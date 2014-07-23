@@ -1,3 +1,82 @@
-body {
-    margin: 0;
+#baguetteBoxOverlay {
+    display: none;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 100000;
+    background-color: #222;
+    background-color: rgba(0,0,0,.8);
+    transition: opacity .5s ease;
+
+    .fullImage img {
+        display: inline-block;
+        max-height: 100%;
+        max-width: 100%;
+        vertical-align: middle;
+        box-shadow: 0 0 8px rgba(0,0,0,.6);
+    }
+
+    .fullImage {
+        height: 100%;
+        line-height: 1px;
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .fullImage:before {
+        content: "";
+        display: inline-block;
+        height: 50%;
+    }
+}
+
+#baguetteBoxOverlay.visible {
+    opacity: 1;
+}
+
+.baguetteBoxButton {
+    position: absolute;
+    cursor: pointer;
+    outline: none;
+
+    &.arrowButton {
+        display: inline-block;
+        top: calc(50% - 30px);
+        width: 45px;
+        height: 60px;
+        padding: 0;
+        border: 0;
+        border-radius: 15%;
+        background-color: rgba(0,0,0,0.4);
+        transition: background-color .4s ease;
+    }
+
+    &.arrowButton:hover {
+        background-color: rgba(0,0,0,0.8);
+    }
+}
+
+#nextButton {
+    @extend .arrowButton;
+    right: 16px;
+}
+
+#previousButton {
+    @extend .arrowButton;
+    left: 16px;
+}
+
+#baguetteBoxSlider {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    white-space: nowrap;
+    transition: left .4s ease;
 }
