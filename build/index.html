@@ -3,8 +3,41 @@
 <head>
 	<meta charset="UTF-8">
 	<title>baguetteBox.js | Demo</title>
+	<link rel="stylesheet" href="css/baguetteBox.min.css">
+	<style>
+.gallery {
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.gallery img {
+    height: 200px;
+}
+
+.gallery a {
+	width: 250px;
+	height: 200px;
+	display: inline-block;
+	overflow: hidden;
+}
+	</style>
 </head>
 <body>
-	
+	<div class="baguetteBox gallery">
+		<a href="img/1.jpg"><img src="img/thumbs/1.jpg"></a>
+		<a href="img/2.jpg"><img src="img/thumbs/2.jpg"></a>
+		<a href="img/3.jpg"><img src="img/thumbs/3.jpg"></a>
+		<a href="img/4.jpg"><img src="img/thumbs/4.jpg"></a>
+		<a href="img/5.jpg"><img src="img/thumbs/5.jpg"></a>
+		<a href="img/6.jpg"><img src="img/thumbs/6.jpg"></a>
+	</div>
+	<script src="js/baguetteBox.min.js"></script>
+	<script>
+window.onload = function() {
+    console.log('Window loaded');
+    baguetteBox('.gallery');
+};
+	</script>
 </body>
 </html>
