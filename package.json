@@ -1,6 +1,6 @@
 {
   "name": "baguetteBox.js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Simple and easy to use lightbox script",
   "main": "gulpfile.js",
   "devDependencies": {
