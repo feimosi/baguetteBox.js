@@ -79,9 +79,16 @@ gulp.task('html', function() {
 });
 
 // Bump to a new version
-gulp.task('bump', function () {
+gulp.task('bump-minor', function () {
   return gulp.src('./package.json')
     .pipe(plugins.bump({type:'minor'}))
+    .pipe(gulp.dest('./'));
+});
+
+// Bump to a new version
+gulp.task('bump-patch', function () {
+  return gulp.src('./package.json')
+    .pipe(plugins.bump({type:'patch'}))
     .pipe(gulp.dest('./'));
 });
 
@@ -113,4 +120,6 @@ gulp.task('browser-sync', ['js', 'css', 'html'], function () {
 // Default task
 gulp.task('default', ['css', 'js', 'html', 'watch', 'browser-sync']);
 
-gulp.task('release', ['css-min', 'js-min', 'html', 'bump']);
+gulp.task('release', ['css-min', 'js-min', 'html', 'bump-minor']);
+
+gulp.task('patch', ['css-min', 'js-min', 'html', 'bump-patch']);
