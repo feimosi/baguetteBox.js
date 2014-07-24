@@ -7,57 +7,105 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    z-index: 100000;
+    z-index: 1000000;
     background-color: #222;
     background-color: rgba(0,0,0,.8);
     transition: opacity .5s ease;
 
-    .fullImage img {
-        display: inline-block;
-        max-height: 100%;
-        max-width: 100%;
-        vertical-align: middle;
-        box-shadow: 0 0 8px rgba(0,0,0,.6);
+    &.visible {
+        opacity: 1;
     }
 
     .fullImage {
-        height: 100%;
-        line-height: 1px;
-        text-align: center;
-        width: 100%;
         display: inline-block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+
+        figure {
+            display: inline-block;
+            position: relative;
+            margin: 0;
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        img {
+            max-height: 100%;
+            max-width: 100%;
+            vertical-align: middle;
+            box-shadow: 0 0 8px rgba(0,0,0,.6);
+        }
+
+        figcaption {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 1.8;
+            color: #ccc;
+            background-color: rgba(0,0,0,.6);
+            font-family: sans-serif;
+        }
+
+        &:before {
+            content: "";
+            display: inline-block;
+            height: 50%;
+        }
     }
 
-    .fullImage:before {
-        content: "";
-        display: inline-block;
-        height: 50%;
+}
+
+#baguetteBoxSlider {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    white-space: nowrap;
+    transition: left .4s ease;
+
+    &.bounceFromRight {
+        animation: bounceFromRight .4s ease-out;
+    }
+
+    &.bounceFromLeft {
+        animation: bounceFromLeft .4s ease-out;
     }
 }
 
-#baguetteBoxOverlay.visible {
-    opacity: 1;
+@keyframes bounceFromRight{
+    0% { margin-left: 0; }
+    50% { margin-left: -30px; }
+    100% { margin-left: 0; }
+}
+
+@keyframes bounceFromLeft{
+    0% { margin-left: 0; }
+    50% { margin-left: 30px; }
+    100% { margin-left: 0; }
 }
 
 .baguetteBoxButton {
     position: absolute;
     cursor: pointer;
     outline: none;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 15%;
+    background-color: rgba(68,68,68,0.5);
+    transition: background-color .4s ease;
+
+    &:hover {
+        background-color: rgba(68,68,68,0.8);
+    }
 
     &.arrowButton {
-        display: inline-block;
         top: calc(50% - 30px);
         width: 45px;
         height: 60px;
-        padding: 0;
-        border: 0;
-        border-radius: 15%;
-        background-color: rgba(0,0,0,0.4);
-        transition: background-color .4s ease;
-    }
-
-    &.arrowButton:hover {
-        background-color: rgba(0,0,0,0.8);
     }
 }
 
@@ -71,12 +119,9 @@
     left: 16px;
 }
 
-#baguetteBoxSlider {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    white-space: nowrap;
-    transition: left .4s ease;
+#closeButton {
+    top: 20px;
+    right: 24px;
+    width: 30px;
+    height: 30px;
 }
