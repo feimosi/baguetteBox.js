@@ -25,10 +25,8 @@ gulp.task('css', function() {
         .pipe(plugins.combineMediaQueries())
         // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer())
-        // Minify CSS
-        //.pipe(plugins.cssmin())
         // Concatenate all styles
-        .pipe(plugins.concat('baguetteBox.min.css'))
+        .pipe(plugins.concat('baguetteBox.css'))
         // Where to store the finalized CSS
         .pipe(gulp.dest(build.css));
 });
@@ -56,9 +54,7 @@ gulp.task('js', function () {
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         // Concatenate all JS files into one
-        .pipe(plugins.concat('baguetteBox.min.js'))
-        // Minify JS
-        //.pipe(plugins.uglify())
+        .pipe(plugins.concat('baguetteBox.js'))
         // Where to store the finalized JS
         .pipe(gulp.dest(build.js));
 });
