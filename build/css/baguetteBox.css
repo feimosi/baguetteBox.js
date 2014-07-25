@@ -1,12 +1,12 @@
 #baguetteBoxOverlay {
 	display: none;
-	overflow: hidden;
+	opacity: 0;
 	position: fixed;
+	overflow: hidden;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: 0;
 	z-index: 1000000;
 	background-color: #222;
 	background-color: rgba(0, 0, 0, 0.8);
@@ -26,17 +26,14 @@
 }
 
 #baguetteBoxOverlay .fullImage figure {
-	display: inline-block;
-	position: relative;
+	display: inline;
 	margin: 0;
-	height: 100%;
-	width: 100%;
 }
 
 #baguetteBoxOverlay .fullImage img {
+	vertical-align: middle;
 	max-height: 100%;
 	max-width: 100%;
-	vertical-align: middle;
 	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
 	        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
 }
@@ -56,6 +53,8 @@
 	content: "";
 	display: inline-block;
 	height: 50%;
+	width: 1px;
+	margin-right: -1px;
 }
 
 #baguetteBoxSlider {
@@ -115,8 +114,6 @@
 #closeButton {
 	top: 20px;
 	right: 24px;
-	width: 30px;
-	height: 30px;
 }
 
 @-webkit-keyframes bounceFromRight {
