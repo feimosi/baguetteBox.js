@@ -31,7 +31,26 @@ Simple and easy to use lightbox script.
   	</div>
   ```
   
+## Customization
+
+You can pass as a second paramater an object with custom options. The following are available with corresponding defaults:
+```javascript
+{
+  captions: true,   // Display image captions
+  buttons: true,    // Display buttons
+  preload: 2        // How many images should be preloaded
+}
+```
+  
+## Compatibility
+
+Tested on Chrome 37, Firefox 33 and IE 11.
+  
 ## Notes
 
 It's still a work in progress and the script works well only on modern browsers.
 Feel free to report any bugs or suggest new features!
+
+## Credits
+
+Creation of `baguetteBox.js` was inspired by great jQuery plugin [touchTouch](https://github.com/martinaglv/touchTouch).
