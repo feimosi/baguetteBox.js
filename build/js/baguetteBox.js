@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 0.2.1
+ * @version 0.3.0
  */
 
 var baguetteBox = function(selector, userOptions) {
@@ -23,8 +23,8 @@ var baguetteBox = function(selector, userOptions) {
     var sliderID = 'baguetteBoxSlider';
     var options = {
         captions: true,
-        preload: 2,
-        buttons: true
+        buttons: true,
+        preload: 2
     };
     // Update options object
     for(var item in userOptions) {
@@ -35,6 +35,10 @@ var baguetteBox = function(selector, userOptions) {
     var overlay, slider, previousButton, nextButton, closeButton;
     // Image index inside the slider
     var currentIndex = 0, currentGallery = -1;
+    // Touch event start position (for slide gesture)
+    var touchStartX;
+    // If set to true ignore touch events because animation was already fired
+    var touchFlag = false;
     // Array of all active galleries
     var galleries = document.querySelectorAll(selector);
     // Map of galleries images
@@ -50,7 +54,7 @@ var baguetteBox = function(selector, userOptions) {
         [].forEach.call(
             galleries,
             function (galleryElement, galleryIndex) {
-                galleryElement.dataset.baguetteBoxId = galleryIndex;
+                galleryElement.setAttribute('data-baguetteBoxId', galleryIndex);
                 imagesMap[galleryIndex] = galleryElement.getElementsByTagName('a');
                 [].forEach.call(
                     imagesMap[galleryIndex],
@@ -59,7 +63,7 @@ var baguetteBox = function(selector, userOptions) {
                             event.preventDefault();
                             prepareOverlay(galleryIndex);
                             showOverlay(imageIndex);
-                        }, false);
+                        });
                     }
                 );
             }
@@ -113,18 +117,43 @@ var baguetteBox = function(selector, userOptions) {
         overlay.addEventListener('click', function(event) {
             if(event.target && event.target.nodeName !== "IMG")
                 hideOverlay();
-        }, false);
-        // Add event listeners for next / previous buttons
+        });
+        // Add event listeners for buttons
         if(options.buttons) {
             document.getElementById('previousButton').addEventListener('click', function(event) {
                 event.stopPropagation();
                 showPreviousImage();
-            }, false);
+            });
             document.getElementById('nextButton').addEventListener('click', function(event) {
                 event.stopPropagation();
                 showNextImage();
-            }, false);
+            });
+            document.getElementById('closeButton').addEventListener('click', function(event) {
+                event.stopPropagation();
+                hideOverlay();
+            });
         }
+        // Add touch events
+        overlay.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].pageX;
+        });
+        overlay.addEventListener('touchmove', function(event) {
+            if(touchFlag)
+                return;
+            event.preventDefault();
+            touch = event.touches[0] || event.changedTouches[0];
+            if(touch.pageX - touchStartX > 40) {
+                touchFlag = true;
+                showPreviousImage();
+            }
+            else if (touch.pageX - touchStartX < -40) {
+                touchFlag = true;
+                showNextImage();
+            }
+        });
+        overlay.addEventListener('touchend', function(event) {
+            touchFlag = false;
+        });
         // Activate keyboard shortcuts
         window.addEventListener('keydown', function(event) {
             switch(event.keyCode) {
@@ -138,7 +167,7 @@ var baguetteBox = function(selector, userOptions) {
                     hideOverlay();
                     break;
             }
-        }, false);
+        });
     }
 
     function prepareOverlay(galleryIndex) {
@@ -203,8 +232,8 @@ var baguetteBox = function(selector, userOptions) {
             return;
         }
         imageElement = imagesMap[currentGallery][index];
-        imageCaption = imageElement.dataset.caption;
-        imageCaption = typeof imageCaption !== 'undefined' ? '<figcaption>' + imageCaption + '</figcaption>' : '';
+        imageCaption = imageElement.getAttribute('data-caption');
+        imageCaption = imageCaption ? '<figcaption>' + imageCaption + '</figcaption>' : '';
         // Prepare image container elements
         var figure = document.createElement('figure');
         var image = document.createElement('img');
