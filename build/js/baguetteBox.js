@@ -1,10 +1,10 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 0.1.0
+ * @version 0.2.1
  */
 
-var baguetteBox = function(selector) {
+var baguetteBox = function(selector, userOptions) {
     // Buttons SVG shapes
     var leftArrow = '<svg width="45" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
             '<polyline points="10 30 30 10 50 30" stroke="rgba(255,255,255,0.5)" stroke-width="5"' +
@@ -21,6 +21,16 @@ var baguetteBox = function(selector) {
             '</g></svg>';
     var overlayID = 'baguetteBoxOverlay';
     var sliderID = 'baguetteBoxSlider';
+    var options = {
+        captions: true,
+        preload: 2,
+        buttons: true
+    };
+    // Update options object
+    for(var item in userOptions) {
+        if(options.hasOwnProperty(item))
+            options[item] = userOptions[item];
+    }
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
     // Image index inside the slider
@@ -41,7 +51,7 @@ var baguetteBox = function(selector) {
             galleries,
             function (galleryElement, galleryIndex) {
                 galleryElement.dataset.baguetteBoxId = galleryIndex;
-                imagesMap[galleryIndex] = galleryElement.querySelectorAll('a');
+                imagesMap[galleryIndex] = galleryElement.getElementsByTagName('a');
                 [].forEach.call(
                     imagesMap[galleryIndex],
                     function (imageElement, imageIndex) {
@@ -58,11 +68,17 @@ var baguetteBox = function(selector) {
 
     function buildOverlay() {
         overlay = document.getElementById(overlayID);
-        // Check if the overlay already exists, if yes return
-        if(overlay)
-           return;
+        // Check if the overlay already exists
+        if(overlay) {
+            slider = document.getElementById(sliderID);
+            previousButton = document.getElementById('previousButton');
+            nextButton = document.getElementById('nextButton');
+            closeButton = document.getElementById('closeButton');
+            return;
+        }
+        // Create overlay element
         overlay = document.createElement('div');
-        overlay = document.querySelector('body').appendChild(overlay);
+        overlay = document.getElementsByTagName('body')[0].appendChild(overlay);
         overlay.id = overlayID;
         // Create gallery slider element
         slider = document.createElement('div');
@@ -70,22 +86,24 @@ var baguetteBox = function(selector) {
         slider.id = sliderID;
         slider.style.left = '0%';
         // Create all necessary buttons
-        previousButton = document.createElement('button');
-        previousButton.id = 'previousButton';
-        previousButton.innerHTML = leftArrow;
-        previousButton = overlay.appendChild(previousButton);
+        if(options.buttons) {
+            previousButton = document.createElement('button');
+            previousButton.id = 'previousButton';
+            previousButton.innerHTML = leftArrow;
+            previousButton = overlay.appendChild(previousButton);
 
-        nextButton = document.createElement('button');
-        nextButton.id = 'nextButton';
-        nextButton.innerHTML = rightArrow;
-        nextButton = overlay.appendChild(nextButton);
+            nextButton = document.createElement('button');
+            nextButton.id = 'nextButton';
+            nextButton.innerHTML = rightArrow;
+            nextButton = overlay.appendChild(nextButton);
 
-        closeButton = document.createElement('button');
-        closeButton.id = 'closeButton';
-        closeButton.innerHTML = closeX;
-        closeButton = overlay.appendChild(closeButton);
+            closeButton = document.createElement('button');
+            closeButton.id = 'closeButton';
+            closeButton.innerHTML = closeX;
+            closeButton = overlay.appendChild(closeButton);
 
-        previousButton.className = nextButton.className = closeButton.className = 'baguetteBoxButton';
+            previousButton.className = nextButton.className = closeButton.className = 'baguetteBoxButton';
+        }
 
         bindEvents();
     }
@@ -97,14 +115,16 @@ var baguetteBox = function(selector) {
                 hideOverlay();
         }, false);
         // Add event listeners for next / previous buttons
-        document.querySelector('#previousButton').addEventListener('click', function(event) {
-            event.stopPropagation();
-            showPreviousImage();
-        }, false);
-        document.querySelector('#nextButton').addEventListener('click', function(event) {
-            event.stopPropagation();
-            showNextImage();
-        }, false);
+        if(options.buttons) {
+            document.getElementById('previousButton').addEventListener('click', function(event) {
+                event.stopPropagation();
+                showPreviousImage();
+            }, false);
+            document.getElementById('nextButton').addEventListener('click', function(event) {
+                event.stopPropagation();
+                showNextImage();
+            }, false);
+        }
         // Activate keyboard shortcuts
         window.addEventListener('keydown', function(event) {
             switch(event.keyCode) {
@@ -126,10 +146,10 @@ var baguetteBox = function(selector) {
             return;
         currentGallery = galleryIndex;
         // Empty slider of previous contents
-        while (slider.firstChild) {
+        while(slider.firstChild) {
             slider.removeChild(slider.firstChild);
         }
-        imagesArray = [];
+        imagesArray.length = 0;
         // Prepare and append images containers
         for(var i = 0; i < imagesMap[galleryIndex].length; i++) {
             imagesArray.push(returnImageContainer());
@@ -150,12 +170,15 @@ var baguetteBox = function(selector) {
         // Show proper image and set current index to a new value
         overlay.style.display = 'block';
         currentIndex = index;
-        showImage(currentIndex);
+        loadImage(currentIndex, function() {
+            preloadNext(currentIndex);
+            preloadPrev(currentIndex);
+        });
         updateOffset();
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
-        }, 10);
+        }, 100);
     }
 
     function hideOverlay() {
@@ -169,20 +192,40 @@ var baguetteBox = function(selector) {
         }, 500);
     }
 
-    function showImage(index) {
-        if(index > imagesArray.length - 1)
-            return;
+    function loadImage(index, callback) {
         var imageContainer = imagesArray[index];
+        // If index is invalid return
+        if(typeof imageContainer === 'undefined')
+            return;
+        // If image is already loaded run callback and return
+        if(typeof imageContainer.getElementsByTagName('img')[0] !== 'undefined') {
+            callback();
+            return;
+        }
         imageElement = imagesMap[currentGallery][index];
         imageCaption = imageElement.dataset.caption;
         imageCaption = typeof imageCaption !== 'undefined' ? '<figcaption>' + imageCaption + '</figcaption>' : '';
-        imageContainer.innerHTML = '<figure><img src="' + imageElement.getAttribute('href') + '">' + imageCaption + '</figure>';
+        // Prepare image container elements
+        var figure = document.createElement('figure');
+        var image = document.createElement('img');
+        var figcaption = document.createElement('figcaption');
+        imageContainer.appendChild(figure);
+        image.setAttribute('src', imageElement.getAttribute('href'));
+        image.onload = function() {
+            callback();
+        };
+        figure.appendChild(image);
+        if(options.captions) {
+            figcaption.innerHTML = imageCaption;
+            figure.appendChild(figcaption);
+        }
     }
 
     function showNextImage() {
         if(currentIndex <= imagesArray.length - 2) {
             currentIndex++;
             updateOffset();
+            preloadNext(currentIndex);
         } else {
             slider.className = 'bounceFromRight';
             setTimeout(function() {
@@ -195,6 +238,7 @@ var baguetteBox = function(selector) {
         if(currentIndex >= 1) {
             currentIndex--;
             updateOffset();
+            preloadPrev(currentIndex);
         } else {
             slider.className = 'bounceFromLeft';
             setTimeout(function() {
@@ -205,13 +249,17 @@ var baguetteBox = function(selector) {
 
     function updateOffset() {
         slider.style.left = -currentIndex * 100 + '%';
-        preload();
     }
 
-    function preload() {
-        if(currentIndex <= imagesArray.length - 2)
-            showImage(currentIndex + 1);
-        if(currentIndex >= 1)
-            showImage(currentIndex - 1);
+    function preloadNext(index) {
+        if(Math.abs(currentIndex - index) >= options.preload)
+            return;
+        loadImage(index + 1, function() { preloadNext(index + 1); });
+    }
+
+    function preloadPrev(index) {
+        if(Math.abs(currentIndex - index) >= options.preload)
+            return;
+        loadImage(index - 1, function() { preloadPrev(index - 1); });
     }
 };
