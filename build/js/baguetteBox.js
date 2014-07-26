@@ -1,21 +1,22 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 0.3.0
+ * @version 0.4.0
+ * @url https://github.com/feimosi/baguetteBox.js
  */
 
 var baguetteBox = function(selector, userOptions) {
     // Buttons SVG shapes
-    var leftArrow = '<svg width="45" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
-            '<polyline points="10 30 30 10 50 30" stroke="rgba(255,255,255,0.5)" stroke-width="5"' +
-              'stroke-linecap="butt" fill="none" stroke-linejoin="round" transform="translate(0, 60) rotate(-90)"/>' +
+    var leftArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+            '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round">&lt;</polyline>' +
             '</svg>',
-        rightArrow = '<svg width="45" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
-            '<polyline points="10 30 30 10 50 30" stroke="rgba(255,255,255,0.5)" stroke-width="5"' +
-              'stroke-linecap="butt" fill="none" stroke-linejoin="round" transform="translate(45) rotate(90)"/>' +
+        rightArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+            '<polyline points="10 10 30 30 10 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round">&gt;</polyline>' +
             '</svg>',
         closeX = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
-            '<g stroke="rgb(187, 187, 187)" stroke-width="4">' +
+            '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             '</g></svg>';
@@ -233,7 +234,6 @@ var baguetteBox = function(selector, userOptions) {
         }
         imageElement = imagesMap[currentGallery][index];
         imageCaption = imageElement.getAttribute('data-caption');
-        imageCaption = imageCaption ? '<figcaption>' + imageCaption + '</figcaption>' : '';
         // Prepare image container elements
         var figure = document.createElement('figure');
         var image = document.createElement('img');
@@ -241,10 +241,16 @@ var baguetteBox = function(selector, userOptions) {
         imageContainer.appendChild(figure);
         image.setAttribute('src', imageElement.getAttribute('href'));
         image.onload = function() {
+            var spinner = this.parentNode.getElementsByClassName('spinner')[0];
+            this.parentNode.removeChild(spinner);
             callback();
         };
+        figure.innerHTML = '<div class="spinner">' +
+          '<div class="double-bounce1"></div>' +
+          '<div class="double-bounce2"></div>' +
+        '</div>';
         figure.appendChild(image);
-        if(options.captions) {
+        if(options.captions && imageCaption) {
             figcaption.innerHTML = imageCaption;
             figure.appendChild(figcaption);
         }
