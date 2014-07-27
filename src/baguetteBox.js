@@ -26,9 +26,10 @@ var baguetteBox = function(selector, userOptions) {
         captions: true,
         buttons: true,
         async: false,
-        preload: 2
+        preload: 2,
+        animation: 'slideIn'
     };
-    // Update options object
+    // Update object with user custom options
     for(var item in userOptions) {
         if(options.hasOwnProperty(item))
             options[item] = userOptions[item];
@@ -52,6 +53,8 @@ var baguetteBox = function(selector, userOptions) {
 
     function init() {
         buildOverlay();
+        if(options.animation === 'fadeIn')
+            slider.style.transition = 'opacity .4s ease';
         // For each gallery bind a click event to every image inside it
         [].forEach.call(
             galleries,
@@ -287,7 +290,15 @@ var baguetteBox = function(selector, userOptions) {
     }
 
     function updateOffset() {
-        slider.style.left = -currentIndex * 100 + '%';
+        if(options.animation === 'fadeIn') {
+            slider.style.opacity = 0;
+            setTimeout(function() {
+                slider.style.left = -currentIndex * 100 + '%';
+                slider.style.opacity = 1;
+            }, 400);
+        } else {
+            slider.style.left = -currentIndex * 100 + '%';
+        }
     }
 
     function preloadNext(index) {
