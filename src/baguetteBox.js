@@ -25,6 +25,7 @@ var baguetteBox = function(selector, userOptions) {
     var options = {
         captions: true,
         buttons: true,
+        async: false,
         preload: 2
     };
     // Update options object
@@ -243,7 +244,8 @@ var baguetteBox = function(selector, userOptions) {
         image.onload = function() {
             var spinner = this.parentNode.getElementsByClassName('spinner')[0];
             this.parentNode.removeChild(spinner);
-            callback();
+            if(!options.async)
+                callback();
         };
         figure.innerHTML = '<div class="spinner">' +
           '<div class="double-bounce1"></div>' +
@@ -254,6 +256,8 @@ var baguetteBox = function(selector, userOptions) {
             figcaption.innerHTML = imageCaption;
             figure.appendChild(figcaption);
         }
+        if(options.async)
+            callback();
     }
 
     function showNextImage() {
