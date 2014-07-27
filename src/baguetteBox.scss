@@ -43,6 +43,7 @@
         }
 
         figcaption {
+            display: block;
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -135,12 +136,6 @@
     right: calc(2% + 6px);
     width: 30px;
     height: 30px;
-
-    svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
 }
 
 /*

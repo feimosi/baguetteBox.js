@@ -19,7 +19,7 @@ var baguetteBox = function(selector, userOptions) {
             '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
-            '</g></svg>';
+            'X</g></svg>';
     var overlayID = 'baguetteBoxOverlay';
     var sliderID = 'baguetteBoxSlider';
     var options = {
@@ -60,7 +60,7 @@ var baguetteBox = function(selector, userOptions) {
                 [].forEach.call(
                     imagesMap[galleryIndex],
                     function (imageElement, imageIndex) {
-                        imageElement.addEventListener('click', function(event) {
+                        bind(imageElement, 'click', function(event) {
                             event.preventDefault();
                             prepareOverlay(galleryIndex);
                             showOverlay(imageIndex);
@@ -115,30 +115,30 @@ var baguetteBox = function(selector, userOptions) {
 
     function bindEvents() {
         // When clicked on the overlay (outside displayed image) close it
-        overlay.addEventListener('click', function(event) {
+        bind(overlay, 'click', function(event) {
             if(event.target && event.target.nodeName !== "IMG")
                 hideOverlay();
         });
         // Add event listeners for buttons
         if(options.buttons) {
-            document.getElementById('previousButton').addEventListener('click', function(event) {
+            bind(document.getElementById('previousButton'), 'click', function(event) {
                 event.stopPropagation();
                 showPreviousImage();
             });
-            document.getElementById('nextButton').addEventListener('click', function(event) {
+            bind(document.getElementById('nextButton'), 'click', function(event) {
                 event.stopPropagation();
                 showNextImage();
             });
-            document.getElementById('closeButton').addEventListener('click', function(event) {
+            bind(document.getElementById('closeButton'), 'click', function(event) {
                 event.stopPropagation();
                 hideOverlay();
             });
         }
         // Add touch events
-        overlay.addEventListener('touchstart', function(event) {
+        bind(overlay, 'touchstart', function(event) {
             touchStartX = event.changedTouches[0].pageX;
         });
-        overlay.addEventListener('touchmove', function(event) {
+        bind(overlay, 'touchmove', function(event) {
             if(touchFlag)
                 return;
             event.preventDefault();
@@ -152,11 +152,11 @@ var baguetteBox = function(selector, userOptions) {
                 showNextImage();
             }
         });
-        overlay.addEventListener('touchend', function(event) {
+        bind(overlay, 'touchend', function(event) {
             touchFlag = false;
         });
         // Activate keyboard shortcuts
-        window.addEventListener('keydown', function(event) {
+        bind(window, 'keydown', function(event) {
             switch(event.keyCode) {
                 case 37: // Left arrow
                     showPreviousImage();
@@ -296,5 +296,12 @@ var baguetteBox = function(selector, userOptions) {
         if(Math.abs(currentIndex - index) >= options.preload)
             return;
         loadImage(index - 1, function() { preloadPrev(index - 1); });
+    }
+
+    function bind(element, event, callback) {
+        if(element.addEventListener)
+          element.addEventListener(event, callback, false);
+        else if (element.attachEvent)
+          element.attachEvent('on' + event, callback);
     }
 };
