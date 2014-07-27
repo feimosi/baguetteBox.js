@@ -5,7 +5,7 @@
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
-#baguetteBoxOverlay {
+#baguetteBox-overlay {
     display: none;
     opacity: 0;
     position: fixed;
@@ -23,7 +23,7 @@
         opacity: 1;
     }
 
-    .fullImage {
+    .full-image {
         display: inline-block;
         position: relative;
         width: 100%;
@@ -65,7 +65,7 @@
 
 }
 
-#baguetteBoxSlider {
+#baguetteBox-slider {
     position: absolute;
     left: 0;
     top: 0;
@@ -74,11 +74,11 @@
     white-space: nowrap;
     transition: left .4s ease;
 
-    &.bounceFromRight {
+    &.bounce-from-right {
         animation: bounceFromRight .4s ease-out;
     }
 
-    &.bounceFromLeft {
+    &.bounce-from-left {
         animation: bounceFromLeft .4s ease-out;
     }
 }
@@ -95,7 +95,7 @@
     100% { margin-left: 0; }
 }
 
-.baguetteBoxButton {
+.baguetteBox-button {
     position: absolute;
     cursor: pointer;
     outline: none;
@@ -112,7 +112,7 @@
         background-color: rgba(50,50,50,0.9);
     }
 
-    &.arrowButton {
+    &.arrow-button {
         top: 50%;
         top: calc(50% - 30px);
         width: 44px;
@@ -120,17 +120,17 @@
     }
 }
 
-#nextButton {
-    @extend .arrowButton;
+#next-button {
+    @extend .arrow-button;
     right: 2%;
 }
 
-#previousButton {
-    @extend .arrowButton;
+#previous-button {
+    @extend .arrow-button;
     left: 2%;
 }
 
-#closeButton {
+#close-button {
     top: 20px;
     right: 2%;
     right: calc(2% + 6px);

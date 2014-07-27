@@ -20,8 +20,8 @@ var baguetteBox = function(selector, userOptions) {
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             'X</g></svg>';
-    var overlayID = 'baguetteBoxOverlay';
-    var sliderID = 'baguetteBoxSlider';
+    var overlayID = 'baguetteBox-overlay';
+    var sliderID = 'baguetteBox-slider';
     var options = {
         captions: true,
         buttons: true,
@@ -77,9 +77,9 @@ var baguetteBox = function(selector, userOptions) {
         // Check if the overlay already exists
         if(overlay) {
             slider = document.getElementById(sliderID);
-            previousButton = document.getElementById('previousButton');
-            nextButton = document.getElementById('nextButton');
-            closeButton = document.getElementById('closeButton');
+            previousButton = document.getElementById('previous-button');
+            nextButton = document.getElementById('next-button');
+            closeButton = document.getElementById('close-button');
             return;
         }
         // Create overlay element
@@ -94,21 +94,21 @@ var baguetteBox = function(selector, userOptions) {
         // Create all necessary buttons
         if(options.buttons) {
             previousButton = document.createElement('button');
-            previousButton.id = 'previousButton';
+            previousButton.id = 'previous-button';
             previousButton.innerHTML = leftArrow;
             previousButton = overlay.appendChild(previousButton);
 
             nextButton = document.createElement('button');
-            nextButton.id = 'nextButton';
+            nextButton.id = 'next-button';
             nextButton.innerHTML = rightArrow;
             nextButton = overlay.appendChild(nextButton);
 
             closeButton = document.createElement('button');
-            closeButton.id = 'closeButton';
+            closeButton.id = 'close-button';
             closeButton.innerHTML = closeX;
             closeButton = overlay.appendChild(closeButton);
 
-            previousButton.className = nextButton.className = closeButton.className = 'baguetteBoxButton';
+            previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
         }
 
         bindEvents();
@@ -122,15 +122,15 @@ var baguetteBox = function(selector, userOptions) {
         });
         // Add event listeners for buttons
         if(options.buttons) {
-            bind(document.getElementById('previousButton'), 'click', function(event) {
+            bind(document.getElementById('previous-button'), 'click', function(event) {
                 event.stopPropagation();
                 showPreviousImage();
             });
-            bind(document.getElementById('nextButton'), 'click', function(event) {
+            bind(document.getElementById('next-button'), 'click', function(event) {
                 event.stopPropagation();
                 showNextImage();
             });
-            bind(document.getElementById('closeButton'), 'click', function(event) {
+            bind(document.getElementById('close-button'), 'click', function(event) {
                 event.stopPropagation();
                 hideOverlay();
             });
@@ -190,7 +190,7 @@ var baguetteBox = function(selector, userOptions) {
 
     function returnImageContainer() {
         var fullImage = document.createElement('div');
-        fullImage.className = 'fullImage';
+        fullImage.className = 'full-image';
         return fullImage;
     }
 
@@ -248,9 +248,9 @@ var baguetteBox = function(selector, userOptions) {
                 callback();
         };
         figure.innerHTML = '<div class="spinner">' +
-          '<div class="double-bounce1"></div>' +
-          '<div class="double-bounce2"></div>' +
-        '</div>';
+            '<div class="double-bounce1"></div>' +
+            '<div class="double-bounce2"></div>' +
+            '</div>';
         figure.appendChild(image);
         if(options.captions && imageCaption) {
             figcaption.innerHTML = imageCaption;
@@ -266,7 +266,7 @@ var baguetteBox = function(selector, userOptions) {
             updateOffset();
             preloadNext(currentIndex);
         } else {
-            slider.className = 'bounceFromRight';
+            slider.className = 'bounce-from-right';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
@@ -279,7 +279,7 @@ var baguetteBox = function(selector, userOptions) {
             updateOffset();
             preloadPrev(currentIndex);
         } else {
-            slider.className = 'bounceFromLeft';
+            slider.className = 'bounce-from-left';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
@@ -303,9 +303,6 @@ var baguetteBox = function(selector, userOptions) {
     }
 
     function bind(element, event, callback) {
-        if(element.addEventListener)
-          element.addEventListener(event, callback, false);
-        else if (element.attachEvent)
-          element.attachEvent('on' + event, callback);
+        element.addEventListener(event, callback, false);
     }
 };
