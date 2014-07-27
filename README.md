@@ -5,12 +5,13 @@ Simple and easy to use lightbox script.
 
 ## Features
 
-* Written in pure JavaScript, no dependencies like jQuery required
+* Written in pure JavaScript, no dependencies required
 * Modern and minimal look
 * Multiple galleries support
 * Image captions support
 * CSS3 transitions
 * SVG buttons, no extra files to download
+* Around 1.5KB gzipped
 
 ## Usage
 
@@ -31,6 +32,8 @@ Simple and easy to use lightbox script.
   	</div>
   ```
   
+4. To use captions, put `data-caption` attribute on `a` tag.
+
 ## Customization
 
 You can pass as a second paramater an object with custom options. The following are available with corresponding defaults:
@@ -38,17 +41,24 @@ You can pass as a second paramater an object with custom options. The following 
 {
   captions: true,   // Display image captions
   buttons: true,    // Display buttons
+  async: false,     // Preload files asynchronously
   preload: 2        // How many images should be preloaded
 }
 ```
   
 ## Compatibility
 
-Tested on Chrome 37, Firefox 33 and IE 11.
-  
+Tested on the following browsers.
+- IE9+
+- Firefox 3.6 and 32
+- Chrome 37 
+- Opera 23
+
+What about IE8?
+The extra code would take to much space and make the code less readable so I decided to give up on this.
+
 ## Notes
 
-It's still a work in progress and the script works well only on modern browsers.
 Feel free to report any bugs or suggest new features!
 
 ## Credits
