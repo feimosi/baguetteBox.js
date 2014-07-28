@@ -197,9 +197,9 @@ var baguetteBox = (function() {
         else
             slider.style.transition = '';
         // Hide or display buttons 
-        if(options.buttons === 'auto' && 'ontouchstart' in window)
+        if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
-        previousButton.style.display = nextButton.style.display = closeButton.style.display = options.buttons ? '' : 'none';
+        previousButton.style.display = nextButton.style.display = options.buttons ? '' : 'none';
     }
 
     function returnImageContainer() {
