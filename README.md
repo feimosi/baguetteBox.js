@@ -28,7 +28,7 @@ Simple and easy to use lightbox script.
   ```js
     baguetteBox.run('.gallery', {
       // Custom options
-    })
+    });
   ```
   where the first argument is a selector to gallery containing anchor tags. The HTML code may look like this:
 
@@ -54,7 +54,8 @@ You can pass as a second paramater an object with custom options. The following 
   animation: 'slideIn'  // 'slideIn'|'fadeIn' - Animation type
 }
 ```
-  
+`buttons: 'auto'` means to hide buttons on touch-enabled devices and when only one image is displayed.
+
 ## Compatibility
 
 * IE9+
