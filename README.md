@@ -70,3 +70,9 @@ Feel free to report any bugs or suggest new features!
 ## Credits
 
 Creation of `baguetteBox.js` was inspired by great jQuery plugin [touchTouch](https://github.com/martinaglv/touchTouch).
+
+## License
+
+Copyright (c) 2014 [feimosi](https://github.com/feimosi/)
+
+This content is released under the [MIT License](http://opensource.org/licenses/MIT).
