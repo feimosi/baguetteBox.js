@@ -6,12 +6,12 @@ Simple and easy to use lightbox script.
 ## Features
 
 * Written in pure JavaScript, no dependencies required
+* Multiple galleries support with custom options each
 * Modern and minimal look
-* Multiple galleries support
 * Image captions support
 * CSS3 transitions
 * SVG buttons, no extra files to download
-* Around 1.5KB gzipped
+* Around 1.6KB gzipped
 
 ## Usage
 
@@ -22,11 +22,17 @@ Simple and easy to use lightbox script.
   	<script src="js/baguetteBox.min.js"></script>
   ```
 
-3. Initialize the script by running `baguetteBox(selector)`, where the first argument is a selector to gallery containing anchor tags. The HTML code may look like this:
+3. Initialize the script by running:
+  ```js
+    baguetteBox('.gallery', {
+      // Custom options
+    })
+  ```
+  where the first argument is a selector to gallery containing anchor tags. The HTML code may look like this:
 
   ```html
   	<div class="baguetteBox gallery">
-  		<a href="img/2-1.jpg"><img src="img/thumbs/2-1.jpg"></a>
+  		<a href="img/2-1.jpg" data-caption="Additional image caption"><img src="img/thumbs/2-1.jpg"></a>
   		<a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
       ...
   	</div>
@@ -39,23 +45,20 @@ Simple and easy to use lightbox script.
 You can pass as a second paramater an object with custom options. The following are available with corresponding defaults:
 ```javascript
 {
-  captions: true,   // Display image captions
-  buttons: true,    // Display buttons
-  async: false,     // Preload files asynchronously
-  preload: 2        // How many images should be preloaded
+  captions: true,       // true|false - Display image captions
+  buttons: 'auto',      // 'auto'|true|false - Display buttons
+  async: false,         // true|false - Load files asynchronously
+  preload: 2,           // [number] - How many files should be preloaded from current image
+  animation: 'slideIn'  // 'slideIn'|'fadeIn' - Animation type
 }
 ```
   
 ## Compatibility
 
-Tested on the following browsers.
-- IE9+
-- Firefox 3.6 and 32
-- Chrome 37 
-- Opera 23
-
-What about IE8?
-The extra code would take to much space and make the code less readable so I decided to give up on this.
+* IE9+
+* Chrome
+* Firefox 3.6+
+* Opera 12+
 
 ## Notes
 
