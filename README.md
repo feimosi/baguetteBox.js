@@ -9,6 +9,7 @@ Simple and easy to use lightbox script.
 
 * Written in pure JavaScript, no dependencies required
 * Multiple galleries support with custom options each
+* Touch-screen devices support with swipe gestures
 * Modern and minimal look
 * Image captions support
 * CSS3 transitions
