@@ -3,6 +3,8 @@ baguetteBox.js
 
 Simple and easy to use lightbox script.
 
+[Demo page](https://feimosi.github.io/baguetteBox.js/)
+
 ## Features
 
 * Written in pure JavaScript, no dependencies required
@@ -24,7 +26,7 @@ Simple and easy to use lightbox script.
 
 3. Initialize the script by running:
   ```js
-    baguetteBox('.gallery', {
+    baguetteBox.run('.gallery', {
       // Custom options
     })
   ```
