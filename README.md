@@ -54,7 +54,7 @@ You can pass as a second paramater an object with custom options. The following 
   animation: 'slideIn'  // 'slideIn'|'fadeIn' - Animation type
 }
 ```
-`buttons: 'auto'` means to hide buttons on touch-enabled devices and when only one image is displayed.
+`buttons: 'auto'` hides buttons on touch-enabled devices and when only one image is displayed.
 
 ## Compatibility
 
