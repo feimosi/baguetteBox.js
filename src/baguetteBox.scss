@@ -33,6 +33,7 @@
         figure {
             display: inline;
             margin: 0;
+            height: 100%; // Opera 12 image stretching fix
         }
 
         img {
@@ -50,6 +51,7 @@
             text-align: center;
             line-height: 1.8;
             color: #ccc;
+            background-color: #000;
             background-color: rgba(0,0,0,.6);
             font-family: sans-serif;
         }
@@ -103,13 +105,14 @@
     margin: 0;
     border: 0;
     border-radius: 15%;
-    background-color: rgba(50,50,50,0.5);
+    background-color: #323232;
+    background-color: rgba(50,50,50,.5);
     color: #ddd;
     font: 1.6em sans-serif;
     transition: background-color .4s ease;
 
     &:hover {
-        background-color: rgba(50,50,50,0.9);
+        background-color: rgba(50,50,50,.9);
     }
 
     &.arrow-button {
@@ -159,7 +162,7 @@
     height: 100%;
     border-radius: 50%;
     background-color: #fff;
-    opacity: 0.6;
+    opacity: .6;
     position: absolute;
     top: 0;
     left: 0;
@@ -172,7 +175,7 @@
 
 @keyframes bounce {
     0%, 100% { 
-        transform: scale(0.0);
+        transform: scale(0);
     } 50% { 
         transform: scale(1.0);
     }
