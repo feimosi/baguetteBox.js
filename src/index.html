@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>baguetteBox.js | Demo</title>
     <link rel="stylesheet" href="css/baguetteBox.css">
     <style>
@@ -17,6 +19,14 @@ a, a:visited {
 
 h1, h2, footer, .gallery {
     text-align: center;
+}
+
+pre {
+    width: 300px;
+    margin: 0 auto;
+    border: dashed 1px #aaa;
+    padding: 12px;
+    margin-bottom: 10px;
 }
 
 .content {
@@ -42,6 +52,9 @@ h1, h2, footer, .gallery {
 <div class="content">
     <h1>baguetteBox.js Demo</h1>
     <h2>Sample gallery</h2>
+<pre>
+baguetteBox.run('.baguetteBoxOne');
+</pre>
     <div class="baguetteBoxOne gallery">
         <a href="img/1-1.jpg" data-caption="Golden Gate Bridge"><img src="img/thumbs/1-1.jpg"></a>
         <a href="img/1-2.jpg"><img src="img/thumbs/1-2.jpg"></a>
@@ -52,14 +65,22 @@ h1, h2, footer, .gallery {
         <a href="img/1-7.jpg"><img src="img/thumbs/1-7.jpg"></a>
         <a href="img/1-8.jpg"><img src="img/thumbs/1-8.jpg"></a>
     </div>
-    <h2>High resolution images</h2>
+    <h2>Responsive images</h2>
+<pre>
+baguetteBox.run('.baguetteBoxTwo');
+</pre>
     <div class="baguetteBoxTwo gallery">
-        <a href="img/2-1.jpg"><img src="img/thumbs/2-1.jpg"></a>
-        <a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
-        <a href="img/2-3.jpg"><img src="img/thumbs/2-3.jpg"></a>
-        <a href="img/2-4.jpg"><img src="img/thumbs/2-4.jpg"></a>
+        <a href="img/2-1.jpg" data-at-450="img/thumbs/2-1.jpg" data-at-800="img/small/2-1.jpg" data-at-1366="img/medium/2-1.jpg" data-at-1920="img/big/2-1.jpg"><img src="img/thumbs/2-1.jpg"></a>
+        <a href="img/2-2.jpg" data-at-450="img/thumbs/2-2.jpg" data-at-800="img/small/2-2.jpg" data-at-1366="img/medium/2-2.jpg" data-at-1920="img/big/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
+        <a href="img/2-3.jpg" data-at-450="img/thumbs/2-3.jpg" data-at-800="img/small/2-3.jpg" data-at-1366="img/medium/2-3.jpg" data-at-1920="img/big/2-3.jpg"><img src="img/thumbs/2-3.jpg"></a>
+        <a href="img/2-4.jpg" data-at-450="img/thumbs/2-4.jpg" data-at-800="img/small/2-4.jpg" data-at-1366="img/medium/2-4.jpg" data-at-1920="img/big/2-4.jpg"><img src="img/thumbs/2-4.jpg"></a>
     </div>
     <h2>FadeIn animataion</h2>
+<pre>
+baguetteBox.run('.baguetteBoxThree', {
+    animation: 'fadeIn',
+});
+</pre>
     <div class="baguetteBoxThree gallery">
         <a href="img/3-1.jpg"><img src="img/thumbs/3-1.jpg"></a>
         <a href="img/3-2.jpg"><img src="img/thumbs/3-2.jpg"></a>
@@ -67,6 +88,11 @@ h1, h2, footer, .gallery {
         <a href="img/3-4.jpg"><img src="img/thumbs/3-4.jpg"></a>
     </div>
     <h2>Small images, buttons disabled</h2>
+<pre>
+baguetteBox.run('.baguetteBoxFour', {
+    buttons: false
+});
+</pre>
     <div class="baguetteBoxFour gallery">
         <a href="img/thumbs/4-1.jpg" data-caption="Balloon trip"><img src="img/thumbs/4-1.jpg"></a>
         <a href="img/thumbs/4-2.jpg" data-caption="Road to nowhere"><img src="img/thumbs/4-2.jpg"></a>
@@ -74,6 +100,9 @@ h1, h2, footer, .gallery {
         <a href="img/thumbs/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
     </div>
     <h2>Single image</h2>
+<pre>
+baguetteBox.run('.baguetteBoxFive');
+</pre>
     <div class="baguetteBoxFive gallery">
         <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg"></a>
     </div>
