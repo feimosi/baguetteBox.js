@@ -68,6 +68,7 @@ var baguetteBox = (function() {
                     imagesMap[galleryID],
                     function (imageElement, imageIndex) {
                         bind(imageElement, 'click', function(event) {
+                            /*jshint -W030 */
                             event.preventDefault ? event.preventDefault() : event.returnValue = false;
                             prepareOverlay(galleryID);
                             showOverlay(imageIndex);
@@ -126,14 +127,17 @@ var baguetteBox = (function() {
         });
         // Add event listeners for buttons
         bind(document.getElementById('previous-button'), 'click', function(event) {
+            /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             showPreviousImage();
         });
         bind(document.getElementById('next-button'), 'click', function(event) {
+            /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             showNextImage();
         });
         bind(document.getElementById('close-button'), 'click', function(event) {
+            /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             hideOverlay();
         });
@@ -144,6 +148,7 @@ var baguetteBox = (function() {
         bind(overlay, 'touchmove', function(event) {
             if(touchFlag)
                 return;
+            /*jshint -W030 */
             event.preventDefault ? event.preventDefault() : event.returnValue = false;
             touch = event.touches[0] || event.changedTouches[0];
             if(touch.pageX - touchStartX > 40) {
@@ -263,6 +268,7 @@ var baguetteBox = (function() {
         // Get element reference and optional caption
         imageElement = imagesMap[currentGallery][index];
         imageCaption = imageElement.getAttribute('data-caption');
+        imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = document.createElement('figure');
         var image = document.createElement('img');
@@ -275,7 +281,7 @@ var baguetteBox = (function() {
             if(!options.async && callback)
                 callback();
         };
-        image.setAttribute('src', imageElement.getAttribute('href'));
+        image.setAttribute('src', imageSrc);
         // Add loader element
         figure.innerHTML = '<div class="spinner">' +
             '<div class="double-bounce1"></div>' +
@@ -290,6 +296,29 @@ var baguetteBox = (function() {
         // Run callback
         if(options.async && callback)
             callback();
+    }
+
+    function getImageSrc(image) {
+        var result = imageElement.getAttribute('href');
+        if(image.dataset) {
+            var srcs = [];
+            for(var item in image.dataset) {
+                if(item.substring(0, 3) === 'at-')
+                    srcs[item.replace('at-', '')] = image.dataset[item];
+            }
+            keys = Object.keys(srcs).sort(function(a, b) {
+                return parseInt(a) < parseInt(b) ? -1 : 1;
+            });
+            var width = window.innerWidth * window.devicePixelRatio;
+            for(var i = 0; i < keys.length; i++) {
+                if(keys[i] > width) {
+                    result = srcs[keys[i]];    
+                    break;
+                }
+                result = srcs[keys[i]];
+            }
+        }
+        return result;
     }
 
     function showNextImage() {
