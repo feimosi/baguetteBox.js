@@ -24,7 +24,7 @@ gulp.task('css', function() {
         // Combine media queries
         .pipe(plugins.combineMediaQueries())
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer())
+        .pipe(plugins.autoprefixer(["last 2 version", "> 1%", "ie 8", "ie 7", 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
         // Concatenate all styles
         .pipe(plugins.concat('baguetteBox.css'))
         // Where to store the finalized CSS
@@ -38,7 +38,7 @@ gulp.task('css-min', function() {
         // Combine media queries
         .pipe(plugins.combineMediaQueries())
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer())
+        .pipe(plugins.autoprefixer(["last 2 version", "> 1%", "ie 8", "ie 7", 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
         // Minify CSS
         .pipe(plugins.cssmin())
         // Concatenate all styles
