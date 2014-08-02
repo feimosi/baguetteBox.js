@@ -15,6 +15,7 @@ body {
 
 a, a:visited {
     color: #97B6D6;
+    text-decoration: none;
 }
 
 h1, h2, footer, .gallery {
@@ -69,6 +70,15 @@ baguetteBox.run('.baguetteBoxOne');
 <pre>
 baguetteBox.run('.baguetteBoxTwo');
 </pre>
+<pre>
+&lt;a href=&quot;img/2-1.jpg&quot; 
+  data-at-450=&quot;img/thumbs/2-1.jpg&quot; 
+  data-at-800=&quot;img/small/2-1.jpg&quot; 
+  data-at-1366=&quot;img/medium/2-1.jpg&quot; 
+  data-at-1920=&quot;img/big/2-1.jpg&quot;&gt;
+    &lt;img src=&quot;img/thumbs/2-1.jpg&quot;&gt;
+&lt;/a&gt;
+</pre>
     <div class="baguetteBoxTwo gallery">
         <a href="img/2-1.jpg" data-at-450="img/thumbs/2-1.jpg" data-at-800="img/small/2-1.jpg" data-at-1366="img/medium/2-1.jpg" data-at-1920="img/big/2-1.jpg"><img src="img/thumbs/2-1.jpg"></a>
         <a href="img/2-2.jpg" data-at-450="img/thumbs/2-2.jpg" data-at-800="img/small/2-2.jpg" data-at-1366="img/medium/2-2.jpg" data-at-1920="img/big/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
@@ -87,7 +97,7 @@ baguetteBox.run('.baguetteBoxThree', {
         <a href="img/3-3.jpg"><img src="img/thumbs/3-3.jpg"></a>
         <a href="img/3-4.jpg"><img src="img/thumbs/3-4.jpg"></a>
     </div>
-    <h2>Small images, buttons disabled</h2>
+    <h2>Small images, buttons disabled (use arrows or swipe gesture)</h2>
 <pre>
 baguetteBox.run('.baguetteBoxFour', {
     buttons: false
@@ -99,7 +109,7 @@ baguetteBox.run('.baguetteBoxFour', {
         <a href="img/thumbs/4-3.jpg" data-caption="Misty landscape"><img src="img/thumbs/4-3.jpg"></a>
         <a href="img/thumbs/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
     </div>
-    <h2>Single image</h2>
+    <h2>Single image (buttons hidden by dafault)</h2>
 <pre>
 baguetteBox.run('.baguetteBoxFive');
 </pre>
@@ -107,6 +117,7 @@ baguetteBox.run('.baguetteBoxFive');
         <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg"></a>
     </div>
     <footer>
+        <p><a href="https://github.com/feimosi/baguetteBox.js">https://github.com/feimosi/baguetteBox.js</a></p>
         <p>Images downloaded from: <a href="http://unsplash.com/">unsplash.com</a> and <a href="http://www.gratisography.com/">gratisography.com</a></p>
     </footer>
 </div>
