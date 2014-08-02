@@ -69,7 +69,6 @@
             margin-right:-1px;
         }
     }
-
 }
 
 #baguetteBox-slider {
@@ -102,6 +101,13 @@
     100% { margin-left: 0; }
 }
 
+%arrow-button {
+    top: 50%;
+    top: calc(50% - 30px);
+    width: 44px;
+    height: 60px;
+}
+
 .baguetteBox-button {
     position: absolute;
     cursor: pointer;
@@ -120,30 +126,23 @@
         background-color: rgba(50,50,50,.9);
     }
 
-    &.arrow-button {
-        top: 50%;
-        top: calc(50% - 30px);
-        width: 44px;
-        height: 60px;
+    &#next-button {
+        @extend %arrow-button;
+        right: 2%;
     }
-}
 
-#next-button {
-    @extend .arrow-button;
-    right: 2%;
-}
+    &#previous-button {
+        @extend %arrow-button;
+        left: 2%;
+    }
 
-#previous-button {
-    @extend .arrow-button;
-    left: 2%;
-}
-
-#close-button {
-    top: 20px;
-    right: 2%;
-    right: calc(2% + 6px);
-    width: 30px;
-    height: 30px;
+    &#close-button {
+        top: 20px;
+        right: 2%;
+        right: calc(2% + 6px);
+        width: 30px;
+        height: 30px;
+    }
 }
 
 /*

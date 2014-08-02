@@ -22,7 +22,7 @@ var baguetteBox = (function() {
             'X</g></svg>';
     var overlayID = 'baguetteBox-overlay';
     var sliderID = 'baguetteBox-slider';
-    // Global options and their defaults objects
+    // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
         buttons: 'auto',
@@ -45,6 +45,7 @@ var baguetteBox = (function() {
     // Array containing temporary images DOM elements
     var imagesArray = [];
 
+    // forEach polyfill for IE8
     if(!Array.prototype.forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
             var len = this.length;
@@ -54,6 +55,7 @@ var baguetteBox = (function() {
         };
     }
 
+    // Script entry point
     function run(selector, userOptions) {
         buildOverlay();
         // For each gallery bind a click event to every image inside it
@@ -143,6 +145,7 @@ var baguetteBox = (function() {
         });
         // Add touch events
         bind(overlay, 'touchstart', function(event) {
+            // Save x axis position
             touchStartX = event.changedTouches[0].pageX;
         });
         bind(overlay, 'touchmove', function(event) {
@@ -180,9 +183,11 @@ var baguetteBox = (function() {
     }
 
     function prepareOverlay(galleryIndex) {
+        // If the same gallery is being opened prevent from loading it once again
         if(currentGallery === galleryIndex)
             return;
         currentGallery = galleryIndex;
+        // Update gallery specific options
         setOptions(imagesMap[galleryIndex].options);
         // Empty slider of previous contents
         while(slider.firstChild) {
@@ -206,16 +211,16 @@ var baguetteBox = (function() {
         }
         /* Apply new options */
         // Change transition for proper animation
-        if(options.animation === 'fadeIn')
-            slider.style.transition = 'opacity .4s ease';
-        else
-            slider.style.transition = '';
-        // Hide or display buttons
+        slider.style.transition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
+        slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
+        // Hide buttons if necessary
         if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
+        // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = options.buttons ? '' : 'none';
     }
 
+    // Return DOM element for image container <div class="full-image">...</div>
     function returnImageContainer() {
         var fullImage = document.createElement('div');
         fullImage.className = 'full-image';
@@ -265,7 +270,7 @@ var baguetteBox = (function() {
                 callback();
             return;
         }
-        // Get element reference and optional caption
+        // Get element reference, optional caption and source path
         imageElement = imagesMap[currentGallery][index];
         imageCaption = imageElement.getAttribute('data-caption');
         imageSrc = getImageSrc(imageElement);
@@ -274,6 +279,7 @@ var baguetteBox = (function() {
         var image = document.createElement('img');
         var figcaption = document.createElement('figcaption');
         imageContainer.appendChild(figure);
+        // Set callback function when image loads
         image.onload = function() {
             // Remove loader element
             var spinner = this.parentNode.querySelector('.spinner');
@@ -299,19 +305,25 @@ var baguetteBox = (function() {
     }
 
     function getImageSrc(image) {
+        // Set dafult image path from href
         var result = imageElement.getAttribute('href');
+        // If dataset is supported find the most suitable image
         if(image.dataset) {
             var srcs = [];
+            // Get all possible image versions depending on the resolution 
             for(var item in image.dataset) {
                 if(item.substring(0, 3) === 'at-')
                     srcs[item.replace('at-', '')] = image.dataset[item];
             }
+            // Sort resolutions ascending
             keys = Object.keys(srcs).sort(function(a, b) {
                 return parseInt(a) < parseInt(b) ? -1 : 1;
             });
+            // Get real screen resolution 
             var width = window.innerWidth * window.devicePixelRatio;
+            // Find first image bigger than the current width
             for(var i = 0; i < keys.length; i++) {
-                if(keys[i] > width) {
+                if(keys[i] >= width) {
                     result = srcs[keys[i]];    
                     break;
                 }
