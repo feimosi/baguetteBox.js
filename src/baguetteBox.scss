@@ -78,7 +78,7 @@
     height: 100%;
     width: 100%;
     white-space: nowrap;
-    transition: left .4s ease;
+    transition: left .4s ease, transform .4s ease;
 
     &.bounce-from-right {
         animation: bounceFromRight .4s ease-out;
