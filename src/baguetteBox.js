@@ -79,6 +79,7 @@ var baguetteBox = (function() {
                 );
             }
         );
+        defaults.transforms = testTransformsSupport();
     }
 
     function buildOverlay() {
@@ -360,15 +361,27 @@ var baguetteBox = (function() {
     }
 
     function updateOffset() {
+        var offset = -currentIndex * 100 + '%';
         if(options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
-                slider.style.left = -currentIndex * 100 + '%';
+                options.transforms ?
+                    slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
+                    : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
-            slider.style.left = -currentIndex * 100 + '%';
+            options.transforms ?
+                slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
+                : slider.style.left = offset;
         }
+    }
+
+    function testTransformsSupport() {
+        var div = document.createElement('div'),
+            support = false;
+        support = typeof div.style.perspective !== 'undefined' || typeof div.style.webkitPerspective !== 'undefined';
+        return support;
     }
 
     function preloadNext(index) {
