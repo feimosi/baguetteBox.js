@@ -232,17 +232,14 @@ var baguetteBox = (function() {
         // Return if overlay is already visible
         if(overlay.style.display === 'block')
             return;
-        // Show proper image and set current index to a new value
-        overlay.style.display = 'block';
+        // Set current index to a new value and show proper image
         currentIndex = index;
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
-        // Prevent IE bug when updating offset and fading in overlay, when diplay: 'none' - transition is not fired
-        slider.style.display = 'none';
         updateOffset();
-        slider.style.display = '';
+        overlay.style.display = 'block';
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
