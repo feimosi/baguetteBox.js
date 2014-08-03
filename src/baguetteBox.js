@@ -362,12 +362,14 @@ var baguetteBox = (function() {
         if(options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
+                /*jshint -W030 */
                 options.transforms ?
                     slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                     : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
+            /*jshint -W030 */
             options.transforms ?
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
