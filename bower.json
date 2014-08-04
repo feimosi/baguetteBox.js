@@ -23,6 +23,9 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "src/index.html",
+    "build/index.html",
+    "build/img/*"
   ]
 }
