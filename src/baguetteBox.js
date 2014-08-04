@@ -6,7 +6,7 @@
  */
 
 var baguetteBox = (function() {
-    // Buttons SVG shapes
+    // SVG shapes used in buttons
     var leftArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round">&lt;</polyline>' +
@@ -20,6 +20,7 @@ var baguetteBox = (function() {
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             'X</g></svg>';
+    // Main ID names
     var overlayID = 'baguetteBox-overlay';
     var sliderID = 'baguetteBox-slider';
     // Global options and their defaults
@@ -32,13 +33,13 @@ var baguetteBox = (function() {
     };
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
-    // Image index inside the slider and currently displayed gallery
+    // Current image index inside the slider and displayed gallery index
     var currentIndex = 0, currentGallery = -1;
     // Touch event start position (for slide gesture)
     var touchStartX;
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
-    // Array of all used galleries DOM elements
+    // Array of all used galleries (DOM elements)
     var galleries = [];
     // 2D array of galleries and images inside them
     var imagesMap = [];
@@ -94,28 +95,27 @@ var baguetteBox = (function() {
         }
         // Create overlay element
         overlay = document.createElement('div');
-        overlay = document.getElementsByTagName('body')[0].appendChild(overlay);
         overlay.id = overlayID;
+        document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
         slider = document.createElement('div');
-        slider = overlay.appendChild(slider);
         slider.id = sliderID;
-        slider.style.left = '0%';
+        overlay.appendChild(slider);
         // Create all necessary buttons
         previousButton = document.createElement('button');
         previousButton.id = 'previous-button';
         previousButton.innerHTML = leftArrow;
-        previousButton = overlay.appendChild(previousButton);
+        overlay.appendChild(previousButton);
 
         nextButton = document.createElement('button');
         nextButton.id = 'next-button';
         nextButton.innerHTML = rightArrow;
-        nextButton = overlay.appendChild(nextButton);
+        overlay.appendChild(nextButton);
 
         closeButton = document.createElement('button');
         closeButton.id = 'close-button';
         closeButton.innerHTML = closeX;
-        closeButton = overlay.appendChild(closeButton);
+        overlay.appendChild(closeButton);
 
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
 
@@ -158,8 +158,7 @@ var baguetteBox = (function() {
             if(touch.pageX - touchStartX > 40) {
                 touchFlag = true;
                 showPreviousImage();
-            }
-            else if (touch.pageX - touchStartX < -40) {
+            } else if (touch.pageX - touchStartX < -40) {
                 touchFlag = true;
                 showNextImage();
             }
@@ -190,10 +189,9 @@ var baguetteBox = (function() {
         currentGallery = galleryIndex;
         // Update gallery specific options
         setOptions(imagesMap[galleryIndex].options);
-        // Empty slider of previous contents
-        while(slider.firstChild) {
+        // Empty slider of previous contents (more effective than .innerHTML = "")
+        while(slider.firstChild)
             slider.removeChild(slider.firstChild);
-        }
         imagesArray.length = 0;
         // Prepare and append images containers
         for(var i = 0; i < imagesMap[galleryIndex].length; i++) {
@@ -212,8 +210,7 @@ var baguetteBox = (function() {
         }
         /* Apply new options */
         // Change transition for proper animation
-        slider.style.transition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
-        slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
+        slider.style.transition = slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
         // Hide buttons if necessary
         if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
@@ -319,7 +316,7 @@ var baguetteBox = (function() {
             });
             // Get real screen resolution 
             var width = window.innerWidth * window.devicePixelRatio;
-            // Find first image bigger than the current width
+            // Find first image bigger than or equal to the current width
             for(var i = 0; i < keys.length; i++) {
                 if(keys[i] >= width) {
                     result = srcs[keys[i]];    
