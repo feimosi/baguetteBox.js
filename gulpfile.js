@@ -80,14 +80,14 @@ gulp.task('html', function() {
 
 // Bump to a new version
 gulp.task('bump-minor', function () {
-  return gulp.src('./package.json')
+  return gulp.src(['./bower.json', './package.json'])
     .pipe(plugins.bump({type:'minor'}))
     .pipe(gulp.dest('./'));
 });
 
 // Bump to a new version
 gulp.task('bump-patch', function () {
-  return gulp.src('./package.json')
+  return gulp.src(['./bower.json', './package.json'])
     .pipe(plugins.bump({type:'patch'}))
     .pipe(gulp.dest('./'));
 });
