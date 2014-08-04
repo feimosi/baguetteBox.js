@@ -17,7 +17,7 @@ Simple and easy to use lightbox script.
 * SVG buttons, no extra files to download
 * Around 2KB gzipped
 
-## Instalation
+## Installation
 
 ### Bower
 
@@ -70,7 +70,7 @@ If you have 1366x768 resolution it'll choose `"img/medium/2-1.jpg"`. If, however
 
 ## Customization
 
-You can pass as a second paramater an object with custom options. The following are available with corresponding defaults:
+You can pass as a second parameter an object with custom options. The following are available with corresponding defaults:
 ```javascript
 {
   captions: true,       // true|false - Display image captions
