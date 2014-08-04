@@ -15,9 +15,15 @@ Simple and easy to use lightbox script.
 * Responsive images
 * CSS3 transitions
 * SVG buttons, no extra files to download
-* Around 1.9KB gzipped
+* Around 2KB gzipped
 
-## Usage
+## Instalation
+
+### Bower
+
+`bower install baguettebox.js`
+
+### Manually
 
 1. Download `baguetteBox.min.css` and `baguetteBox.min.js` files from `dist` folder.
 2. Include them somewhere in you document:
@@ -26,14 +32,15 @@ Simple and easy to use lightbox script.
   	<script src="js/baguetteBox.min.js" async></script>
   ```
 
-3. Initialize the script by running:
+## Usage
+
+Initialize the script by running:
   ```js
     baguetteBox.run('.gallery', {
       // Custom options
     });
   ```
-  where the first argument is a selector to a gallery containing `a` tags. The HTML code may look like this:
-
+where the first argument is a selector to a gallery (or galleries) containing `a` tags. The HTML code may look like this:
   ```html
   	<div class="gallery">
   		<a href="img/2-1.jpg" data-caption="Additional image caption"><img src="img/thumbs/2-1.jpg"></a>
@@ -41,8 +48,8 @@ Simple and easy to use lightbox script.
       ...
   	</div>
   ```
-  
-4. To use captions, put `data-caption` attribute on `a` tag.
+
+To use captions put `title` or `data-caption` attribute on `a` tag.
 
 ## Responsive images
 
