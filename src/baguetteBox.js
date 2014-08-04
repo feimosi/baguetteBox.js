@@ -274,6 +274,11 @@ var baguetteBox = (function() {
         var image = document.createElement('img');
         var figcaption = document.createElement('figcaption');
         imageContainer.appendChild(figure);
+        // Add loader element
+        figure.innerHTML = '<div class="spinner">' +
+            '<div class="double-bounce1"></div>' +
+            '<div class="double-bounce2"></div>' +
+            '</div>';
         // Set callback function when image loads
         image.onload = function() {
             // Remove loader element
@@ -283,11 +288,6 @@ var baguetteBox = (function() {
                 callback();
         };
         image.setAttribute('src', imageSrc);
-        // Add loader element
-        figure.innerHTML = '<div class="spinner">' +
-            '<div class="double-bounce1"></div>' +
-            '<div class="double-bounce2"></div>' +
-            '</div>';
         figure.appendChild(image);
         // Insert caption if available
         if(options.captions && imageCaption) {
