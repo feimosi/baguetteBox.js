@@ -270,7 +270,7 @@ var baguetteBox = (function() {
         }
         // Get element reference, optional caption and source path
         imageElement = imagesMap[currentGallery][index];
-        imageCaption = imageElement.getAttribute('data-caption');
+        imageCaption = imageElement.getAttribute('data-caption') || imageElement.title;
         imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = document.createElement('figure');
