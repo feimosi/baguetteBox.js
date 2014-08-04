@@ -1,12 +1,12 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 0.6.0
+ * @version 0.7.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
 var baguetteBox = (function() {
-    // Buttons SVG shapes
+    // SVG shapes used in buttons
     var leftArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round">&lt;</polyline>' +
@@ -20,6 +20,7 @@ var baguetteBox = (function() {
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             'X</g></svg>';
+    // Main ID names
     var overlayID = 'baguetteBox-overlay';
     var sliderID = 'baguetteBox-slider';
     // Global options and their defaults
@@ -32,13 +33,13 @@ var baguetteBox = (function() {
     };
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
-    // Image index inside the slider and currently displayed gallery
+    // Current image index inside the slider and displayed gallery index
     var currentIndex = 0, currentGallery = -1;
     // Touch event start position (for slide gesture)
     var touchStartX;
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
-    // Array of all used galleries DOM elements
+    // Array of all used galleries (DOM elements)
     var galleries = [];
     // 2D array of galleries and images inside them
     var imagesMap = [];
@@ -79,6 +80,7 @@ var baguetteBox = (function() {
                 );
             }
         );
+        defaults.transforms = testTransformsSupport();
     }
 
     function buildOverlay() {
@@ -93,28 +95,27 @@ var baguetteBox = (function() {
         }
         // Create overlay element
         overlay = document.createElement('div');
-        overlay = document.getElementsByTagName('body')[0].appendChild(overlay);
         overlay.id = overlayID;
+        document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
         slider = document.createElement('div');
-        slider = overlay.appendChild(slider);
         slider.id = sliderID;
-        slider.style.left = '0%';
+        overlay.appendChild(slider);
         // Create all necessary buttons
         previousButton = document.createElement('button');
         previousButton.id = 'previous-button';
         previousButton.innerHTML = leftArrow;
-        previousButton = overlay.appendChild(previousButton);
+        overlay.appendChild(previousButton);
 
         nextButton = document.createElement('button');
         nextButton.id = 'next-button';
         nextButton.innerHTML = rightArrow;
-        nextButton = overlay.appendChild(nextButton);
+        overlay.appendChild(nextButton);
 
         closeButton = document.createElement('button');
         closeButton.id = 'close-button';
         closeButton.innerHTML = closeX;
-        closeButton = overlay.appendChild(closeButton);
+        overlay.appendChild(closeButton);
 
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
 
@@ -157,8 +158,7 @@ var baguetteBox = (function() {
             if(touch.pageX - touchStartX > 40) {
                 touchFlag = true;
                 showPreviousImage();
-            }
-            else if (touch.pageX - touchStartX < -40) {
+            } else if (touch.pageX - touchStartX < -40) {
                 touchFlag = true;
                 showNextImage();
             }
@@ -189,10 +189,9 @@ var baguetteBox = (function() {
         currentGallery = galleryIndex;
         // Update gallery specific options
         setOptions(imagesMap[galleryIndex].options);
-        // Empty slider of previous contents
-        while(slider.firstChild) {
+        // Empty slider of previous contents (more effective than .innerHTML = "")
+        while(slider.firstChild)
             slider.removeChild(slider.firstChild);
-        }
         imagesArray.length = 0;
         // Prepare and append images containers
         for(var i = 0; i < imagesMap[galleryIndex].length; i++) {
@@ -211,8 +210,7 @@ var baguetteBox = (function() {
         }
         /* Apply new options */
         // Change transition for proper animation
-        slider.style.transition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
-        slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
+        slider.style.transition = slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
         // Hide buttons if necessary
         if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
@@ -231,17 +229,14 @@ var baguetteBox = (function() {
         // Return if overlay is already visible
         if(overlay.style.display === 'block')
             return;
-        // Show proper image and set current index to a new value
-        overlay.style.display = 'block';
+        // Set current index to a new value and show proper image
         currentIndex = index;
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
-        // Prevent IE bug when updating offset and fading in overlay, when diplay: 'none' - transition is not fired
-        slider.style.display = 'none';
         updateOffset();
-        slider.style.display = '';
+        overlay.style.display = 'block';
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
@@ -272,13 +267,18 @@ var baguetteBox = (function() {
         }
         // Get element reference, optional caption and source path
         imageElement = imagesMap[currentGallery][index];
-        imageCaption = imageElement.getAttribute('data-caption');
+        imageCaption = imageElement.getAttribute('data-caption') || imageElement.title;
         imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = document.createElement('figure');
         var image = document.createElement('img');
         var figcaption = document.createElement('figcaption');
         imageContainer.appendChild(figure);
+        // Add loader element
+        figure.innerHTML = '<div class="spinner">' +
+            '<div class="double-bounce1"></div>' +
+            '<div class="double-bounce2"></div>' +
+            '</div>';
         // Set callback function when image loads
         image.onload = function() {
             // Remove loader element
@@ -288,11 +288,6 @@ var baguetteBox = (function() {
                 callback();
         };
         image.setAttribute('src', imageSrc);
-        // Add loader element
-        figure.innerHTML = '<div class="spinner">' +
-            '<div class="double-bounce1"></div>' +
-            '<div class="double-bounce2"></div>' +
-            '</div>';
         figure.appendChild(image);
         // Insert caption if available
         if(options.captions && imageCaption) {
@@ -312,7 +307,7 @@ var baguetteBox = (function() {
             var srcs = [];
             // Get all possible image versions depending on the resolution 
             for(var item in image.dataset) {
-                if(item.substring(0, 3) === 'at-')
+                if(item.substring(0, 3) === 'at-' && !isNaN(item.substring(3)))
                     srcs[item.replace('at-', '')] = image.dataset[item];
             }
             // Sort resolutions ascending
@@ -321,7 +316,7 @@ var baguetteBox = (function() {
             });
             // Get real screen resolution 
             var width = window.innerWidth * window.devicePixelRatio;
-            // Find first image bigger than the current width
+            // Find first image bigger than or equal to the current width
             for(var i = 0; i < keys.length; i++) {
                 if(keys[i] >= width) {
                     result = srcs[keys[i]];    
@@ -360,15 +355,29 @@ var baguetteBox = (function() {
     }
 
     function updateOffset() {
+        var offset = -currentIndex * 100 + '%';
         if(options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
-                slider.style.left = -currentIndex * 100 + '%';
+                /*jshint -W030 */
+                options.transforms ?
+                    slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
+                    : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
-            slider.style.left = -currentIndex * 100 + '%';
+            /*jshint -W030 */
+            options.transforms ?
+                slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
+                : slider.style.left = offset;
         }
+    }
+
+    function testTransformsSupport() {
+        var div = document.createElement('div'),
+            support = false;
+        support = typeof div.style.perspective !== 'undefined' || typeof div.style.webkitPerspective !== 'undefined';
+        return support;
     }
 
     function preloadNext(index) {
