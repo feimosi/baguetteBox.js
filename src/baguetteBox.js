@@ -310,7 +310,7 @@ var baguetteBox = (function() {
             var srcs = [];
             // Get all possible image versions depending on the resolution 
             for(var item in image.dataset) {
-                if(item.substring(0, 3) === 'at-')
+                if(item.substring(0, 3) === 'at-' && !isNaN(item.substring(3)))
                     srcs[item.replace('at-', '')] = image.dataset[item];
             }
             // Sort resolutions ascending
