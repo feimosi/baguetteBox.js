@@ -26,6 +26,6 @@
     "tests",
     "src/index.html",
     "build/index.html",
-    "build/img/*"
+    "build/img"
   ]
 }
