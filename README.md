@@ -28,26 +28,26 @@ Simple and easy to use lightbox script.
 1. Download `baguetteBox.min.css` and `baguetteBox.min.js` files from `dist` folder.
 2. Include them somewhere in you document:
   ```html
-  	<link rel="stylesheet" href="css/baguetteBox.min.css">
-  	<script src="js/baguetteBox.min.js" async></script>
+	<link rel="stylesheet" href="css/baguetteBox.min.css">
+	<script src="js/baguetteBox.min.js" async></script>
   ```
 
 ## Usage
 
 Initialize the script by running:
-  ```js
-    baguetteBox.run('.gallery', {
-      // Custom options
-    });
-  ```
+```js
+baguetteBox.run('.gallery', {
+  // Custom options
+});
+```
 where the first argument is a selector to a gallery (or galleries) containing `a` tags. The HTML code may look like this:
-  ```html
-  	<div class="gallery">
-  		<a href="img/2-1.jpg" data-caption="Additional image caption"><img src="img/thumbs/2-1.jpg"></a>
-  		<a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
-      ...
-  	</div>
-  ```
+```html
+<div class="gallery">
+	<a href="img/2-1.jpg" data-caption="Additional image caption"><img src="img/thumbs/2-1.jpg"></a>
+	<a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
+  ...
+</div>
+```
 
 To use captions put `title` or `data-caption` attribute on `a` tag.
 
