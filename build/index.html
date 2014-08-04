@@ -11,6 +11,7 @@ body {
     background-color: #666;
     color: #ddd;
     font-family: sans-serif;
+    margin: 0;
 }
 
 a, a:visited {
@@ -18,7 +19,7 @@ a, a:visited {
     text-decoration: none;
 }
 
-h1, h2, footer, .gallery {
+h1, h2, h3, footer, .gallery {
     text-align: center;
 }
 
@@ -30,6 +31,16 @@ pre {
     margin-bottom: 10px;
 }
 
+header, footer {
+    padding: .2em 0;
+    background: #555;
+    box-shadow: 0 0 8px #222;
+}
+
+footer {
+    margin-top: 1em;
+}
+
 .content {
     max-width: 1160px;
     margin: 0 auto;
@@ -37,6 +48,14 @@ pre {
 
 .gallery img {
     height: 200px;
+    transition: -webkit-filter .4s, filter .4s;
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0%);
+}
+
+.gallery img:hover {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
 }
 
 .gallery a {
@@ -45,20 +64,23 @@ pre {
     display: inline-block;
     overflow: hidden;
     margin: 4px;
-    border-radius: 4px;
+    box-shadow: 0 0 4px -1px #000;
 }
     </style>
 </head>
 <body>
+<header>
+    <h1>baguetteBox.js</h1>
+    <h3>Simple and easy to use lightbox script in pure JavaScript</h3>
+</header>
 <div class="content">
-    <h1>baguetteBox.js Demo</h1>
     <h2>Sample gallery</h2>
 <pre>
 baguetteBox.run('.baguetteBoxOne');
 </pre>
     <div class="baguetteBoxOne gallery">
         <a href="img/1-1.jpg" data-caption="Golden Gate Bridge"><img src="img/thumbs/1-1.jpg"></a>
-        <a href="img/1-2.jpg"><img src="img/thumbs/1-2.jpg"></a>
+        <a href="img/1-2.jpg" title="Midnight City"><img src="img/thumbs/1-2.jpg"></a>
         <a href="img/1-3.jpg"><img src="img/thumbs/1-3.jpg"></a>
         <a href="img/1-4.jpg"><img src="img/thumbs/1-4.jpg"></a>
         <a href="img/1-5.jpg"><img src="img/thumbs/1-5.jpg"></a>
@@ -104,10 +126,10 @@ baguetteBox.run('.baguetteBoxFour', {
 });
 </pre>
     <div class="baguetteBoxFour gallery">
-        <a href="img/thumbs/4-1.jpg" data-caption="Balloon trip"><img src="img/thumbs/4-1.jpg"></a>
-        <a href="img/thumbs/4-2.jpg" data-caption="Road to nowhere"><img src="img/thumbs/4-2.jpg"></a>
-        <a href="img/thumbs/4-3.jpg" data-caption="Misty landscape"><img src="img/thumbs/4-3.jpg"></a>
-        <a href="img/thumbs/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
+        <a href="img/small/4-1.jpg" data-caption="Balloon trip"><img src="img/thumbs/4-1.jpg"></a>
+        <a href="img/small/4-2.jpg" data-caption="Road to nowhere"><img src="img/thumbs/4-2.jpg"></a>
+        <a href="img/small/4-3.jpg" data-caption="Misty landscape"><img src="img/thumbs/4-3.jpg"></a>
+        <a href="img/small/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
     </div>
     <h2>Single image (buttons hidden by dafault)</h2>
 <pre>
@@ -116,11 +138,12 @@ baguetteBox.run('.baguetteBoxFive');
     <div class="baguetteBoxFive gallery">
         <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg"></a>
     </div>
-    <footer>
-        <p><a href="https://github.com/feimosi/baguetteBox.js">https://github.com/feimosi/baguetteBox.js</a></p>
-        <p>Images downloaded from: <a href="http://unsplash.com/">unsplash.com</a> and <a href="http://www.gratisography.com/">gratisography.com</a></p>
-    </footer>
 </div>
+<footer>
+    <p>Usage instructions and source code at:
+    <a href="https://github.com/feimosi/baguetteBox.js">https://github.com/feimosi/baguetteBox.js</a></p>
+    <p>Images downloaded from: <a href="http://unsplash.com/">unsplash.com</a> and <a href="http://www.gratisography.com/">gratisography.com</a></p>
+</footer>
     <script src="js/baguetteBox.js"></script>
     <script>
 window.onload = function() {

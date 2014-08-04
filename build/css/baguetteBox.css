@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 0.6.0
+ * @version 0.7.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -79,8 +79,9 @@
 	height: 100%;
 	width: 100%;
 	white-space: nowrap;
-	-webkit-transition: left 0.4s ease;
-	        transition: left 0.4s ease;
+	-webkit-transition: left 0.4s ease, -webkit-transform 0.4s ease;
+	        transition: left 0.4s ease, -moz-transform 0.4s ease;
+	        transition: left 0.4s ease, transform 0.4s ease;
 }
 
 #baguetteBox-slider.bounce-from-right {
