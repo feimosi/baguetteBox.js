@@ -7,19 +7,19 @@
 
 var baguetteBox = (function() {
     // SVG shapes used in buttons
-    var leftArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+    var leftArrow = '<svg width="44" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
-              'stroke-linecap="butt" fill="none" stroke-linejoin="round">&lt;</polyline>' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
             '</svg>',
-        rightArrow = '<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
-            '<polyline points="10 10 30 30 10 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
-              'stroke-linecap="butt" fill="none" stroke-linejoin="round">&gt;</polyline>' +
+        rightArrow = '<svg width="44" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+            '<polyline points="14 10 34 30 14 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
             '</svg>',
         closeX = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
             '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
-            'X</g></svg>';
+            '</g></svg>';
     // Main ID names
     var overlayID = 'baguetteBox-overlay';
     var sliderID = 'baguetteBox-slider';
@@ -31,6 +31,8 @@ var baguetteBox = (function() {
         preload: 2,
         animation: 'slideIn'
     };
+    // Object containing compatibility information
+    var supports = {};
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
     // Current image index inside the slider and displayed gallery index
@@ -58,6 +60,8 @@ var baguetteBox = (function() {
 
     // Script entry point
     function run(selector, userOptions) {
+        supports.transforms = testTransformsSupport();
+        supports.svg = testSVGSupport();
         buildOverlay();
         // For each gallery bind a click event to every image inside it
         galleries = document.querySelectorAll(selector);
@@ -80,7 +84,6 @@ var baguetteBox = (function() {
                 );
             }
         );
-        defaults.transforms = testTransformsSupport();
     }
 
     function buildOverlay() {
@@ -104,17 +107,17 @@ var baguetteBox = (function() {
         // Create all necessary buttons
         previousButton = document.createElement('button');
         previousButton.id = 'previous-button';
-        previousButton.innerHTML = leftArrow;
+        previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
         overlay.appendChild(previousButton);
 
         nextButton = document.createElement('button');
         nextButton.id = 'next-button';
-        nextButton.innerHTML = rightArrow;
+        nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
         overlay.appendChild(nextButton);
 
         closeButton = document.createElement('button');
         closeButton.id = 'close-button';
-        closeButton.innerHTML = closeX;
+        closeButton.innerHTML = supports.svg ? closeX : 'X';
         overlay.appendChild(closeButton);
 
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
@@ -360,24 +363,30 @@ var baguetteBox = (function() {
             slider.style.opacity = 0;
             setTimeout(function() {
                 /*jshint -W030 */
-                options.transforms ?
+                supports.transforms ?
                     slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                     : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
             /*jshint -W030 */
-            options.transforms ?
+            supports.transforms ?
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
         }
     }
 
+    // CSS 3D Transforms test
     function testTransformsSupport() {
-        var div = document.createElement('div'),
-            support = false;
-        support = typeof div.style.perspective !== 'undefined' || typeof div.style.webkitPerspective !== 'undefined';
-        return support;
+        var div = document.createElement('div');
+        return typeof div.style.perspective !== 'undefined' || typeof div.style.webkitPerspective !== 'undefined';
+    }
+
+    // Inline SVG test
+    function testSVGSupport() {
+        var div = document.createElement('div');
+        div.innerHTML = '<svg/>';
+        return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
     }
 
     function preloadNext(index) {
