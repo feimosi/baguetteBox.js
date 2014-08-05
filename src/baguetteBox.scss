@@ -143,6 +143,13 @@
         width: 30px;
         height: 30px;
     }
+
+    // Firefox fix
+    svg {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 }
 
 /*
