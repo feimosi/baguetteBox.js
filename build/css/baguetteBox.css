@@ -139,6 +139,12 @@
 	height: 30px;
 }
 
+.baguetteBox-button svg {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
 /*
     Preloader
     Borrowed from http://tobiasahlin.com/spinkit/
