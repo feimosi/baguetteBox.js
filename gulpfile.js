@@ -3,8 +3,7 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync');
 var src = {
         css: ['./src/*.scss', './src/*.css'],
-        js: './src/*.js',
-        html: './src/*.html'
+        js: './src/*.js'
     },
     build = {
         css: './build/css/',
@@ -72,12 +71,6 @@ gulp.task('js-min', function() {
         .pipe(gulp.dest(dist.js));
 });
 
-// HTML tasks
-gulp.task('html', function() {
-    return gulp.src(src.html).
-        pipe(gulp.dest(build.html));
-});
-
 // Bump to a new version
 gulp.task('bump-minor', function () {
   return gulp.src(['./bower.json', './package.json'])
@@ -98,12 +91,10 @@ gulp.task('watch', ['browser-sync'], function() {
     gulp.watch(src.css, ['css']);
     // Watch JS files
     gulp.watch(src.js, ['js']);
-    // Watch HTML files
-    gulp.watch(src.html, ['html']);
 });
 
 // Live browser reload
-gulp.task('browser-sync', ['js', 'css', 'html'], function () {
+gulp.task('browser-sync', ['js', 'css'], function () {
    var files = [
       build.html + '*.html',
       build.css + '*.css',
@@ -118,8 +109,8 @@ gulp.task('browser-sync', ['js', 'css', 'html'], function () {
 });
 
 // Default task
-gulp.task('default', ['css', 'js', 'html', 'watch', 'browser-sync']);
+gulp.task('default', ['css', 'js', 'watch', 'browser-sync']);
 
-gulp.task('release', ['css-min', 'js-min', 'html', 'bump-minor']);
+gulp.task('release', ['css-min', 'js-min', 'bump-minor']);
 
-gulp.task('patch', ['css-min', 'js-min', 'html', 'bump-patch']);
+gulp.task('patch', ['css-min', 'js-min', 'bump-patch']);
