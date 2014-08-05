@@ -10,7 +10,7 @@
 body {
     background-color: #666;
     color: #ddd;
-    font-family: sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     margin: 0;
 }
 
@@ -24,14 +24,14 @@ h1, h2, h3, footer, .gallery {
 }
 
 pre {
-    width: 300px;
+    width: 310px;
     margin: 0 auto;
     border: dashed 1px #aaa;
-    padding: 12px;
     margin-bottom: 10px;
 }
 
 header, footer {
+    display: block;
     padding: .2em 0;
     background: #555;
     box-shadow: 0 0 8px #222;
@@ -47,17 +47,20 @@ footer {
 }
 
 .gallery img {
-    height: 200px;
+    height: 100%;
 }
 
 .gallery a {
     width: 250px;
-    height: 200px;
+    height: 180px;
     display: inline-block;
     overflow: hidden;
     margin: 4px;
     box-shadow: 0 0 4px -1px #000;
 }
+
+/* Highlight.js Tomorrow Night style */
+.hljs-comment{color:#969896}.hljs-tag{color:#f8f8f2}.css .hljs-class,.css .hljs-id,.css .hljs-pseudo,.hljs-attribute,.hljs-regexp,.hljs-title,.hljs-variable,.html .hljs-doctype,.ruby .hljs-constant,.xml .hljs-doctype,.xml .hljs-pi,.xml .hljs-tag .hljs-title{color:#c66}.hljs-built_in,.hljs-constant,.hljs-literal,.hljs-number,.hljs-params,.hljs-pragma,.hljs-preprocessor{color:#de935f}.css .hljs-rules .hljs-attribute,.ruby .hljs-class .hljs-title{color:#f0c674}.hljs-header,.hljs-inheritance,.hljs-string,.hljs-value,.ruby .hljs-symbol,.xml .hljs-cdata{color:#b5bd68}.css .hljs-hexcolor{color:#8abeb7}.coffeescript .hljs-title,.hljs-function,.javascript .hljs-title,.perl .hljs-sub,.python .hljs-decorator,.python .hljs-title,.ruby .hljs-function .hljs-title,.ruby .hljs-title .hljs-keyword{color:#81a2be}.hljs-keyword,.javascript .hljs-function{color:#b294bb}.hljs{display:block;overflow-x:auto;background:#35383C;color:#c5c8c6;padding:.8em}.coffeescript .javascript,.javascript .xml,.tex .hljs-formula,.xml .css,.xml .hljs-cdata,.xml .javascript,.xml .vbscript{opacity:.5}
     </style>
 </head>
 <body>
@@ -67,9 +70,7 @@ footer {
 </header>
 <div class="content">
     <h2>Sample gallery</h2>
-<pre>
-baguetteBox.run('.baguetteBoxOne');
-</pre>
+<pre><code class="js">baguetteBox.run('.baguetteBoxOne');</code></pre>
     <div class="baguetteBoxOne gallery">
         <a href="img/1-1.jpg" data-caption="Golden Gate Bridge"><img src="img/thumbs/1-1.jpg"></a>
         <a href="img/1-2.jpg" title="Midnight City"><img src="img/thumbs/1-2.jpg"></a>
@@ -81,18 +82,14 @@ baguetteBox.run('.baguetteBoxOne');
         <a href="img/1-8.jpg"><img src="img/thumbs/1-8.jpg"></a>
     </div>
     <h2>Responsive images</h2>
-<pre>
-baguetteBox.run('.baguetteBoxTwo');
-</pre>
-<pre>
-&lt;a href=&quot;img/2-1.jpg&quot; 
-  data-at-450=&quot;img/thumbs/2-1.jpg&quot; 
-  data-at-800=&quot;img/small/2-1.jpg&quot; 
-  data-at-1366=&quot;img/medium/2-1.jpg&quot; 
-  data-at-1920=&quot;img/big/2-1.jpg&quot;&gt;
-    &lt;img src=&quot;img/thumbs/2-1.jpg&quot;&gt;
-&lt;/a&gt;
-</pre>
+<pre><code class="js">baguetteBox.run('.baguetteBoxTwo');</code></pre>
+<pre><code class="html">&lt;a href=&quot;img/2-1.jpg&quot; 
+    data-at-450=&quot;img/thumbs/2-1.jpg&quot; 
+    data-at-800=&quot;img/small/2-1.jpg&quot; 
+    data-at-1366=&quot;img/medium/2-1.jpg&quot; 
+    data-at-1920=&quot;img/big/2-1.jpg&quot;&gt;
+        &lt;img src=&quot;img/thumbs/2-1.jpg&quot;&gt;
+&lt;/a&gt;</code></pre>
     <div class="baguetteBoxTwo gallery">
         <a href="img/2-1.jpg" data-at-450="img/thumbs/2-1.jpg" data-at-800="img/small/2-1.jpg" data-at-1366="img/medium/2-1.jpg" data-at-1920="img/big/2-1.jpg"><img src="img/thumbs/2-1.jpg"></a>
         <a href="img/2-2.jpg" data-at-450="img/thumbs/2-2.jpg" data-at-800="img/small/2-2.jpg" data-at-1366="img/medium/2-2.jpg" data-at-1920="img/big/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
@@ -100,11 +97,9 @@ baguetteBox.run('.baguetteBoxTwo');
         <a href="img/2-4.jpg" data-at-450="img/thumbs/2-4.jpg" data-at-800="img/small/2-4.jpg" data-at-1366="img/medium/2-4.jpg" data-at-1920="img/big/2-4.jpg"><img src="img/thumbs/2-4.jpg"></a>
     </div>
     <h2>FadeIn animataion</h2>
-<pre>
-baguetteBox.run('.baguetteBoxThree', {
+<pre><code class="js">baguetteBox.run('.baguetteBoxThree', {
     animation: 'fadeIn',
-});
-</pre>
+});</code></pre>
     <div class="baguetteBoxThree gallery">
         <a href="img/3-1.jpg"><img src="img/thumbs/3-1.jpg"></a>
         <a href="img/3-2.jpg"><img src="img/thumbs/3-2.jpg"></a>
@@ -112,11 +107,9 @@ baguetteBox.run('.baguetteBoxThree', {
         <a href="img/3-4.jpg"><img src="img/thumbs/3-4.jpg"></a>
     </div>
     <h2>Small images, buttons disabled (use arrows or swipe gesture)</h2>
-<pre>
-baguetteBox.run('.baguetteBoxFour', {
+<pre><code class="js">baguetteBox.run('.baguetteBoxFour', {
     buttons: false
-});
-</pre>
+});</code></pre>
     <div class="baguetteBoxFour gallery">
         <a href="img/small/4-1.jpg" data-caption="Balloon trip"><img src="img/thumbs/4-1.jpg"></a>
         <a href="img/small/4-2.jpg" data-caption="Road to nowhere"><img src="img/thumbs/4-2.jpg"></a>
@@ -124,9 +117,7 @@ baguetteBox.run('.baguetteBoxFour', {
         <a href="img/small/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
     </div>
     <h2>Single image (buttons hidden by dafault)</h2>
-<pre>
-baguetteBox.run('.baguetteBoxFive');
-</pre>
+<pre><code class="js">baguetteBox.run('.baguetteBoxFive');</code></pre>
     <div class="baguetteBoxFive gallery">
         <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg"></a>
     </div>
@@ -136,9 +127,11 @@ baguetteBox.run('.baguetteBoxFive');
     <a href="https://github.com/feimosi/baguetteBox.js">https://github.com/feimosi/baguetteBox.js</a></p>
     <p>Images downloaded from: <a href="http://unsplash.com/">unsplash.com</a> and <a href="http://www.gratisography.com/">gratisography.com</a></p>
 </footer>
-    <script src="js/baguetteBox.js"></script>
+    <script src="js/baguetteBox.js" async></script>
+    <script src="js/plugins.js" async></script>
     <script>
 window.onload = function() {
+    hljs.initHighlighting();
     baguetteBox.run('.baguetteBoxOne');
     baguetteBox.run('.baguetteBoxTwo');
     baguetteBox.run('.baguetteBoxThree', {
