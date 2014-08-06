@@ -6,23 +6,20 @@
  */
 
 var baguetteBox = (function() {
-    // SVG shapes used in buttons
-    var leftArrow = '<svg width="44" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+    // SVG shapes used within the buttons
+    var leftArrow = '<svg width="44" height="60">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
             '</svg>',
-        rightArrow = '<svg width="44" height="60" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+        rightArrow = '<svg width="44" height="60">' +
             '<polyline points="14 10 34 30 14 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
             '</svg>',
-        closeX = '<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" version="1.1">' +
+        closeX = '<svg width="30" height="30">' +
             '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             '</g></svg>';
-    // Main ID names
-    var overlayID = 'baguetteBox-overlay';
-    var sliderID = 'baguetteBox-slider';
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
@@ -31,7 +28,7 @@ var baguetteBox = (function() {
         preload: 2,
         animation: 'slideIn'
     };
-    // Object containing compatibility information
+    // Object containing information about features compatibility
     var supports = {};
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
@@ -46,31 +43,34 @@ var baguetteBox = (function() {
     // 2D array of galleries and images inside them
     var imagesMap = [];
     // Array containing temporary images DOM elements
-    var imagesArray = [];
+    var imagesElements = [];
 
     // forEach polyfill for IE8
     if(!Array.prototype.forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
-            var len = this.length;
-            for(var i = 0; i < len; i++) {
+            for(var i = 0; i < this.length; i++)
                 callback.call(thisArg, this[i], i, this);
-            }
         };
     }
 
     // Script entry point
     function run(selector, userOptions) {
+        // Fill supports object
         supports.transforms = testTransformsSupport();
         supports.svg = testSVGSupport();
+
         buildOverlay();
+
         // For each gallery bind a click event to every image inside it
         galleries = document.querySelectorAll(selector);
         [].forEach.call(
             galleries,
             function (galleryElement, galleryIndex) {
+                // Get all gallery images and save them in imagesMap with custom options
                 var galleryID = imagesMap.length;
                 imagesMap.push(galleryElement.getElementsByTagName('a'));
                 imagesMap[galleryID].options = userOptions;
+
                 [].forEach.call(
                     imagesMap[galleryID],
                     function (imageElement, imageIndex) {
@@ -87,10 +87,10 @@ var baguetteBox = (function() {
     }
 
     function buildOverlay() {
-        overlay = document.getElementById(overlayID);
+        overlay = document.getElementById('baguetteBox-overlay');
         // Check if the overlay already exists
         if(overlay) {
-            slider = document.getElementById(sliderID);
+            slider = document.getElementById('baguetteBox-slider');
             previousButton = document.getElementById('previous-button');
             nextButton = document.getElementById('next-button');
             closeButton = document.getElementById('close-button');
@@ -98,11 +98,11 @@ var baguetteBox = (function() {
         }
         // Create overlay element
         overlay = document.createElement('div');
-        overlay.id = overlayID;
+        overlay.id = 'baguetteBox-overlay';
         document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
         slider = document.createElement('div');
-        slider.id = sliderID;
+        slider.id = 'baguetteBox-slider';
         overlay.appendChild(slider);
         // Create all necessary buttons
         previousButton = document.createElement('button');
@@ -158,6 +158,7 @@ var baguetteBox = (function() {
             /*jshint -W030 */
             event.preventDefault ? event.preventDefault() : event.returnValue = false;
             touch = event.touches[0] || event.changedTouches[0];
+            // Move at least 40 pixels to trigger the action
             if(touch.pageX - touchStartX > 40) {
                 touchFlag = true;
                 showPreviousImage();
@@ -195,17 +196,20 @@ var baguetteBox = (function() {
         // Empty slider of previous contents (more effective than .innerHTML = "")
         while(slider.firstChild)
             slider.removeChild(slider.firstChild);
-        imagesArray.length = 0;
+        imagesElements.length = 0;
         // Prepare and append images containers
-        for(var i = 0; i < imagesMap[galleryIndex].length; i++) {
-            imagesArray.push(returnImageContainer());
-            slider.appendChild(imagesArray[i]);
+        for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
+            fullImage = document.createElement('div');
+            fullImage.className = 'full-image';
+            imagesElements.push(fullImage);
+            slider.appendChild(imagesElements[i]);
         }
     }
 
     function setOptions(newOptions) {
         if(!newOptions)
             newOptions = {};
+        // Fill options object
         for(var item in defaults) {
             options[item] = defaults[item];
             if(typeof newOptions[item] !== 'undefined')
@@ -213,31 +217,25 @@ var baguetteBox = (function() {
         }
         /* Apply new options */
         // Change transition for proper animation
-        slider.style.transition = slider.style.webkitTransition = options.animation === 'fadeIn' ? 'opacity .4s ease' : '';
+        slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' : '');
         // Hide buttons if necessary
         if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
         // Set buttons style to hide or display them
-        previousButton.style.display = nextButton.style.display = options.buttons ? '' : 'none';
-    }
-
-    // Return DOM element for image container <div class="full-image">...</div>
-    function returnImageContainer() {
-        var fullImage = document.createElement('div');
-        fullImage.className = 'full-image';
-        return fullImage;
+        previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
     }
 
     function showOverlay(index) {
         // Return if overlay is already visible
         if(overlay.style.display === 'block')
             return;
-        // Set current index to a new value and show proper image
+        // Set current index to a new value and load proper image
         currentIndex = index;
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
+
         updateOffset();
         overlay.style.display = 'block';
         // Fade in overlay
@@ -258,7 +256,7 @@ var baguetteBox = (function() {
     }
 
     function loadImage(index, callback) {
-        var imageContainer = imagesArray[index];
+        var imageContainer = imagesElements[index];
         // If index is invalid return
         if(typeof imageContainer === 'undefined')
             return;
@@ -308,7 +306,7 @@ var baguetteBox = (function() {
         // If dataset is supported find the most suitable image
         if(image.dataset) {
             var srcs = [];
-            // Get all possible image versions depending on the resolution 
+            // Get all possible image versions depending on the resolution
             for(var item in image.dataset) {
                 if(item.substring(0, 3) === 'at-' && !isNaN(item.substring(3)))
                     srcs[item.replace('at-', '')] = image.dataset[item];
@@ -317,22 +315,20 @@ var baguetteBox = (function() {
             keys = Object.keys(srcs).sort(function(a, b) {
                 return parseInt(a) < parseInt(b) ? -1 : 1;
             });
-            // Get real screen resolution 
+            // Get real screen resolution
             var width = window.innerWidth * window.devicePixelRatio;
-            // Find first image bigger than or equal to the current width
-            for(var i = 0; i < keys.length; i++) {
-                if(keys[i] >= width) {
-                    result = srcs[keys[i]];    
-                    break;
-                }
-                result = srcs[keys[i]];
-            }
+            // Find the first image bigger than or equal to the current width
+            var i = 0;
+            while(i < keys.length - 1 && keys[i] < width)
+                i++;
+            result = srcs[keys[i]] || result;
         }
         return result;
     }
 
     function showNextImage() {
-        if(currentIndex <= imagesArray.length - 2) {
+        // Check if next image exists
+        if(currentIndex <= imagesElements.length - 2) {
             currentIndex++;
             updateOffset();
             preloadNext(currentIndex);
@@ -345,6 +341,7 @@ var baguetteBox = (function() {
     }
 
     function showPreviousImage() {
+        // Check if previous image exists
         if(currentIndex >= 1) {
             currentIndex--;
             updateOffset();
@@ -404,7 +401,7 @@ var baguetteBox = (function() {
     function bind(element, event, callback) {
         if(element.addEventListener)
             element.addEventListener(event, callback, false);
-        else
+        else // IE8 fallback
             element.attachEvent('on' + event, callback);
     }
 
