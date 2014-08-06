@@ -5,11 +5,13 @@ Simple and easy to use lightbox script.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
 
+![Demo Page screenshot](http://i.imgur.com/uLSDpuW.png)
+
 ## Features
 
 * Written in pure JavaScript, no dependencies required
-* Multiple galleries support with custom options each
-* Touch-screen devices support with swipe gestures
+* Multiple-gallery support, allows custom options for each 
+* Supports swipe gestures on touch-screen devices
 * Modern and minimal look
 * Image captions support
 * Responsive images
@@ -54,9 +56,9 @@ To use captions put `title` or `data-caption` attribute on `a` tag.
 
 ## Responsive images
 
-To use this feature, simply put `data-at-{width}` attributes on `a` tags with value being a path to the desired image. `{width}` should be the maximum screen width at which the image can be displayed. The script chooses the first image with `{width}` being bigger or equal to the current screen width for best user experience.
+To use this feature, simply put `data-at-{width}` attributes on `a` tags with value being a path to the desired image. `{width}` should be the maximum screen width the image can be displayed at. The script chooses the first image with `{width}` greater than or equal to the current screen width for best user experience.
 
-That's how the HTML code can look like:
+Here's an example of what the HTML code can look like:
 ```html
 <a href="img/2-1.jpg" 
   data-at-450="img/thumbs/2-1.jpg" 
@@ -66,11 +68,11 @@ That's how the HTML code can look like:
     <img src="img/thumbs/2-1.jpg">
 </a>
 ```
-If you have 1366x768 resolution it'll choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep `href` attribute as a fallback (link to a bigger image eg. Full HD).
+If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep `href` attribute as a fallback (link to a bigger image eg. Full HD).
 
 ## Customization
 
-You can pass as a second parameter an object with custom options. The following are available with corresponding defaults:
+You can pass an object with custom options as a second parameter. The following are available with their corresponding defaults:
 ```javascript
 {
   captions: true,       // true|false - Display image captions
@@ -80,7 +82,7 @@ You can pass as a second parameter an object with custom options. The following 
   animation: 'slideIn'  // 'slideIn'|'fadeIn' - Animation type
 }
 ```
-`buttons: 'auto'` hides buttons on touch-enabled devices and when only one image is displayed.
+`buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
 
 ## Compatibility
 
@@ -88,6 +90,7 @@ You can pass as a second parameter an object with custom options. The following 
 * Chrome
 * Firefox 3.6+
 * Opera 12+
+* Sleipnir
 
 ## Notes
 
