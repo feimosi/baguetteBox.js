@@ -38,6 +38,8 @@ var baguetteBox = (function() {
     var touchStartX;
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
+    // Regex pattern to match image files
+    var regex = /.+\.(gif|jpe?g|png|webp)$/i;
     // Array of all used galleries (DOM elements)
     var galleries = [];
     // 2D array of galleries and images inside them
@@ -46,10 +48,19 @@ var baguetteBox = (function() {
     var imagesElements = [];
 
     // forEach polyfill for IE8
-    if(!Array.prototype.forEach) {
+    if(![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
             for(var i = 0; i < this.length; i++)
                 callback.call(thisArg, this[i], i, this);
+        };
+    }
+
+    // filter polyfill for IE8
+    // https://gist.github.com/eliperelman/1031656
+    if(![].filter) {
+        Array.prototype.filter = function(a,b,c,d,e) {
+            /*jshint -W030 */
+            c=this;d=[];for(e=0;e<c.length;e++)a.call(b,c[e],e,c)&&d.push(c[e]);return d;
         };
     }
 
@@ -68,7 +79,13 @@ var baguetteBox = (function() {
             function (galleryElement, galleryIndex) {
                 // Get all gallery images and save them in imagesMap with custom options
                 var galleryID = imagesMap.length;
-                imagesMap.push(galleryElement.getElementsByTagName('a'));
+                // Filter 'a' elements from those not linking to images
+                var tags = galleryElement.getElementsByTagName('a');
+                tags = [].filter.call(tags, function(element) {
+                    return regex.test(element.href);
+                });
+
+                imagesMap.push(tags);
                 imagesMap[galleryID].options = userOptions;
 
                 [].forEach.call(
@@ -302,7 +319,7 @@ var baguetteBox = (function() {
 
     function getImageSrc(image) {
         // Set dafult image path from href
-        var result = imageElement.getAttribute('href');
+        var result = imageElement.href;
         // If dataset is supported find the most suitable image
         if(image.dataset) {
             var srcs = [];
