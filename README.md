@@ -90,6 +90,7 @@ You can pass an object with custom options as a second parameter. The following 
 * Chrome
 * Firefox 3.6+
 * Opera 12+
+* Safari 5+
 * Sleipnir
 
 ## Notes
