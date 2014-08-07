@@ -48,6 +48,7 @@ var baguetteBox = (function() {
     var imagesElements = [];
 
     // forEach polyfill for IE8
+    // http://stackoverflow.com/a/14827443/1077846
     if(![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
             for(var i = 0; i < this.length; i++)
@@ -77,14 +78,14 @@ var baguetteBox = (function() {
         [].forEach.call(
             galleries,
             function (galleryElement, galleryIndex) {
-                // Get all gallery images and save them in imagesMap with custom options
-                var galleryID = imagesMap.length;
                 // Filter 'a' elements from those not linking to images
                 var tags = galleryElement.getElementsByTagName('a');
                 tags = [].filter.call(tags, function(element) {
                     return regex.test(element.href);
                 });
 
+                // Get all gallery images and save them in imagesMap with custom options
+                var galleryID = imagesMap.length;
                 imagesMap.push(tags);
                 imagesMap[galleryID].options = userOptions;
 
@@ -104,35 +105,35 @@ var baguetteBox = (function() {
     }
 
     function buildOverlay() {
-        overlay = document.getElementById('baguetteBox-overlay');
+        overlay = getByID('baguetteBox-overlay');
         // Check if the overlay already exists
         if(overlay) {
-            slider = document.getElementById('baguetteBox-slider');
-            previousButton = document.getElementById('previous-button');
-            nextButton = document.getElementById('next-button');
-            closeButton = document.getElementById('close-button');
+            slider = getByID('baguetteBox-slider');
+            previousButton = getByID('previous-button');
+            nextButton = getByID('next-button');
+            closeButton = getByID('close-button');
             return;
         }
         // Create overlay element
-        overlay = document.createElement('div');
+        overlay = create('div');
         overlay.id = 'baguetteBox-overlay';
         document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
-        slider = document.createElement('div');
+        slider = create('div');
         slider.id = 'baguetteBox-slider';
         overlay.appendChild(slider);
         // Create all necessary buttons
-        previousButton = document.createElement('button');
+        previousButton = create('button');
         previousButton.id = 'previous-button';
         previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
         overlay.appendChild(previousButton);
 
-        nextButton = document.createElement('button');
+        nextButton = create('button');
         nextButton.id = 'next-button';
         nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
         overlay.appendChild(nextButton);
 
-        closeButton = document.createElement('button');
+        closeButton = create('button');
         closeButton.id = 'close-button';
         closeButton.innerHTML = supports.svg ? closeX : 'X';
         overlay.appendChild(closeButton);
@@ -149,17 +150,17 @@ var baguetteBox = (function() {
                 hideOverlay();
         });
         // Add event listeners for buttons
-        bind(document.getElementById('previous-button'), 'click', function(event) {
+        bind(previousButton, 'click', function(event) {
             /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             showPreviousImage();
         });
-        bind(document.getElementById('next-button'), 'click', function(event) {
+        bind(nextButton, 'click', function(event) {
             /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             showNextImage();
         });
-        bind(document.getElementById('close-button'), 'click', function(event) {
+        bind(closeButton, 'click', function(event) {
             /*jshint -W030 */
             event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
             hideOverlay();
@@ -170,6 +171,7 @@ var baguetteBox = (function() {
             touchStartX = event.changedTouches[0].pageX;
         });
         bind(overlay, 'touchmove', function(event) {
+            // If action was already triggered return
             if(touchFlag)
                 return;
             /*jshint -W030 */
@@ -216,7 +218,7 @@ var baguetteBox = (function() {
         imagesElements.length = 0;
         // Prepare and append images containers
         for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
-            fullImage = document.createElement('div');
+            fullImage = create('div');
             fullImage.className = 'full-image';
             imagesElements.push(fullImage);
             slider.appendChild(imagesElements[i]);
@@ -288,9 +290,9 @@ var baguetteBox = (function() {
         imageCaption = imageElement.getAttribute('data-caption') || imageElement.title;
         imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
-        var figure = document.createElement('figure');
-        var image = document.createElement('img');
-        var figcaption = document.createElement('figcaption');
+        var figure = create('figure');
+        var image = create('img');
+        var figcaption = create('figcaption');
         imageContainer.appendChild(figure);
         // Add loader element
         figure.innerHTML = '<div class="spinner">' +
@@ -392,13 +394,13 @@ var baguetteBox = (function() {
 
     // CSS 3D Transforms test
     function testTransformsSupport() {
-        var div = document.createElement('div');
+        var div = create('div');
         return typeof div.style.perspective !== 'undefined' || typeof div.style.webkitPerspective !== 'undefined';
     }
 
     // Inline SVG test
     function testSVGSupport() {
-        var div = document.createElement('div');
+        var div = create('div');
         div.innerHTML = '<svg/>';
         return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
     }
@@ -420,6 +422,14 @@ var baguetteBox = (function() {
             element.addEventListener(event, callback, false);
         else // IE8 fallback
             element.attachEvent('on' + event, callback);
+    }
+
+    function getByID(id) {
+        return document.getElementById(id);
+    }
+
+    function create(element) {
+        return document.createElement(element);
     }
 
     return {
