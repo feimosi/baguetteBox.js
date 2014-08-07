@@ -220,6 +220,7 @@ var baguetteBox = (function() {
         for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
+            fullImage.id = 'baguette-img-' + i;
             imagesElements.push(fullImage);
             slider.appendChild(imagesElements[i]);
         }
@@ -302,8 +303,8 @@ var baguetteBox = (function() {
         // Set callback function when image loads
         image.onload = function() {
             // Remove loader element
-            var spinner = this.parentNode.querySelector('.spinner');
-            this.parentNode.removeChild(spinner);
+            var spinner = document.querySelector('#baguette-img-' + index + ' .spinner');
+            figure.removeChild(spinner);
             if(!options.async && callback)
                 callback();
         };
