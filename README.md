@@ -79,7 +79,7 @@ You can pass an object with custom options as a second parameter. The following 
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
-  animation: 'slideIn'  // 'slideIn'|'fadeIn' - Animation type
+  animation: 'slideIn'  // 'slideIn'|'fadeIn'|false - Animation type
 }
 ```
 `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
