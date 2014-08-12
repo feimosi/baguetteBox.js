@@ -39,7 +39,7 @@ var baguetteBox = (function() {
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)$/i;
+    var regex = /.+\.(gif|jpe?g|png|webp)/i;
     // Array of all used galleries (DOM elements)
     var galleries = [];
     // 2D array of galleries and images inside them
