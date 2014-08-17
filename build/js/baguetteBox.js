@@ -39,7 +39,7 @@ var baguetteBox = (function() {
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)$/i;
+    var regex = /.+\.(gif|jpe?g|png|webp)/i;
     // Array of all used galleries (DOM elements)
     var galleries = [];
     // 2D array of galleries and images inside them
@@ -237,7 +237,8 @@ var baguetteBox = (function() {
         }
         /* Apply new options */
         // Change transition for proper animation
-        slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' : '');
+        slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' : 
+            options.animation === 'slideIn' ? '' : 'none');
         // Hide buttons if necessary
         if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
             options.buttons = false;
@@ -352,7 +353,7 @@ var baguetteBox = (function() {
             currentIndex++;
             updateOffset();
             preloadNext(currentIndex);
-        } else {
+        } else if(options.animation) {
             slider.className = 'bounce-from-right';
             setTimeout(function() {
                 slider.className = '';
@@ -366,7 +367,7 @@ var baguetteBox = (function() {
             currentIndex--;
             updateOffset();
             preloadPrev(currentIndex);
-        } else {
+        } else if(options.animation) {
             slider.className = 'bounce-from-left';
             setTimeout(function() {
                 slider.className = '';
