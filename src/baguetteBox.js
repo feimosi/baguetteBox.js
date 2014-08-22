@@ -146,7 +146,7 @@ var baguetteBox = (function() {
     function bindEvents() {
         // When clicked on the overlay (outside displayed image) close it
         bind(overlay, 'click', function(event) {
-            if(event.target && event.target.nodeName !== "IMG")
+            if(event.target && event.target.nodeName !== "IMG" && event.target.nodeName !== "FIGCAPTION")
                 hideOverlay();
         });
         // Add event listeners for buttons
