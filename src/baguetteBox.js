@@ -321,8 +321,9 @@ var baguetteBox = (function() {
             callback();
     }
 
+    // Get image source location, mostly used for responsive images
     function getImageSrc(image) {
-        // Set dafult image path from href
+        // Set default image path from href
         var result = imageElement.href;
         // If dataset is supported find the most suitable image
         if(image.dataset) {
@@ -347,32 +348,38 @@ var baguetteBox = (function() {
         return result;
     }
 
+    // Return false at the right end of the gallery
     function showNextImage() {
         // Check if next image exists
         if(currentIndex <= imagesElements.length - 2) {
             currentIndex++;
             updateOffset();
             preloadNext(currentIndex);
+            return true;
         } else if(options.animation) {
             slider.className = 'bounce-from-right';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
         }
+        return false;
     }
 
+    // Return false at the left end of the gallery
     function showPreviousImage() {
         // Check if previous image exists
         if(currentIndex >= 1) {
             currentIndex--;
             updateOffset();
             preloadPrev(currentIndex);
+            return true;
         } else if(options.animation) {
             slider.className = 'bounce-from-left';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
         }
+        return false;
     }
 
     function updateOffset() {
@@ -435,7 +442,9 @@ var baguetteBox = (function() {
     }
 
     return {
-        run: run
+        run: run,
+        showNext: showNextImage,
+        showPrevious: showPreviousImage
     };
 
 })();
