@@ -26,7 +26,9 @@ var baguetteBox = (function() {
         buttons: 'auto',
         async: false,
         preload: 2,
-        animation: 'slideIn'
+        animation: 'slideIn',
+        afterShow: null,
+        afterHide: null
     };
     // Object containing information about features compatibility
     var supports = {};
@@ -262,6 +264,8 @@ var baguetteBox = (function() {
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
+            if(options.afterShow)
+                options.afterShow();
         }, 50);
     }
 
@@ -273,6 +277,8 @@ var baguetteBox = (function() {
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
+            if(options.afterHide)
+                options.afterHide();
         }, 500);
     }
 
