@@ -56,7 +56,7 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 
 To use captions put `title` or `data-caption` attribute on `a` tag.
 
-### Additional public methods:
+### Additional public methods
 
 * `showNext` - switch to the next image
 * `showPrevious` - switch to the previous image
