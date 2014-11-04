@@ -37,6 +37,8 @@ Simple and easy to use lightbox script.
 
 ## Usage
 
+### Initialization
+
 Initialize the script by running:
 ```js
 baguetteBox.run('.gallery', {
@@ -53,6 +55,13 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 ```
 
 To use captions put `title` or `data-caption` attribute on `a` tag.
+
+### Additional public methods:
+
+* `showNext` - switch to the next image
+* `showPrevious` - switch to the previous image
+
+They both return true on success or false if there's no more images to be loaded.
 
 ## Responsive images
 
@@ -79,7 +88,9 @@ You can pass an object with custom options as a second parameter. The following 
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
-  animation: 'slideIn'  // 'slideIn'|'fadeIn'|false - Animation type
+  animation: 'slideIn', // 'slideIn'|'fadeIn'|false - Animation type
+  afterShow: null,      // callback - To be run after showing the overlay
+  afterHide: null       // callback - To be run after hiding the overlay
 }
 ```
 `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
