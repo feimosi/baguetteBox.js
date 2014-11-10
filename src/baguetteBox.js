@@ -295,7 +295,9 @@ var baguetteBox = (function() {
         }
         // Get element reference, optional caption and source path
         imageElement = imagesMap[currentGallery][index];
-        imageCaption = imageElement.getAttribute('data-caption') || imageElement.title;
+        imageCaption = (typeof(options.captions) === 'function') ?
+                            options.captions.call(imagesMap[currentGallery], imageElement) :
+                            imageElement.getAttribute('data-caption') || imageElement.title;
         imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = create('figure');
