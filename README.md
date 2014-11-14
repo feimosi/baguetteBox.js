@@ -84,7 +84,7 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 You can pass an object with custom options as a second parameter. The following are available with their corresponding defaults:
 ```javascript
 {
-  captions: true,       // true|false - Display image captions
+  captions: true,       // true|false|callback - Display image captions or return from callback (arguments: gallery, element)
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
