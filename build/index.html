@@ -125,10 +125,15 @@ footer {
         <a href="img/small/4-3.jpg" data-caption="Misty landscape"><img src="img/thumbs/4-3.jpg"></a>
         <a href="img/small/4-4.jpg" data-caption="Forest"><img src="img/thumbs/4-4.jpg"></a>
     </div>
-    <h2>Single image (buttons hidden by default)</h2>
-<pre><code class="js">baguetteBox.run('.baguetteBoxFive');</code></pre>
+    <h2>Single image (buttons hidden by default, custom caption function)</h2>
+<pre style="width: 500px"><code class="js">baguetteBox.run('.baguetteBoxFive', {
+        captions: function(element) {
+            // `this` == Array of current gallery items
+            return element.getElementsByTagName('img')[0].alt;
+        }
+});</code></pre>
     <div class="baguetteBoxFive gallery">
-        <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg"></a>
+        <a href="img/5-1.jpg"><img src="img/thumbs/5-1.jpg" alt="A caption in the alt attribute"></a>
     </div>
     <h3>Usage instructions and source code can be found on
     <a href="https://github.com/feimosi/baguetteBox.js">GitHub</a></h3>
@@ -156,7 +161,12 @@ window.onload = function() {
     baguetteBox.run('.baguetteBoxFour', {
         buttons: false
     });
-    baguetteBox.run('.baguetteBoxFive');
+    baguetteBox.run('.baguetteBoxFive', {
+        captions: function(element) {
+            // `this` == Array of current gallery items
+            return element.getElementsByTagName('img')[0].alt;
+        }
+    });
 };
     </script>
 </body>
