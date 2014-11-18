@@ -28,7 +28,7 @@ Simple and easy to use lightbox script.
 ### Manually
 
 1. Download `baguetteBox.min.css` and `baguetteBox.min.js` files from `dist` folder.
-2. Include them somewhere in you document:
+2. Include them somewhere in your document:
 
   ```html
 <link rel="stylesheet" href="css/baguetteBox.min.css">
