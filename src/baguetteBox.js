@@ -29,7 +29,8 @@ var baguetteBox = (function() {
         animation: 'slideIn',
         afterShow: null,
         afterHide: null,
-        onChange: null // callback when image changes with currentIndex and imagesElements.length as parameter
+        // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
+        onChange: null
     };
     // Object containing information about features compatibility
     var supports = {};
@@ -268,7 +269,6 @@ var baguetteBox = (function() {
             if(options.afterShow)
                 options.afterShow();
         }, 50);
-        // call onChange-Callback
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
     }
