@@ -17,7 +17,7 @@ Simple and easy to use lightbox script.
 * Responsive images
 * CSS3 transitions
 * SVG buttons, no extra files to download
-* Around 2KB gzipped
+* Around 2.3KB gzipped
 
 ## Installation
 
@@ -84,20 +84,22 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 You can pass an object with custom options as a second parameter. The following are available with their corresponding defaults:
 ```javascript
 {
-  captions: true,       // true|false|callback - Display image captions or return from callback (arguments: gallery, element)
+  captions: true,       // true|false|callback(gallery, element) - Display image captions 
+                        //   or return from the callback 
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
   animation: 'slideIn', // 'slideIn'|'fadeIn'|false - Animation type
   afterShow: null,      // callback - To be run after showing the overlay
-  afterHide: null       // callback - To be run after hiding the overlay
+  afterHide: null,      // callback - To be run after hiding the overlay
+  onChange: null        // callback(currentIndex, imagesElements.length) - When image changes
 }
 ```
 `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
 
 ## Compatibility
 
-* IE8+
+* IE 8+
 * Chrome
 * Firefox 3.6+
 * Opera 12+
@@ -110,7 +112,7 @@ Feel free to report any bugs!
 
 ## Credits
 
-Creation of `baguetteBox.js` was inspired by great jQuery plugin [touchTouch](https://github.com/martinaglv/touchTouch).
+Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](https://github.com/martinaglv/touchTouch).
 
 ## License
 
