@@ -63,7 +63,7 @@ var baguetteBox = (function() {
     // filter polyfill for IE8
     // https://gist.github.com/eliperelman/1031656
     if(![].filter) {
-        Array.prototype.filter = function(a,b,c,d,e) {
+        Array.prototype.filter = function(a, b, c, d, e) {
             /*jshint -W030 */
             c=this;d=[];for(e=0;e<c.length;e++)a.call(b,c[e],e,c)&&d.push(c[e]);return d;
         };
@@ -81,7 +81,7 @@ var baguetteBox = (function() {
         galleries = document.querySelectorAll(selector);
         [].forEach.call(
             galleries,
-            function (galleryElement, galleryIndex) {
+            function(galleryElement, galleryIndex) {
                 // Filter 'a' elements from those not linking to images
                 var tags = galleryElement.getElementsByTagName('a');
                 tags = [].filter.call(tags, function(element) {
@@ -95,7 +95,7 @@ var baguetteBox = (function() {
 
                 [].forEach.call(
                     imagesMap[galleryID],
-                    function (imageElement, imageIndex) {
+                    function(imageElement, imageIndex) {
                         bind(imageElement, 'click', function(event) {
                             /*jshint -W030 */
                             event.preventDefault ? event.preventDefault() : event.returnValue = false;
@@ -150,7 +150,7 @@ var baguetteBox = (function() {
     function bindEvents() {
         // When clicked on the overlay (outside displayed image) close it
         bind(overlay, 'click', function(event) {
-            if(event.target && event.target.nodeName !== "IMG" && event.target.nodeName !== "FIGCAPTION")
+            if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
                 hideOverlay();
         });
         // Add event listeners for buttons
