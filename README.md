@@ -92,7 +92,8 @@ You can pass an object with custom options as a second parameter. The following 
   animation: 'slideIn', // 'slideIn'|'fadeIn'|false - Animation type
   afterShow: null,      // callback - To be run after showing the overlay
   afterHide: null,      // callback - To be run after hiding the overlay
-  onChange: null        // callback(currentIndex, imagesElements.length) - When image changes
+  onChange: null,       // callback(currentIndex, imagesElements.length) - When image changes
+  filter: /.+\.(gif|jpe?g|png|webp)/i // RegExp object - pattern to match image files
 }
 ```
 `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
