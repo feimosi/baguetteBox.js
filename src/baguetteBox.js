@@ -82,6 +82,8 @@ var baguetteBox = (function() {
         [].forEach.call(
             galleries,
             function(galleryElement, galleryIndex) {
+                if(userOptions && userOptions.filter) 
+                    regex = userOptions.filter;
                 // Filter 'a' elements from those not linking to images
                 var tags = galleryElement.getElementsByTagName('a');
                 tags = [].filter.call(tags, function(element) {
