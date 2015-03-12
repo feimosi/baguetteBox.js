@@ -21,6 +21,10 @@ Simple and easy to use lightbox script.
 
 ## Installation
 
+### npm
+
+`npm install baguettebox.js`
+
 ### Bower
 
 `bower install baguettebox.js`
@@ -117,6 +121,6 @@ Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](
 
 ## License
 
-Copyright (c) 2014 [feimosi](https://github.com/feimosi/)
+Copyright (c) 2015 [feimosi](https://github.com/feimosi/)
 
 This content is released under the [MIT License](http://opensource.org/licenses/MIT).
