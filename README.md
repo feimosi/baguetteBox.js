@@ -70,6 +70,7 @@ They both return true on success or false if there's no more images to be loaded
 ## Responsive images
 
 To use this feature, simply put `data-at-{width}` attributes on `a` tags with value being a path to the desired image. `{width}` should be the maximum screen width the image can be displayed at. The script chooses the first image with `{width}` greater than or equal to the current screen width for best user experience.
+That last `data-at-X` image is used also in the case of a screen larger than X.
 
 Here's an example of what the HTML code can look like:
 ```html
@@ -81,7 +82,7 @@ Here's an example of what the HTML code can look like:
     <img src="img/thumbs/2-1.jpg">
 </a>
 ```
-If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep `href` attribute as a fallback (link to a bigger image eg. Full HD).
+If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
 
 ## Customization
 
