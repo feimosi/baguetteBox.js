@@ -82,7 +82,7 @@ var baguetteBox = (function() {
         [].forEach.call(
             galleries,
             function(galleryElement, galleryIndex) {
-                if(userOptions && userOptions.filter) 
+                if(userOptions && userOptions.filter)
                     regex = userOptions.filter;
                 // Filter 'a' elements from those not linking to images
                 var tags = galleryElement.getElementsByTagName('a');
@@ -149,6 +149,20 @@ var baguetteBox = (function() {
         bindEvents();
     }
 
+    function keyDownHandler(event) {
+        switch(event.keyCode) {
+            case 37: // Left arrow
+                showPreviousImage();
+                break;
+            case 39: // Right arrow
+                showNextImage();
+                break;
+            case 27: // Esc
+                hideOverlay();
+                break;
+        }
+    }
+
     function bindEvents() {
         // When clicked on the overlay (outside displayed image) close it
         bind(overlay, 'click', function(event) {
@@ -194,20 +208,6 @@ var baguetteBox = (function() {
         });
         bind(overlay, 'touchend', function(event) {
             touchFlag = false;
-        });
-        // Activate keyboard shortcuts
-        bind(document, 'keydown', function(event) {
-            switch(event.keyCode) {
-                case 37: // Left arrow
-                    showPreviousImage();
-                    break;
-                case 39: // Right arrow
-                    showNextImage();
-                    break;
-                case 27: // Esc
-                    hideOverlay();
-                    break;
-            }
         });
     }
 
@@ -256,6 +256,8 @@ var baguetteBox = (function() {
         // Return if overlay is already visible
         if(overlay.style.display === 'block')
             return;
+        // Activate keyboard shortcuts
+        bind(document, 'keydown', keyDownHandler);
         // Set current index to a new value and load proper image
         currentIndex = index;
         loadImage(currentIndex, function() {
@@ -279,6 +281,9 @@ var baguetteBox = (function() {
         // Return if overlay is already hidden
         if(overlay.style.display === 'none')
             return;
+
+        // deactivate global keyboard shorcuts
+        unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
         setTimeout(function() {
@@ -453,6 +458,13 @@ var baguetteBox = (function() {
             element.addEventListener(event, callback, false);
         else // IE8 fallback
             element.attachEvent('on' + event, callback);
+    }
+
+    function unbind(element, event, callback) {
+        if(element.removeEventListener)
+            element.removeEventListener(event, callback, false);
+        else // IE8 fallback
+            element.detachEvent('on' + event, callback);
     }
 
     function getByID(id) {
