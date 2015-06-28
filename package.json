@@ -2,7 +2,7 @@
   "name": "baguettebox.js",
   "version": "1.3.2",
   "description": "Simple and easy to use lightbox script written in pure JavaScript",
-  "main": "gulpfile.js",
+  "main": "dist/baguetteBox.min.js",
   "devDependencies": {
     "browser-sync": "^1.3.0",
     "gulp": "^3.8.6",
