@@ -5,7 +5,16 @@
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
-var baguetteBox = (function() {
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.baguetteBox = factory();
+    }
+}(this, function () {
+
     // SVG shapes used within the buttons
     var leftArrow = '<svg width="44" height="60">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
@@ -481,4 +490,4 @@ var baguetteBox = (function() {
         showPrevious: showPreviousImage
     };
 
-})();
+}));
