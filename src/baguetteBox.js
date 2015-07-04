@@ -59,6 +59,8 @@
     var imagesMap = [];
     // Array containing temporary images DOM elements
     var imagesElements = [];
+    // Event handlers
+    var imagedEventHandlers = {};
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
@@ -85,38 +87,47 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        bindImageClickListeners(selector, userOptions);
+    }
 
+    function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
         galleries = document.querySelectorAll(selector);
-        [].forEach.call(
-            galleries,
-            function(galleryElement, galleryIndex) {
-                if(userOptions && userOptions.filter)
-                    regex = userOptions.filter;
-                // Filter 'a' elements from those not linking to images
-                var tags = galleryElement.getElementsByTagName('a');
-                tags = [].filter.call(tags, function(element) {
-                    return regex.test(element.href);
-                });
+        [].forEach.call(galleries, function(galleryElement) {
+            if(userOptions && userOptions.filter)
+                regex = userOptions.filter;
+            // Filter 'a' elements from those not linking to images
+            var tags = galleryElement.getElementsByTagName('a');
+            tags = [].filter.call(tags, function(element) {
+                return regex.test(element.href);
+            });
 
-                // Get all gallery images and save them in imagesMap with custom options
-                var galleryID = imagesMap.length;
-                imagesMap.push(tags);
-                imagesMap[galleryID].options = userOptions;
+            // Get all gallery images and save them in imagesMap with custom options
+            var galleryID = imagesMap.length;
+            imagesMap.push(tags);
+            imagesMap[galleryID].options = userOptions;
 
-                [].forEach.call(
-                    imagesMap[galleryID],
-                    function(imageElement, imageIndex) {
-                        bind(imageElement, 'click', function(event) {
-                            /*jshint -W030 */
-                            event.preventDefault ? event.preventDefault() : event.returnValue = false;
-                            prepareOverlay(galleryID);
-                            showOverlay(imageIndex);
-                        });
-                    }
-                );
-            }
-        );
+            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                var imageElementClickHandler = function(event) {
+                    /*jshint -W030 */
+                    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+                    prepareOverlay(galleryID);
+                    showOverlay(imageIndex);
+                }
+                imagedEventHandlers[imageElement] = imageElementClickHandler;
+                bind(imageElement, 'click', imageElementClickHandler);
+            });
+        });
+    }
+
+    function unbindImageClickListeners() {
+        [].forEach.call(galleries, function(galleryElement) {
+            var galleryID = imagesMap.length - 1;
+            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                unbind(imageElement, 'click', imagedEventHandlers[imageElement]);
+            });
+            imagesMap.pop();
+        });
     }
 
     function buildOverlay() {
