@@ -172,52 +172,68 @@
         }
     }
 
-    function bindEvents() {
+    var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
-        bind(overlay, 'click', function(event) {
-            if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
-                hideOverlay();
-        });
-        // Add event listeners for buttons
-        bind(previousButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-            showPreviousImage();
-        });
-        bind(nextButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-            showNextImage();
-        });
-        bind(closeButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
             hideOverlay();
-        });
-        // Add touch events
-        bind(overlay, 'touchstart', function(event) {
-            // Save x axis position
-            touchStartX = event.changedTouches[0].pageX;
-        });
-        bind(overlay, 'touchmove', function(event) {
-            // If action was already triggered return
-            if(touchFlag)
-                return;
-            /*jshint -W030 */
-            event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            touch = event.touches[0] || event.changedTouches[0];
-            // Move at least 40 pixels to trigger the action
-            if(touch.pageX - touchStartX > 40) {
-                touchFlag = true;
-                showPreviousImage();
-            } else if (touch.pageX - touchStartX < -40) {
-                touchFlag = true;
-                showNextImage();
-            }
-        });
-        bind(overlay, 'touchend', function(event) {
-            touchFlag = false;
-        });
+    };
+    var previousButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showPreviousImage();
+    };
+    var nextButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showNextImage();
+    };
+    var closeButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        hideOverlay();
+    };
+    var touchstartHandler = function(event) {
+        // Save x axis position
+        touchStartX = event.changedTouches[0].pageX;
+    }
+    var touchmoveHandler = function(event) {
+        // If action was already triggered return
+        if(touchFlag)
+            return;
+        /*jshint -W030 */
+        event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        touch = event.touches[0] || event.changedTouches[0];
+        // Move at least 40 pixels to trigger the action
+        if(touch.pageX - touchStartX > 40) {
+            touchFlag = true;
+            showPreviousImage();
+        } else if (touch.pageX - touchStartX < -40) {
+            touchFlag = true;
+            showNextImage();
+        }
+    }
+    var touchendHandler = function(event) {
+        touchFlag = false;
+    }
+
+    function bindEvents() {
+        bind(overlay, 'click', overlayClickHandler);
+        bind(previousButton, 'click', previousButtonClickHandler);
+        bind(nextButton, 'click', nextButtonClickHandler);
+        bind(closeButton, 'click', closeButtonClickHandler);
+        bind(overlay, 'touchstart', touchstartHandler);
+        bind(overlay, 'touchmove', touchmoveHandler);
+        bind(overlay, 'touchend', touchendHandler);
+    }
+
+    function unbindEvents() {
+        unbind(overlay, 'click', overlayClickHandler);
+        unbind(previousButton, 'click', previousButtonClickHandler);
+        unbind(nextButton, 'click', nextButtonClickHandler);
+        unbind(closeButton, 'click', closeButtonClickHandler);
+        unbind(overlay, 'touchstart', touchstartHandler);
+        unbind(overlay, 'touchmove', touchmoveHandler);
+        unbind(overlay, 'touchend', touchendHandler);
     }
 
     function prepareOverlay(galleryIndex) {
