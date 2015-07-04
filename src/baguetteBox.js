@@ -510,8 +510,20 @@
         return document.createElement(element);
     }
 
+    function destroyPlugin() {
+        unbindEvents();
+        unbindImageClickListeners();
+        unbind(document, 'keydown', keyDownHandler);
+        document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
+        currentIndex = 0;
+        currentGallery = -1;
+        galleries.length = 0;
+        imagesMap.length = 0;
+    }
+
     return {
         run: run,
+        destroy: destroyPlugin,
         showNext: showNextImage,
         showPrevious: showPreviousImage
     };
