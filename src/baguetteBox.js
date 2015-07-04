@@ -61,6 +61,49 @@
     var imagesElements = [];
     // Event handlers
     var imagedEventHandlers = {};
+    var overlayClickHandler = function(event) {
+        // When clicked on the overlay (outside displayed image) close it
+        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
+            hideOverlay();
+    };
+    var previousButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showPreviousImage();
+    };
+    var nextButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showNextImage();
+    };
+    var closeButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        hideOverlay();
+    };
+    var touchstartHandler = function(event) {
+        // Save x axis position
+        touchStartX = event.changedTouches[0].pageX;
+    };
+    var touchmoveHandler = function(event) {
+        // If action was already triggered return
+        if(touchFlag)
+            return;
+        /*jshint -W030 */
+        event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        touch = event.touches[0] || event.changedTouches[0];
+        // Move at least 40 pixels to trigger the action
+        if(touch.pageX - touchStartX > 40) {
+            touchFlag = true;
+            showPreviousImage();
+        } else if (touch.pageX - touchStartX < -40) {
+            touchFlag = true;
+            showNextImage();
+        }
+    };
+    var touchendHandler = function(event) {
+        touchFlag = false;
+    };
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
@@ -113,7 +156,7 @@
                     event.preventDefault ? event.preventDefault() : event.returnValue = false;
                     prepareOverlay(galleryID);
                     showOverlay(imageIndex);
-                }
+                };
                 imagedEventHandlers[imageElement] = imageElementClickHandler;
                 bind(imageElement, 'click', imageElementClickHandler);
             });
@@ -181,50 +224,6 @@
                 hideOverlay();
                 break;
         }
-    }
-
-    var overlayClickHandler = function(event) {
-        // When clicked on the overlay (outside displayed image) close it
-        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
-            hideOverlay();
-    };
-    var previousButtonClickHandler = function(event) {
-        /*jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-        showPreviousImage();
-    };
-    var nextButtonClickHandler = function(event) {
-        /*jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-        showNextImage();
-    };
-    var closeButtonClickHandler = function(event) {
-        /*jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-        hideOverlay();
-    };
-    var touchstartHandler = function(event) {
-        // Save x axis position
-        touchStartX = event.changedTouches[0].pageX;
-    }
-    var touchmoveHandler = function(event) {
-        // If action was already triggered return
-        if(touchFlag)
-            return;
-        /*jshint -W030 */
-        event.preventDefault ? event.preventDefault() : event.returnValue = false;
-        touch = event.touches[0] || event.changedTouches[0];
-        // Move at least 40 pixels to trigger the action
-        if(touch.pageX - touchStartX > 40) {
-            touchFlag = true;
-            showPreviousImage();
-        } else if (touch.pageX - touchStartX < -40) {
-            touchFlag = true;
-            showNextImage();
-        }
-    }
-    var touchendHandler = function(event) {
-        touchFlag = false;
     }
 
     function bindEvents() {
