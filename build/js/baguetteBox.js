@@ -5,8 +5,17 @@
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
-var baguetteBox = (function() {
-    // SVG shapes used within the buttons
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.baguetteBox = factory();
+    }
+}(this, function () {
+
+    // SVG shapes used on the buttons
     var leftArrow = '<svg width="44" height="60">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
@@ -50,6 +59,51 @@ var baguetteBox = (function() {
     var imagesMap = [];
     // Array containing temporary images DOM elements
     var imagesElements = [];
+    // Event handlers
+    var imagedEventHandlers = {};
+    var overlayClickHandler = function(event) {
+        // When clicked on the overlay (outside displayed image) close it
+        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
+            hideOverlay();
+    };
+    var previousButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showPreviousImage();
+    };
+    var nextButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        showNextImage();
+    };
+    var closeButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        hideOverlay();
+    };
+    var touchstartHandler = function(event) {
+        // Save x axis position
+        touchStartX = event.changedTouches[0].pageX;
+    };
+    var touchmoveHandler = function(event) {
+        // If action was already triggered return
+        if(touchFlag)
+            return;
+        /*jshint -W030 */
+        event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        touch = event.touches[0] || event.changedTouches[0];
+        // Move at least 40 pixels to trigger the action
+        if(touch.pageX - touchStartX > 40) {
+            touchFlag = true;
+            showPreviousImage();
+        } else if (touch.pageX - touchStartX < -40) {
+            touchFlag = true;
+            showNextImage();
+        }
+    };
+    var touchendHandler = function(event) {
+        touchFlag = false;
+    };
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
@@ -76,38 +130,47 @@ var baguetteBox = (function() {
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        bindImageClickListeners(selector, userOptions);
+    }
 
+    function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
         galleries = document.querySelectorAll(selector);
-        [].forEach.call(
-            galleries,
-            function(galleryElement, galleryIndex) {
-                if(userOptions && userOptions.filter)
-                    regex = userOptions.filter;
-                // Filter 'a' elements from those not linking to images
-                var tags = galleryElement.getElementsByTagName('a');
-                tags = [].filter.call(tags, function(element) {
-                    return regex.test(element.href);
-                });
+        [].forEach.call(galleries, function(galleryElement) {
+            if(userOptions && userOptions.filter)
+                regex = userOptions.filter;
+            // Filter 'a' elements from those not linking to images
+            var tags = galleryElement.getElementsByTagName('a');
+            tags = [].filter.call(tags, function(element) {
+                return regex.test(element.href);
+            });
 
-                // Get all gallery images and save them in imagesMap with custom options
-                var galleryID = imagesMap.length;
-                imagesMap.push(tags);
-                imagesMap[galleryID].options = userOptions;
+            // Get all gallery images and save them in imagesMap with custom options
+            var galleryID = imagesMap.length;
+            imagesMap.push(tags);
+            imagesMap[galleryID].options = userOptions;
 
-                [].forEach.call(
-                    imagesMap[galleryID],
-                    function(imageElement, imageIndex) {
-                        bind(imageElement, 'click', function(event) {
-                            /*jshint -W030 */
-                            event.preventDefault ? event.preventDefault() : event.returnValue = false;
-                            prepareOverlay(galleryID);
-                            showOverlay(imageIndex);
-                        });
-                    }
-                );
-            }
-        );
+            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                var imageElementClickHandler = function(event) {
+                    /*jshint -W030 */
+                    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+                    prepareOverlay(galleryID);
+                    showOverlay(imageIndex);
+                };
+                imagedEventHandlers[imageElement] = imageElementClickHandler;
+                bind(imageElement, 'click', imageElementClickHandler);
+            });
+        });
+    }
+
+    function unbindImageClickListeners() {
+        [].forEach.call(galleries, function(galleryElement) {
+            var galleryID = imagesMap.length - 1;
+            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                unbind(imageElement, 'click', imagedEventHandlers[imageElement]);
+            });
+            imagesMap.pop();
+        });
     }
 
     function buildOverlay() {
@@ -164,51 +227,23 @@ var baguetteBox = (function() {
     }
 
     function bindEvents() {
-        // When clicked on the overlay (outside displayed image) close it
-        bind(overlay, 'click', function(event) {
-            if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
-                hideOverlay();
-        });
-        // Add event listeners for buttons
-        bind(previousButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-            showPreviousImage();
-        });
-        bind(nextButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-            showNextImage();
-        });
-        bind(closeButton, 'click', function(event) {
-            /*jshint -W030 */
-            event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-            hideOverlay();
-        });
-        // Add touch events
-        bind(overlay, 'touchstart', function(event) {
-            // Save x axis position
-            touchStartX = event.changedTouches[0].pageX;
-        });
-        bind(overlay, 'touchmove', function(event) {
-            // If action was already triggered return
-            if(touchFlag)
-                return;
-            /*jshint -W030 */
-            event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            touch = event.touches[0] || event.changedTouches[0];
-            // Move at least 40 pixels to trigger the action
-            if(touch.pageX - touchStartX > 40) {
-                touchFlag = true;
-                showPreviousImage();
-            } else if (touch.pageX - touchStartX < -40) {
-                touchFlag = true;
-                showNextImage();
-            }
-        });
-        bind(overlay, 'touchend', function(event) {
-            touchFlag = false;
-        });
+        bind(overlay, 'click', overlayClickHandler);
+        bind(previousButton, 'click', previousButtonClickHandler);
+        bind(nextButton, 'click', nextButtonClickHandler);
+        bind(closeButton, 'click', closeButtonClickHandler);
+        bind(overlay, 'touchstart', touchstartHandler);
+        bind(overlay, 'touchmove', touchmoveHandler);
+        bind(overlay, 'touchend', touchendHandler);
+    }
+
+    function unbindEvents() {
+        unbind(overlay, 'click', overlayClickHandler);
+        unbind(previousButton, 'click', previousButtonClickHandler);
+        unbind(nextButton, 'click', nextButtonClickHandler);
+        unbind(closeButton, 'click', closeButtonClickHandler);
+        unbind(overlay, 'touchstart', touchstartHandler);
+        unbind(overlay, 'touchmove', touchmoveHandler);
+        unbind(overlay, 'touchend', touchendHandler);
     }
 
     function prepareOverlay(galleryIndex) {
@@ -252,14 +287,12 @@ var baguetteBox = (function() {
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
     }
 
-    function showOverlay(index) {
-        // Return if overlay is already visible
+    function showOverlay(chosenImageIndex) {
         if(overlay.style.display === 'block')
             return;
-        // Activate keyboard shortcuts
+
         bind(document, 'keydown', keyDownHandler);
-        // Set current index to a new value and load proper image
-        currentIndex = index;
+        currentIndex = chosenImageIndex;
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
@@ -278,11 +311,9 @@ var baguetteBox = (function() {
     }
 
     function hideOverlay() {
-        // Return if overlay is already hidden
         if(overlay.style.display === 'none')
             return;
 
-        // deactivate global keyboard shorcuts
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
@@ -295,9 +326,9 @@ var baguetteBox = (function() {
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        // If index is invalid return
         if(typeof imageContainer === 'undefined')
             return;
+
         // If image is already loaded run callback and return
         if(imageContainer.getElementsByTagName('img')[0]) {
             if(callback)
@@ -475,10 +506,22 @@ var baguetteBox = (function() {
         return document.createElement(element);
     }
 
+    function destroyPlugin() {
+        unbindEvents();
+        unbindImageClickListeners();
+        unbind(document, 'keydown', keyDownHandler);
+        document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
+        currentIndex = 0;
+        currentGallery = -1;
+        galleries.length = 0;
+        imagesMap.length = 0;
+    }
+
     return {
         run: run,
+        destroy: destroyPlugin,
         showNext: showNextImage,
         showPrevious: showPreviousImage
     };
 
-})();
+}));
