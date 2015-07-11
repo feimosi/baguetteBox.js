@@ -1,6 +1,6 @@
 {
   "name": "baguettebox.js",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Simple and easy to use lightbox script written in pure JavaScript",
   "main": [
     "./build/js/baguetteBox.js",
