@@ -1,6 +1,6 @@
 {
   "name": "baguettebox.js",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Simple and easy to use lightbox script written in pure JavaScript",
   "main": "dist/baguetteBox.min.js",
   "devDependencies": {
@@ -15,7 +15,7 @@
     "gulp-jshint": "^1.7.1",
     "gulp-load-plugins": "^0.5.3",
     "gulp-rimraf": "^0.1.0",
-    "gulp-sass": "^0.7.2",
+    "gulp-sass": "^1.3.3",
     "gulp-uglify": "^0.3.1",
     "gulp-usemin": "^0.3.7",
     "jshint-stylish": "^0.4.0"
