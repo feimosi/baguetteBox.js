@@ -64,8 +64,9 @@ To use captions put `title` or `data-caption` attribute on `a` tag.
 
 * `showNext` - switch to the next image
 * `showPrevious` - switch to the previous image
+* `destroy` - remove the plugin with any event bindings
 
-They both return true on success or false if there's no more images to be loaded.
+The first two methods return true on success or false if there's no more images to be loaded.
 
 ## Responsive images
 
