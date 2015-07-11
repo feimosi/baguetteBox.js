@@ -15,7 +15,7 @@
     }
 }(this, function () {
 
-    // SVG shapes used within the buttons
+    // SVG shapes used on the buttons
     var leftArrow = '<svg width="44" height="60">' +
             '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
               'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
@@ -287,14 +287,12 @@
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
     }
 
-    function showOverlay(index) {
-        // Return if overlay is already visible
+    function showOverlay(chosenImageIndex) {
         if(overlay.style.display === 'block')
             return;
-        // Activate keyboard shortcuts
+
         bind(document, 'keydown', keyDownHandler);
-        // Set current index to a new value and load proper image
-        currentIndex = index;
+        currentIndex = chosenImageIndex;
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
@@ -313,11 +311,9 @@
     }
 
     function hideOverlay() {
-        // Return if overlay is already hidden
         if(overlay.style.display === 'none')
             return;
 
-        // deactivate global keyboard shorcuts
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
@@ -330,9 +326,9 @@
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        // If index is invalid return
         if(typeof imageContainer === 'undefined')
             return;
+
         // If image is already loaded run callback and return
         if(imageContainer.getElementsByTagName('img')[0]) {
             if(callback)
