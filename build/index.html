@@ -128,7 +128,6 @@ footer {
     <h2>Single image (buttons hidden by default, custom caption function)</h2>
 <pre style="width: 500px"><code class="js">baguetteBox.run('.baguetteBoxFive', {
         captions: function(element) {
-            // `this` == Array of current gallery items
             return element.getElementsByTagName('img')[0].alt;
         }
 });</code></pre>

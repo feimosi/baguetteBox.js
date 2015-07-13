@@ -90,8 +90,7 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 You can pass an object with custom options as a second parameter. The following are available with their corresponding defaults:
 ```javascript
 {
-  captions: true,       // true|false|callback(gallery, element) - Display image captions 
-                        //   or return from the callback 
+  captions: true,       // true|false|callback(element) - Display image captions
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
@@ -103,6 +102,7 @@ You can pass an object with custom options as a second parameter. The following 
 }
 ```
 `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
+`captions: 'callback'` applies a caption returned by the callback. Invoked in the context of an array of gallery images.
 
 ## Compatibility
 
