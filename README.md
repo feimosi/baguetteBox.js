@@ -101,8 +101,8 @@ You can pass an object with custom options as a second parameter. The following 
   filter: /.+\.(gif|jpe?g|png|webp)/i // RegExp object - pattern to match image files
 }
 ```
-`buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
-`captions: 'callback'` applies a caption returned by the callback. Invoked in the context of an array of gallery images.
+* `captions: 'callback'` applies a caption returned by the callback. Invoked in the context of an array of gallery images.
+* `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
 
 ## Compatibility
 
