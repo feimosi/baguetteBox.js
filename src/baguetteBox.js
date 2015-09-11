@@ -28,6 +28,11 @@
             '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
+            '</g></svg>',
+        fullScreen = '<svg width="30" height="30">' +
+            '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
+            '<line x1="5" y1="5" x2="25" y2="25"/>' +
+            '<line x1="5" y1="25" x2="25" y2="5"/>' +
             '</g></svg>';
     // Global options and their defaults
     var options = {}, defaults = {
@@ -44,7 +49,7 @@
     // Object containing information about features compatibility
     var supports = {};
     // DOM Elements references
-    var overlay, slider, previousButton, nextButton, closeButton;
+    var overlay, slider, previousButton, nextButton, closeButton, fullScreenButton;
     // Current image index inside the slider and displayed gallery index
     var currentIndex = 0, currentGallery = -1;
     // Touch event start position (for slide gesture)
@@ -80,6 +85,11 @@
         /*jshint -W030 */
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
         hideOverlay();
+    };
+    var fullScreenButtonClickHandler = function(event) {
+        /*jshint -W030 */
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        goFullScreen();
     };
     var touchstartHandler = function(event) {
         // Save x axis position
@@ -181,6 +191,7 @@
             previousButton = getByID('previous-button');
             nextButton = getByID('next-button');
             closeButton = getByID('close-button');
+            fullScreenButton = getByID('fullScreen-button');
             return;
         }
         // Create overlay element
@@ -207,7 +218,12 @@
         closeButton.innerHTML = supports.svg ? closeX : 'X';
         overlay.appendChild(closeButton);
 
-        previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
+        fullScreenButton = create('button');
+        fullScreenButton.id = 'fullScreen-button';
+        fullScreenButton.innerHTML = supports.svg ? fullScreen : '><';
+        overlay.appendChild(fullScreenButton);
+
+        previousButton.className = nextButton.className = closeButton.className = fullScreenButton.className = 'baguetteBox-button';
 
         bindEvents();
     }
@@ -231,6 +247,7 @@
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
+        bind(fullScreenButton, 'click', fullScreenButtonClickHandler);
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
@@ -241,6 +258,7 @@
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
         unbind(closeButton, 'click', closeButtonClickHandler);
+        unbind(fullScreenButton, 'click', fullScreenButtonClickHandler);
         unbind(overlay, 'touchstart', touchstartHandler);
         unbind(overlay, 'touchmove', touchmoveHandler);
         unbind(overlay, 'touchend', touchendHandler);
@@ -322,6 +340,29 @@
             if(options.afterHide)
                 options.afterHide();
         }, 500);
+    }
+
+    function goFullScreen() {
+        var elem = document.getElementById("baguetteBox-overlay");
+
+        if (!document.fullscreenElement &&    // alternative standard method
+            !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        }
     }
 
     function loadImage(index, callback) {
