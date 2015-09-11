@@ -144,6 +144,14 @@
         width: 30px;
         height: 30px;
     }
+    
+    &#fullScreen-button {
+        top: 20px;
+        right: 2%;
+        right: calc(2% + 50px);
+        width: 30px;
+        height: 30px;
+    }
 
     // Firefox fix
     svg {
