@@ -157,7 +157,7 @@
                     prepareOverlay(galleryID);
                     showOverlay(imageIndex);
                 };
-                imagedEventHandlers[imageElement] = imageElementClickHandler;
+                imagedEventHandlers[galleryID + '_' + imageElement] = imageElementClickHandler;
                 bind(imageElement, 'click', imageElementClickHandler);
             });
         });
@@ -167,7 +167,7 @@
         [].forEach.call(galleries, function(galleryElement) {
             var galleryID = imagesMap.length - 1;
             [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
-                unbind(imageElement, 'click', imagedEventHandlers[imageElement]);
+                unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
             });
             imagesMap.pop();
         });
