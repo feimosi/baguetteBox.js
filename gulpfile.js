@@ -32,8 +32,6 @@ gulp.task('css-min', function() {
     return gulp.src(src.css)
         // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
-        // Combine media queries
-        .pipe(plugins.combineMediaQueries())
         // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer(["last 2 version", "> 1%", "ie 8", "ie 7", 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
         // Minify CSS
