@@ -53,7 +53,7 @@
     var touchFlag = false;
     // Regex pattern to match image files
     var regex = /.+\.(gif|jpe?g|png|webp)/i;
-    // Array of all used galleries (DOM elements)
+    // Array of all used galleries (Array od NodeList elements)
     var galleries = [];
     // 2D array of galleries and images inside them
     var imagesMap = [];
@@ -135,8 +135,9 @@
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        galleries = document.querySelectorAll(selector);
-        [].forEach.call(galleries, function(galleryElement) {
+        var gallery = document.querySelectorAll(selector);
+        galleries.push(gallery);
+        [].forEach.call(gallery, function(galleryElement) {
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
             // Filter 'a' elements from those not linking to images
@@ -164,12 +165,14 @@
     }
 
     function unbindImageClickListeners() {
-        [].forEach.call(galleries, function(galleryElement) {
-            var galleryID = imagesMap.length - 1;
-            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
-                unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
+        galleries.forEach(function(gallery) {
+            [].forEach.call(gallery, function(galleryElement) {
+                var galleryID = imagesMap.length - 1;
+                [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                    unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
+                });
+                imagesMap.pop();
             });
-            imagesMap.pop();
         });
     }
 
