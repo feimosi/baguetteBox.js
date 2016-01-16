@@ -332,6 +332,7 @@
             resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+        setNavigationDisplayProperty('block', true);
     }
 
     function mousemove(event) {
@@ -339,30 +340,19 @@
             return;
         mousePos.x = event.pageX;
         mousePos.y = event.pageY;
-        showNavigation();
+        setNavigationDisplayProperty('block', true);
         clearTimeout(hideNavigationSetTimeoutHandle);
-        hideNavigationSetTimeoutHandle = setTimeout(function() { hideNavigation(); }, options.removeButtonsAfter);
+        hideNavigationSetTimeoutHandle = setTimeout(function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
     }
 
-    function setNavigationDisplayProperty(val) {
-        closeButton.style.display = val;
-        previousButton.style.display = val;
-        nextButton.style.display = val;
-    }
-
-    function hideNavigation() {
-        if(navigationVisible === true) {
+    function setNavigationDisplayProperty(style, state) {
+        // do nothing if state is already set to desired value
+        if(navigationVisible !== state) {
             clearTimeout(hideNavigationSetTimeoutHandle);
-            setNavigationDisplayProperty('none');
-            navigationVisible = false;
-        }
-    }
-
-    function showNavigation() {
-        if(navigationVisible === false) {
-            clearTimeout(hideNavigationSetTimeoutHandle);
-            setNavigationDisplayProperty('block');
-            navigationVisible = true;
+            closeButton.style.display = style;
+            previousButton.style.display = style;
+            nextButton.style.display = style;
+            navigationVisible = state;
         }
     }
 
@@ -479,7 +469,7 @@
 
     function resetHideIconsTimeout() {
         clearTimeout(hideNavigationSetTimeoutHandle);
-        hideNavigationSetTimeoutHandle = setTimeout(hideNavigation, options.removeButtonsAfter);
+        hideNavigationSetTimeoutHandle = setTimeout( function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
     }
 
     // Return false at the left end of the gallery
