@@ -390,6 +390,7 @@
     function hideOverlay() {
         if(options.noScrollbars)
             document.body.style.overflow = 'auto';
+        clearTimeout(hideNavigationSetTimeoutHandle);
         if(overlay.style.display === 'none')
             return;
 
