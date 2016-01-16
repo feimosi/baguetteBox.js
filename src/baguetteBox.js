@@ -66,7 +66,7 @@
     var imagesElements = [];
     // Event handlers
     var imagedEventHandlers = {};
-    // Event handler for remove icons option
+    // setTimeout handler for remove icons option
     var hideNavigationSetTimeoutHandle = null;
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
