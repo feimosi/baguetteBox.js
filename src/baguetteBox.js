@@ -6,6 +6,7 @@
  *
  * modified by H.Lo 2016-01-16
  * - added 'fullScreen' to 'options'
+ * - added 'noScrollbars' to 'options'
  */
 
 (function (root, factory) {
@@ -38,6 +39,8 @@
         // enabling full screen display when showing overlay
         fullScreen: false,
         buttons: 'auto',
+        // removes scrollbars from body element while displaying overlay
+        noScrollbars: false,
         async: false,
         preload: 2,
         animation: 'slideIn',
@@ -296,6 +299,8 @@
     }
 
     function showOverlay(chosenImageIndex) {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'hidden';
         if(overlay.style.display === 'block')
             return;
 
@@ -339,6 +344,8 @@
     }
 
     function hideOverlay() {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'auto';
         if(overlay.style.display === 'none')
             return;
 
