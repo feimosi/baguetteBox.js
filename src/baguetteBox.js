@@ -347,13 +347,13 @@
 
     function setNavigationDisplayProperty(style, state) {
         // do nothing if state is already set to desired value
-        if(navigationVisible !== state) {
-            clearTimeout(hideNavigationSetTimeoutHandle);
-            closeButton.style.display = style;
-            previousButton.style.display = style;
-            nextButton.style.display = style;
-            navigationVisible = state;
-        }
+        if(navigationVisible === state)
+        	return;
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        closeButton.style.display = style;
+        previousButton.style.display = style;
+        nextButton.style.display = style;
+        navigationVisible = state;
     }
 
     function hideOverlay() {
