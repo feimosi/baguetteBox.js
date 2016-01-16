@@ -329,6 +329,15 @@
             element.mozRequestFullScreen();
     }
 
+    function exitFullscreen() {
+        if(document.exitFullscreen)
+            document.exitFullscreen();
+        else if(document.mozCancelFullScreen)
+            document.mozCancelFullScreen();
+        else if(document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
+    }
+
     function hideOverlay() {
         if(overlay.style.display === 'none')
             return;
@@ -338,6 +347,7 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
+            exitFullscreen();
             if(options.afterHide)
                 options.afterHide();
         }, 500);
