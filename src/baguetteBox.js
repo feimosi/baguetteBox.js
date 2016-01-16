@@ -33,6 +33,7 @@
     var options = {}, defaults = {
         captions: true,
         fullScreen: false,
+        noScrollbars: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -295,6 +296,8 @@
     }
 
     function showOverlay(chosenImageIndex) {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'hidden';
         if(overlay.style.display === 'block')
             return;
 
@@ -338,6 +341,8 @@
     }
 
     function hideOverlay() {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'auto';
         if(overlay.style.display === 'none')
             return;
 
