@@ -8,6 +8,7 @@
  * - added 'fullScreen' to 'options'
  * - added 'noScrollbars' to 'options'
  * - added 'removeButtonsAfter' to 'options'
+ * - added 'titleTag' to 'options'
  */
 
 (function (root, factory) {
@@ -39,6 +40,8 @@
         captions: true,
         // enabling full screen display when showing overlay
         fullScreen: false,
+        // when true, propagates title tag from thumbnail image to main image in overlay
+        titleTag: false,
         buttons: 'auto',
         // removes scrollbars from body element while displaying overlay
         noScrollbars: false,
@@ -421,6 +424,8 @@
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
+        if(options.titleTag && imageCaption)
+            image.title = imageCaption;
         var figcaption = create('figcaption');
         imageContainer.appendChild(figure);
         // Add loader element
