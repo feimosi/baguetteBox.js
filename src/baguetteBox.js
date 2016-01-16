@@ -7,6 +7,7 @@
  * modified by H.Lo 2016-01-16
  * - added 'fullScreen' to 'options'
  * - added 'noScrollbars' to 'options'
+ * - added 'removeButtonsAfter' to 'options'
  */
 
 (function (root, factory) {
@@ -41,6 +42,8 @@
         buttons: 'auto',
         // removes scrollbars from body element while displaying overlay
         noScrollbars: false,
+        // idle time in milliseconds to remove navigation buttons and close button; showing again after mouse move
+        removeButtonsAfter: null,
         async: false,
         preload: 2,
         animation: 'slideIn',
@@ -69,6 +72,8 @@
     var imagesElements = [];
     // Event handlers
     var imagedEventHandlers = {};
+    // setTimeout handler for remove icons option
+    var hideNavigationSetTimeoutHandle = null;
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
         if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
@@ -111,6 +116,15 @@
     };
     var touchendHandler = function(event) {
         touchFlag = false;
+    };
+
+    // the state of navigation buttons and close button
+    var navigationVisible = true;
+
+    // here storing mouse position to be able to check if mouse really moved - mousemove event is called sometimes when mouse not moved
+    var mousePos = {
+        x : null,
+        y : null
     };
 
     // forEach polyfill for IE8
@@ -296,6 +310,9 @@
             options.buttons = false;
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // add mousemove event listener only if option is set
+        if(options.removeButtonsAfter)
+            window.addEventListener('mousemove', mousemove);
     }
 
     function showOverlay(chosenImageIndex) {
@@ -321,8 +338,32 @@
             if(options.afterShow)
                 options.afterShow();
         }, 50);
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+        setNavigationDisplayProperty('block', true);
+    }
+
+    function mousemove(event) {
+        if(mousePos.x === event.pageX && mousePos.y === event.pageY)
+            return;
+        mousePos.x = event.pageX;
+        mousePos.y = event.pageY;
+        setNavigationDisplayProperty('block', true);
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        hideNavigationSetTimeoutHandle = setTimeout(function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
+    }
+
+    function setNavigationDisplayProperty(style, state) {
+        // do nothing if state is already set to desired value
+        if(navigationVisible !== state) {
+            clearTimeout(hideNavigationSetTimeoutHandle);
+            closeButton.style.display = style;
+            previousButton.style.display = style;
+            nextButton.style.display = style;
+            navigationVisible = state;
+        }
     }
 
     function fullScreen(element) {
@@ -450,9 +491,16 @@
             }, 400);
             returnValue = false;
         }
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
         return returnValue;
+    }
+
+    function resetHideIconsTimeout() {
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        hideNavigationSetTimeoutHandle = setTimeout( function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
     }
 
     // Return false at the left end of the gallery
@@ -471,6 +519,8 @@
             }, 400);
             returnValue = false;
         }
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
         return returnValue;
