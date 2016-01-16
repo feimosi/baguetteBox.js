@@ -3,6 +3,12 @@
  * @author  feimosi
  * @version 1.4.2
  * @url https://github.com/feimosi/baguetteBox.js
+ *
+ * modified by H.Lo 2016-01-16
+ * - added 'fullScreen' to 'options'
+ * - added 'noScrollbars' to 'options'
+ * - added 'removeButtonsAfter' to 'options'
+ * - added 'titleTag' to 'options'
  */
 
 (function (root, factory) {
@@ -32,7 +38,15 @@
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
+        // enabling full screen display when showing overlay
+        fullScreen: false,
+        // when true, propagates title tag from thumbnail image to main image in overlay
+        titleTag: false,
         buttons: 'auto',
+        // removes scrollbars from body element while displaying overlay
+        noScrollbars: false,
+        // idle time in milliseconds to remove navigation buttons and close button; showing again after mouse move
+        removeButtonsAfter: null,
         async: false,
         preload: 2,
         animation: 'slideIn',
@@ -61,6 +75,8 @@
     var imagesElements = [];
     // Event handlers
     var imagedEventHandlers = {};
+    // setTimeout handler for remove icons option
+    var hideNavigationSetTimeoutHandle = null;
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
         if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
@@ -103,6 +119,15 @@
     };
     var touchendHandler = function(event) {
         touchFlag = false;
+    };
+
+    // the state of navigation buttons and close button
+    var navigationVisible = true;
+
+    // here storing mouse position to be able to check if mouse really moved - mousemove event is called sometimes when mouse not moved
+    var mousePos = {
+        x : null,
+        y : null
     };
 
     // forEach polyfill for IE8
@@ -288,9 +313,14 @@
             options.buttons = false;
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // add mousemove event listener only if option is set
+        if(options.removeButtonsAfter)
+            window.addEventListener('mousemove', mousemove);
     }
 
     function showOverlay(chosenImageIndex) {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'hidden';
         if(overlay.style.display === 'block')
             return;
 
@@ -303,17 +333,62 @@
 
         updateOffset();
         overlay.style.display = 'block';
+        if(options.fullScreen)
+            fullScreen(overlay);
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
             if(options.afterShow)
                 options.afterShow();
         }, 50);
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+        setNavigationDisplayProperty('block', true);
+    }
+
+    function mousemove(event) {
+        if(mousePos.x === event.pageX && mousePos.y === event.pageY)
+            return;
+        mousePos.x = event.pageX;
+        mousePos.y = event.pageY;
+        setNavigationDisplayProperty('block', true);
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        hideNavigationSetTimeoutHandle = setTimeout(function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
+    }
+
+    function setNavigationDisplayProperty(style, state) {
+        // do nothing if state is already set to desired value
+        if(navigationVisible === state)
+        	return;
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        closeButton.style.display = previousButton.style.display = nextButton.style.display = style;
+        navigationVisible = state;
+    }
+
+    function fullScreen(element) {
+        if(element.requestFullscreen)
+            element.requestFullscreen();
+        else if(element.webkitRequestFullscreen )
+            element.webkitRequestFullscreen();
+        else if(element.mozRequestFullScreen)
+            element.mozRequestFullScreen();
+    }
+
+    function exitFullscreen() {
+        if(document.exitFullscreen)
+            document.exitFullscreen();
+        else if(document.mozCancelFullScreen)
+            document.mozCancelFullScreen();
+        else if(document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
     }
 
     function hideOverlay() {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'auto';
+        clearTimeout(hideNavigationSetTimeoutHandle);
         if(overlay.style.display === 'none')
             return;
 
@@ -322,6 +397,7 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
+            exitFullscreen();
             if(options.afterHide)
                 options.afterHide();
         }, 500);
@@ -347,6 +423,8 @@
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
+        if(options.titleTag && imageCaption)
+            image.title = imageCaption;
         var figcaption = create('figcaption');
         imageContainer.appendChild(figure);
         // Add loader element
@@ -417,9 +495,16 @@
             }, 400);
             returnValue = false;
         }
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
         return returnValue;
+    }
+
+    function resetHideIconsTimeout() {
+        clearTimeout(hideNavigationSetTimeoutHandle);
+        hideNavigationSetTimeoutHandle = setTimeout( function() { setNavigationDisplayProperty('none', false); }, options.removeButtonsAfter);
     }
 
     // Return false at the left end of the gallery
@@ -438,6 +523,8 @@
             }, 400);
             returnValue = false;
         }
+        if(options.removeButtonsAfter)
+            resetHideIconsTimeout();
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
         return returnValue;
