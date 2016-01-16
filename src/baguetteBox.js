@@ -3,6 +3,9 @@
  * @author  feimosi
  * @version 1.4.2
  * @url https://github.com/feimosi/baguetteBox.js
+ *
+ * modified by H.Lo 2016-01-16
+ * - added 'fullScreen' to 'options'
  */
 
 (function (root, factory) {
@@ -32,6 +35,8 @@
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
+        // enabling full screen display when showing overlay
+        fullScreen: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -303,6 +308,8 @@
 
         updateOffset();
         overlay.style.display = 'block';
+        if(options.fullScreen)
+            fullScreen(overlay);
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
@@ -311,6 +318,15 @@
         }, 50);
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+    }
+
+    function fullScreen(element) {
+        if(element.requestFullscreen)
+            element.requestFullscreen();
+        else if(element.webkitRequestFullscreen )
+            element.webkitRequestFullscreen();
+        else if(element.mozRequestFullScreen)
+            element.mozRequestFullScreen();
     }
 
     function hideOverlay() {
