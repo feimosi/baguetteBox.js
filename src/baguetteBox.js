@@ -34,6 +34,7 @@
         captions: true,
         fullScreen: false,
         noScrollbars: false,
+        titleTag: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -393,6 +394,8 @@
                 callback();
         };
         image.setAttribute('src', imageSrc);
+        if(options.titleTag && imageCaption)
+            image.title = imageCaption;
         figure.appendChild(image);
         // Insert caption if available
         if(options.captions && imageCaption) {
