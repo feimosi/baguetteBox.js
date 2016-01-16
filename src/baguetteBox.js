@@ -38,6 +38,7 @@
         defaults = {
             captions: true,
             buttons: 'auto',
+            buttonsHideTimeout: null,
             fullScreen: false,
             noScrollbars: false,
             bodyClass: 'baguetteBox-open',
@@ -72,6 +73,14 @@
     var imagesElements = [];
     // The last focused element before opening the overlay
     var documentLastFocus = null;
+    // Handler of buttons hide timeout
+    var buttonsHideTimeoutId = null;
+    // Store previous mouse position to prevent event being called when nothing has moved
+    var previousMousePosition = {
+        x: 0,
+        y: 0
+    };
+
     var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -406,6 +415,9 @@
         }
 
         bind(document, 'keydown', keyDownHandler);
+        // Add mousemove event listener only if option is set
+        if(options.buttonsHideTimeout)
+            bind(window, 'mousemove', mousemove);
         currentIndex = chosenImageIndex;
         touch = {
             count: 0,
@@ -432,6 +444,9 @@
                 options.afterShow();
             }
         }, 50);
+        if (options.buttonsHideTimeout) {
+            resetHideIconsTimeout();
+        }
         if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
         }
@@ -446,6 +461,25 @@
         } else {
             closeButton.focus();
         }
+    }
+
+    function mousemove(event) {
+        // Ignore small mouse movements
+        if(Math.abs(previousMousePosition.x - event.pageX) < 10 &&
+                Math.abs(previousMousePosition.y - event.pageY) < 10)
+            return;
+
+        previousMousePosition.x = event.pageX;
+        previousMousePosition.y = event.pageY;
+        closeButton.style.display = previousButton.style.display = nextButton.style.display = 'block';
+        resetHideIconsTimeout();
+    }
+
+    function resetHideIconsTimeout() {
+        clearTimeout(buttonsHideTimeoutId);
+        buttonsHideTimeoutId = setTimeout(function() {
+            closeButton.style.display = previousButton.style.display = nextButton.style.display = 'none';
+        }, options.buttonsHideTimeout);
     }
 
     function enterFullScreen() {
@@ -478,6 +512,9 @@
         }
 
         unbind(document, 'keydown', keyDownHandler);
+        if(options.buttonsHideTimeout) {
+            unbind(window, 'mousemove', mousemove);
+        }
         // Fade out and hide the overlay
         overlay.className = '';
         setTimeout(function() {
@@ -630,6 +667,9 @@
         });
         updateOffset();
 
+        if (options.buttonsHideTimeout) {
+            resetHideIconsTimeout();
+        }
         if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
         }
