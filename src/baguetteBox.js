@@ -3,6 +3,9 @@
  * @author  feimosi
  * @version 1.4.2
  * @url https://github.com/feimosi/baguetteBox.js
+ *
+ * modified by H.Lo 2016-01-16
+ * - added 'titleTag' to 'options'
  */
 
 (function (root, factory) {
@@ -32,6 +35,8 @@
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
+        // when true, propagates title tag from thumbnail image to main image in overlay
+        titleTag: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -347,6 +352,8 @@
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
+        if(options.titleTag && imageCaption)
+            image.title = imageCaption;
         var figcaption = create('figcaption');
         imageContainer.appendChild(figure);
         // Add loader element
