@@ -39,7 +39,8 @@
         afterShow: null,
         afterHide: null,
         // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
-        onChange: null
+        onChange: null,
+        overlayBackgroundColor: 'rgba(0, 0, 0, .8)',
     };
     // Object containing information about features compatibility
     var supports = {};
@@ -288,6 +289,8 @@
             options.buttons = false;
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // Set overlay color
+        overlay.style.backgroundColor = options.overlayBackgroundColor;
     }
 
     function showOverlay(chosenImageIndex) {
