@@ -32,6 +32,7 @@
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
+        fullScreen: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -306,6 +307,8 @@
 
         updateOffset();
         overlay.style.display = 'block';
+        if(options.fullScreen)
+            enterFullScreen();
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
@@ -314,6 +317,24 @@
         }, 50);
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+    }
+
+    function enterFullScreen() {
+        if(overlay.requestFullscreen)
+            overlay.requestFullscreen();
+        else if(overlay.webkitRequestFullscreen )
+            overlay.webkitRequestFullscreen();
+        else if(overlay.mozRequestFullScreen)
+            overlay.mozRequestFullScreen();
+    }
+
+    function exitFullscreen() {
+        if(document.exitFullscreen)
+            document.exitFullscreen();
+        else if(document.mozCancelFullScreen)
+            document.mozCancelFullScreen();
+        else if(document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
     }
 
     function hideOverlay() {
@@ -325,6 +346,7 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
+            exitFullscreen();
             if(options.afterHide)
                 options.afterHide();
         }, 500);
