@@ -357,7 +357,7 @@
     }
 
     function hideOverlay() {
-	    clearTimeout(hideNavigationSetTimeoutHandle);
+        clearTimeout(hideNavigationSetTimeoutHandle);
         if(overlay.style.display === 'none')
             return;
 
