@@ -3,6 +3,9 @@
  * @author  feimosi
  * @version 1.4.2
  * @url https://github.com/feimosi/baguetteBox.js
+ *
+ * modified by H.Lo 2016-01-16
+ * - added 'noScrollbars' to 'options'
  */
 
 (function (root, factory) {
