@@ -363,9 +363,7 @@
         if(navigationVisible === state)
         	return;
         clearTimeout(hideNavigationSetTimeoutHandle);
-        closeButton.style.display = style;
-        previousButton.style.display = style;
-        nextButton.style.display = style;
+        closeButton.style.display = previousButton.style.display = nextButton.style.display = style;
         navigationVisible = state;
     }
 
