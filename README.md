@@ -91,6 +91,9 @@ You can pass an object with custom options as a second parameter. The following 
 ```javascript
 {
   captions: true,       // true|false|callback(element) - Display image captions
+  fullScreen: false,    // true|false - Enable full screen mode
+  noScrollbars: false,  // true|false - Hide scrollbars when images are displayed
+  titleTag: false,      // true|false - Propage caption to the image title attribute
   buttons: 'auto',      // 'auto'|true|false - Display buttons
   async: false,         // true|false - Load files asynchronously
   preload: 2,           // [number] - How many files should be preloaded from current image
@@ -98,6 +101,7 @@ You can pass an object with custom options as a second parameter. The following 
   afterShow: null,      // callback - To be run after showing the overlay
   afterHide: null,      // callback - To be run after hiding the overlay
   onChange: null,       // callback(currentIndex, imagesElements.length) - When image changes
+  overlayBackgroundColor: 'rgba(0, 0, 0, .8)', // [string] - Background color for the lightbox overlay
   filter: /.+\.(gif|jpe?g|png|webp)/i // RegExp object - pattern to match image files
 }
 ```
