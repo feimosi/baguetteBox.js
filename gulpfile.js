@@ -1,6 +1,8 @@
 var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync'),
+    runSequence = require('run-sequence');
+
 var src = {
         css: ['./src/*.scss', './src/*.css'],
         js: './src/*.js'
@@ -81,6 +83,22 @@ gulp.task('bump-patch', function () {
     .pipe(gulp.dest('./'));
 });
 
+// Update version number in project files
+gulp.task('update-version', function () {
+    return gulp.src([build.css + '*.css',
+            build.js + '*.js',
+            dist.css + '*.css',
+            dist.js + '*.js'
+            ], {
+                base: './'
+        })
+        .pipe(plugins.injectVersion({
+            replace: '%%INJECT_VERSION%%',
+            prepend: { toString: function() { return ''; } }
+        }))
+        .pipe(gulp.dest('./'));
+});
+
 // Watch files for changes
 gulp.task('watch', ['browser-sync'], function() {
     // Watch Sass files
@@ -107,6 +125,12 @@ gulp.task('browser-sync', ['js', 'css'], function () {
 // Default task
 gulp.task('default', ['css', 'js', 'watch', 'browser-sync']);
 
-gulp.task('release', ['css-min', 'js-min', 'bump-minor']);
+gulp.task('release', function() {
+    runSequence('bump-minor', 'build', 'update-version');
+});
 
-gulp.task('patch', ['css-min', 'js-min', 'bump-patch']);
+gulp.task('patch', function() {
+    runSequence('bump-patch', 'build', 'update-version');
+});
+
+gulp.task('build', ['css', 'js', 'css-min', 'js-min']);
