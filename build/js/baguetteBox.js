@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.4.2
+ * @version %%INJECT_VERSION%%
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -32,6 +32,9 @@
     // Global options and their defaults
     var options = {}, defaults = {
         captions: true,
+        fullScreen: false,
+        noScrollbars: false,
+        titleTag: false,
         buttons: 'auto',
         async: false,
         preload: 2,
@@ -39,7 +42,8 @@
         afterShow: null,
         afterHide: null,
         // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
-        onChange: null
+        onChange: null,
+        overlayBackgroundColor: 'rgba(0, 0, 0, .8)',
     };
     // Object containing information about features compatibility
     var supports = {};
@@ -288,9 +292,13 @@
             options.buttons = false;
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // Set overlay color
+        overlay.style.backgroundColor = options.overlayBackgroundColor;
     }
 
     function showOverlay(chosenImageIndex) {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'hidden';
         if(overlay.style.display === 'block')
             return;
 
@@ -303,6 +311,8 @@
 
         updateOffset();
         overlay.style.display = 'block';
+        if(options.fullScreen)
+            enterFullScreen();
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
@@ -313,7 +323,27 @@
             options.onChange(currentIndex, imagesElements.length);
     }
 
+    function enterFullScreen() {
+        if(overlay.requestFullscreen)
+            overlay.requestFullscreen();
+        else if(overlay.webkitRequestFullscreen )
+            overlay.webkitRequestFullscreen();
+        else if(overlay.mozRequestFullScreen)
+            overlay.mozRequestFullScreen();
+    }
+
+    function exitFullscreen() {
+        if(document.exitFullscreen)
+            document.exitFullscreen();
+        else if(document.mozCancelFullScreen)
+            document.mozCancelFullScreen();
+        else if(document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
+    }
+
     function hideOverlay() {
+        if(options.noScrollbars)
+            document.body.style.overflow = 'auto';
         if(overlay.style.display === 'none')
             return;
 
@@ -322,6 +352,7 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
+            exitFullscreen();
             if(options.afterHide)
                 options.afterHide();
         }, 500);
@@ -363,6 +394,8 @@
                 callback();
         };
         image.setAttribute('src', imageSrc);
+        if(options.titleTag && imageCaption)
+            image.title = imageCaption;
         figure.appendChild(image);
         // Insert caption if available
         if(options.captions && imageCaption) {
