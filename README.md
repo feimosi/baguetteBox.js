@@ -87,26 +87,30 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 
 ## Customization
 
-You can pass an object with custom options as a second parameter. The following are available with their corresponding defaults:
-```javascript
-{
-  captions: true,       // true|false|callback(element) - Display image captions
-  fullScreen: false,    // true|false - Enable full screen mode
-  noScrollbars: false,  // true|false - Hide scrollbars when images are displayed
-  titleTag: false,      // true|false - Propage caption to the image title attribute
-  buttons: 'auto',      // 'auto'|true|false - Display buttons
-  async: false,         // true|false - Load files asynchronously
-  preload: 2,           // [number] - How many files should be preloaded from current image
-  animation: 'slideIn', // 'slideIn'|'fadeIn'|false - Animation type
-  afterShow: null,      // callback - To be run after showing the overlay
-  afterHide: null,      // callback - To be run after hiding the overlay
-  onChange: null,       // callback(currentIndex, imagesElements.length) - When image changes
-  overlayBackgroundColor: 'rgba(0, 0, 0, .8)', // [string] - Background color for the lightbox overlay
-  filter: /.+\.(gif|jpe?g|png|webp)/i // RegExp object - pattern to match image files
-}
+You can pass an object with custom options as a second parameter. 
+```js
+baguetteBox.run('.gallery', {
+  // Custom options
+});
 ```
-* `captions: 'callback'` applies a caption returned by the callback. Invoked in the context of an array of gallery images.
-* `buttons: 'auto'` hides buttons on touch-enabled devices or when only one image is displayed.
+The following options are available:
+
+
+| Option | Type | Deafult | Description |
+| --- | --- | --- | --- |
+| `captions` | `Boolean` \| `function(element)` | `true` | Display image captions. Passing a function will use a string returned by this callback. The only argument is `a` element containing the image. Invoked in the context of the current gallery array |
+| `buttons` | `Boolean` \| `'auto'` | `'auto'` | Display buttons. `'auto'` hides buttons on touch-enabled devices or when only one image is available |
+| `fullScreen` | `Boolean` | `false` | Enable full screen mode |
+| `noScrollbars` | `Boolean` | `false` | Hide scrollbars when gallery is displayed |
+| `titleTag` | `Boolean` | `false` | Use caption value also in the gallery `img.title` attribute |
+| `async` | `Boolean` | `false` | Load files asynchronously |
+| `preload` | `Number` | `2` | How many files should be preloaded |
+| `animation` | `'slideIn'` \| `'fadeIn'` \| `false` | `'slideIn'` | Animation type |
+| `afterShow` | `function` | `null` | Callback to be run after showing the overlay |
+| `afterHide` | `function` | `null` | Callback to be run after hiding the overlay |
+| `onChange` | `function(currentIndex, imagesCount)` | `null` | Callback to be run when image changes |
+| `overlayBackgroundColor` | `String` | `'rgba (0,0,0,.8)'` | Background color for the lightbox overlay |
+| `filter` | `RegExp` | `/.+\.(gif|jpe?g|png|webp)/i` | Pattern to match image files. Applied to the `a.href` attribute |
 
 ## Compatibility
 
