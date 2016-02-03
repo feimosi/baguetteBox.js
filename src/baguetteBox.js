@@ -53,6 +53,7 @@
     var currentIndex = 0, currentGallery = -1;
     // Touch event start position (for slide gesture)
     var touchStartX;
+    var touchStartY;
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
@@ -86,8 +87,9 @@
         hideOverlay();
     };
     var touchstartHandler = function(event) {
-        // Save x axis position
+        // Save x and y axis position
         touchStartX = event.changedTouches[0].pageX;
+        touchStartY = event.changedTouches[0].pageY;
     };
     var touchmoveHandler = function(event) {
         // If action was already triggered return
@@ -103,6 +105,9 @@
         } else if (touch.pageX - touchStartX < -40) {
             touchFlag = true;
             showNextImage();
+        // Move 100 pixels up to close the overlay
+        } else if (touchStartY - touch.pageY > 100) {
+            hideOverlay();
         }
     };
     var touchendHandler = function(event) {
