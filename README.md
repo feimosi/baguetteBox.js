@@ -1,6 +1,10 @@
 baguetteBox.js
 ==============
 
+[![GitHub version](https://badge.fury.io/gh/feimosi%2FbaguetteBox.js.svg)](https://badge.fury.io/gh/feimosi%2FbaguetteBox.js)
+[![Dependency Status](https://img.shields.io/david/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js)
+[![GitHub license](https://img.shields.io/npm/l/baguettebox.js.svg)]()
+
 Simple and easy to use lightbox script.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
@@ -127,6 +131,6 @@ Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](
 
 ## License
 
-Copyright (c) 2015 [feimosi](https://github.com/feimosi/)
+Copyright (c) 2016 [feimosi](https://github.com/feimosi/)
 
 This content is released under the [MIT License](http://opensource.org/licenses/MIT).
