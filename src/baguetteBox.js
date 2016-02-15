@@ -139,13 +139,14 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
-        bindImageClickListeners(selector, userOptions);
+        var galleryId = bindImageClickListeners(selector, userOptions);
+        return galleryId;
     }
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
         var gallery = document.querySelectorAll(selector);
-        galleries.push(gallery);
+        var galleryId = (galleries.push(gallery) - 1);
         [].forEach.call(gallery, function(galleryElement) {
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
@@ -171,6 +172,7 @@
                 bind(imageElement, 'click', imageElementClickHandler);
             });
         });
+        return galleryId;
     }
 
     function unbindImageClickListeners() {
@@ -326,6 +328,11 @@
         }, 50);
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+    }
+
+    function showGallery(galleryId) {
+        prepareOverlay(galleryId);
+        showOverlay(0);
     }
 
     function enterFullScreen() {
@@ -562,7 +569,8 @@
         run: run,
         destroy: destroyPlugin,
         showNext: showNextImage,
-        showPrevious: showPreviousImage
+        showPrevious: showPreviousImage,
+        showGallery: showGallery
     };
 
 }));
