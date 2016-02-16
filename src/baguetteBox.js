@@ -66,6 +66,10 @@
     var imagesElements = [];
     // Event handlers
     var imagedEventHandlers = {};
+    // Contains the current image
+	var imageElement;
+	// Contains the current imageSrc
+	var imageSrc;
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
         if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
@@ -97,7 +101,7 @@
             return;
         /*jshint -W030 */
         event.preventDefault ? event.preventDefault() : event.returnValue = false;
-        touch = event.touches[0] || event.changedTouches[0];
+        var touch = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
         if(touch.pageX - touchStartX > 40) {
             touchFlag = true;
@@ -425,7 +429,7 @@
                     srcs[item.replace('at-', '')] = image.dataset[item];
             }
             // Sort resolutions ascending
-            keys = Object.keys(srcs).sort(function(a, b) {
+            var keys = Object.keys(srcs).sort(function(a, b) {
                 return parseInt(a) < parseInt(b) ? -1 : 1;
             });
             // Get real screen resolution
