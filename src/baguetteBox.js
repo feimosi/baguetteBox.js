@@ -68,7 +68,7 @@
     var imagedEventHandlers = {};
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
-        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
+        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION' && event.target.nodeName !== 'A')
             hideOverlay();
     };
     var previousButtonClickHandler = function(event) {
