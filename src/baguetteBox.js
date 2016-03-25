@@ -43,14 +43,16 @@
         afterHide: null,
         // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
         onChange: null,
-        overlayBackgroundColor: 'rgba(0, 0, 0, .8)',
+        overlayBackgroundColor: 'rgba(0, 0, 0, .8)'
     };
     // Object containing information about features compatibility
     var supports = {};
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
-    // Current image index inside the slider and displayed gallery index
-    var currentIndex = 0, currentGallery = -1;
+    // Displayed gallery
+    var currentGallery = [];
+    // Current image index inside the slider
+    var currentIndex = 0;
     // Touch event start position (for slide gesture)
     var touchStartX;
     var touchStartY;
@@ -58,14 +60,12 @@
     var touchFlag = false;
     // Regex pattern to match image files
     var regex = /.+\.(gif|jpe?g|png|webp)/i;
-    // Array of all used galleries (Array od NodeList elements)
-    var galleries = [];
-    // 2D array of galleries and images inside them
-    var imagesMap = [];
+    
+    // Object of all used galleries
+    var data = {};
     // Array containing temporary images DOM elements
     var imagesElements = [];
-    // Event handlers
-    var imagedEventHandlers = {};
+    
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
         if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION' && event.target.nodeName !== 'A')
@@ -139,50 +139,78 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        destroyGalleriesForSelector(selector);
         bindImageClickListeners(selector, userOptions);
     }
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        var gallery = document.querySelectorAll(selector);
-        galleries.push(gallery);
-        [].forEach.call(gallery, function(galleryElement) {
+        var nodeList = document.querySelectorAll(selector),
+            selectorData = {
+                galleries: [],
+                nodeList: nodeList
+            };
+        
+        data[selector] = selectorData;
+        
+        [].forEach.call(nodeList, function(galleryElement) {
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
             // Filter 'a' elements from those not linking to images
-            var tags = galleryElement.getElementsByTagName('a');
-            tags = [].filter.call(tags, function(element) {
+            var tagsNodeList = galleryElement.getElementsByTagName('a');
+            tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
-
-            // Get all gallery images and save them in imagesMap with custom options
-            var galleryID = imagesMap.length;
-            imagesMap.push(tags);
-            imagesMap[galleryID].options = userOptions;
-
-            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+            var gallery = [];
+            
+            if(tagsNodeList.length === 0){
+                return
+            }
+            
+            selectorData.galleries.push(gallery);
+            
+            [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     /*jshint -W030 */
                     event.preventDefault ? event.preventDefault() : event.returnValue = false;
-                    prepareOverlay(galleryID);
+                    prepareOverlay(gallery, userOptions);
                     showOverlay(imageIndex);
                 };
-                imagedEventHandlers[galleryID + '_' + imageElement] = imageElementClickHandler;
+                var imageItem = {
+                    eventHandler: imageElementClickHandler,
+                    imageElement: imageElement
+                };
+                
                 bind(imageElement, 'click', imageElementClickHandler);
+                gallery.push(imageItem);
             });
         });
     }
-
+    
     function unbindImageClickListeners() {
-        galleries.forEach(function(gallery) {
-            [].forEach.call(gallery, function(galleryElement) {
-                var galleryID = imagesMap.length - 1;
-                [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
-                    unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
-                });
-                imagesMap.pop();
+        for(var selector in data) {
+            if(data.hasOwnProperty(selector)) {
+                destroyGalleriesForSelector(selector);
+            }
+        }
+    }
+    
+    function destroyGalleriesForSelector(selector) {
+        if(!data.hasOwnProperty(selector)) {
+            return;
+        }
+        var galleries = data[selector].galleries;
+        [].forEach.call(galleries, function(gallery) {
+            [].forEach.call(gallery, function(imageItem) {
+                unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
+            
+            if(currentGallery === gallery) {
+                currentGallery = [];
+            }
         });
+        
+        delete data[selector];
     }
 
     function buildOverlay() {
@@ -257,20 +285,20 @@
         unbind(overlay, 'touchmove', touchmoveHandler);
         unbind(overlay, 'touchend', touchendHandler);
     }
-
-    function prepareOverlay(galleryIndex) {
+    
+    function prepareOverlay(gallery, userOptions) {
         // If the same gallery is being opened prevent from loading it once again
-        if(currentGallery === galleryIndex)
+        if(currentGallery === gallery)
             return;
-        currentGallery = galleryIndex;
+        currentGallery = gallery;
         // Update gallery specific options
-        setOptions(imagesMap[galleryIndex].options);
+        setOptions(userOptions);
         // Empty slider of previous contents (more effective than .innerHTML = "")
         while(slider.firstChild)
             slider.removeChild(slider.firstChild);
         imagesElements.length = 0;
         // Prepare and append images containers
-        for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
+        for(var i = 0, fullImage; i < gallery.length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
@@ -293,7 +321,7 @@
         slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' :
             options.animation === 'slideIn' ? '' : 'none');
         // Hide buttons if necessary
-        if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
+        if(options.buttons === 'auto' && ('ontouchstart' in window || currentGallery.length === 1))
             options.buttons = false;
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
@@ -375,11 +403,11 @@
             return;
         }
         // Get element reference, optional caption and source path
-        imageElement = imagesMap[currentGallery][index];
-        imageCaption = (typeof(options.captions) === 'function') ?
-                            options.captions.call(imagesMap[currentGallery], imageElement) :
-                            imageElement.getAttribute('data-caption') || imageElement.title;
-        imageSrc = getImageSrc(imageElement);
+        var imageElement = currentGallery[index].imageElement;
+        var imageCaption = (typeof(options.captions) === 'function') ?
+            options.captions.call(currentGallery, imageElement) :
+        imageElement.getAttribute('data-caption') || imageElement.title;
+        var imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
@@ -415,7 +443,7 @@
     // Get image source location, mostly used for responsive images
     function getImageSrc(image) {
         // Set default image path from href
-        var result = imageElement.href;
+        var result = image.href;
         // If dataset is supported find the most suitable image
         if(image.dataset) {
             var srcs = [];
@@ -552,10 +580,9 @@
         unbindImageClickListeners();
         unbind(document, 'keydown', keyDownHandler);
         document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
+        data = {};
+        currentGallery = [];
         currentIndex = 0;
-        currentGallery = -1;
-        galleries.length = 0;
-        imagesMap.length = 0;
     }
 
     return {
