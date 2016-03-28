@@ -58,6 +58,8 @@
     var touchFlag = false;
     // Regex pattern to match image files
     var regex = /.+\.(gif|jpe?g|png|webp)/i;
+    // Object of all used galleries
+    var data = {};
     // Array of all used galleries (Array od NodeList elements)
     var galleries = [];
     // 2D array of galleries and images inside them
@@ -144,7 +146,13 @@
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        var nodeList = document.querySelectorAll(selector);
+        var nodeList = document.querySelectorAll(selector),
+            selectorData = {
+                galleries: [],
+                nodeList: nodeList
+            };
+        data[selector] = selectorData;
+        
         galleries.push(nodeList);
         [].forEach.call(nodeList, function(galleryElement) {
             if(userOptions && userOptions.filter)
@@ -154,6 +162,8 @@
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
+            var gallery = [];
+            selectorData.galleries.push(gallery);
 
             // Get all gallery images and save them in imagesMap with custom options
             var galleryID = imagesMap.length;
@@ -166,10 +176,16 @@
                     prepareOverlay(galleryID, userOptions);
                     showOverlay(imageIndex);
                 };
+                var imageItem = {
+                    eventHandler: imageElementClickHandler,
+                    imageElement: imageElement
+                };
                 imagedEventHandlers[galleryID + '_' + imageElement] = imageElementClickHandler;
                 bind(imageElement, 'click', imageElementClickHandler);
+                gallery.push(imageItem);
             });
         });
+        console.log(data);
     }
 
     function unbindImageClickListeners() {
@@ -553,6 +569,7 @@
         document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
         currentIndex = 0;
         currentGallery = -1;
+        data = {};
         galleries.length = 0;
         imagesMap.length = 0;
     }
