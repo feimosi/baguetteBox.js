@@ -168,12 +168,11 @@
             // Get all gallery images and save them in imagesMap with custom options
             var galleryID = imagesMap.length;
             imagesMap.push(tagsNodeList);
-            imagesMap[galleryID].options = userOptions;
 
             [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
-                    prepareOverlay(galleryID);
+                    prepareOverlay(galleryID, userOptions);
                     showOverlay(imageIndex);
                 };
                 imagedEventHandlers[galleryID + '_' + imageElement] = imageElementClickHandler;
@@ -273,14 +272,14 @@
         unbind(overlay, 'touchend', touchendHandler);
     }
 
-    function prepareOverlay(galleryIndex) {
+    function prepareOverlay(galleryIndex, userOptions) {
         // If the same gallery is being opened prevent from loading it once again
         if (currentGallery === galleryIndex) {
             return;
         }
         currentGallery = galleryIndex;
         // Update gallery specific options
-        setOptions(imagesMap[galleryIndex].options);
+        setOptions(userOptions);
         // Empty slider of previous contents (more effective than .innerHTML = "")
         while (slider.firstChild) {
             slider.removeChild(slider.firstChild);
