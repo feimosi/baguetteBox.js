@@ -153,9 +153,9 @@
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        var gallery = document.querySelectorAll(selector);
-        galleries.push(gallery);
-        [].forEach.call(gallery, function(galleryElement) {
+        var galleryNodeList = document.querySelectorAll(selector);
+        galleries.push(galleryNodeList);
+        [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
