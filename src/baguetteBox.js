@@ -146,6 +146,7 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        removeFromCache(selector);
         bindImageClickListeners(selector, userOptions);
     }
 
@@ -190,7 +191,31 @@
         });
     }
 
-    function unbindImageClickListeners() {}
+    function clearCachedData() {
+        for (var selector in data) {
+            if (data.hasOwnProperty(selector)) {
+                removeFromCache(selector);
+            }
+        }
+    }
+    
+    function removeFromCache(selector) {
+        if (!data.hasOwnProperty(selector)) {
+            return;
+        }
+        var galleries = data[selector].galleries;
+        [].forEach.call(galleries, function(gallery) {
+            [].forEach.call(gallery, function(imageItem) {
+                unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
+            });
+            
+            if (currentGallery === gallery) {
+                currentGallery = [];
+            }
+        });
+        
+        delete data[selector];
+    }
 
     function buildOverlay() {
         overlay = getByID('baguetteBox-overlay');
@@ -598,7 +623,7 @@
 
     function destroyPlugin() {
         unbindEvents();
-        unbindImageClickListeners();
+        clearCachedData();
         unbind(document, 'keydown', keyDownHandler);
         document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
         currentIndex = 0;
