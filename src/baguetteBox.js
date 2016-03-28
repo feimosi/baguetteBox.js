@@ -375,11 +375,11 @@
             return;
         }
         // Get element reference, optional caption and source path
-        imageElement = imagesMap[currentGallery][index];
-        imageCaption = (typeof(options.captions) === 'function') ?
+        var imageElement = imagesMap[currentGallery][index];
+        var imageCaption = (typeof(options.captions) === 'function') ?
                             options.captions.call(imagesMap[currentGallery], imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
-        imageSrc = getImageSrc(imageElement);
+        var imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
@@ -415,7 +415,7 @@
     // Get image source location, mostly used for responsive images
     function getImageSrc(image) {
         // Set default image path from href
-        var result = imageElement.href;
+        var result = image.href;
         // If dataset is supported find the most suitable image
         if(image.dataset) {
             var srcs = [];
