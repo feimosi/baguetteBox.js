@@ -159,7 +159,7 @@
             var galleryID = imagesMap.length;
             imagesMap.push(tagsNodeList);
 
-            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+            [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     /*jshint -W030 */
                     event.preventDefault ? event.preventDefault() : event.returnValue = false;
