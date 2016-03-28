@@ -137,6 +137,7 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        destroyGalleriesForSelector(selector);
         bindImageClickListeners(selector, userOptions);
     }
 
@@ -182,15 +183,29 @@
     }
 
     function unbindImageClickListeners() {
-        // galleries.forEach(function(gallery) {
-        //     [].forEach.call(gallery, function(galleryElement) {
-        //         var galleryID = imagesMap.length - 1;
-        //         [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
-        //             unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
-        //         });
-        //         imagesMap.pop();
-        //     });
-        // });
+        for(var selector in data) {
+            if(data.hasOwnProperty(selector)) {
+                destroyGalleriesForSelector(selector);
+            }
+        }
+    }
+    
+    function destroyGalleriesForSelector(selector) {
+        if(!data.hasOwnProperty(selector)) {
+            return;
+        }
+        var galleries = data[selector].galleries;
+        [].forEach.call(galleries, function(gallery) {
+            [].forEach.call(gallery, function(imageItem) {
+                unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
+            });
+            
+            if(currentGallery === gallery) {
+                currentGallery = [];
+            }
+        });
+        
+        delete data[selector];
     }
 
     function buildOverlay() {
