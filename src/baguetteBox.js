@@ -150,14 +150,14 @@
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
             // Filter 'a' elements from those not linking to images
-            var tags = galleryElement.getElementsByTagName('a');
-            tags = [].filter.call(tags, function(element) {
+            var tagsNodeList = galleryElement.getElementsByTagName('a');
+            tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
 
             // Get all gallery images and save them in imagesMap with custom options
             var galleryID = imagesMap.length;
-            imagesMap.push(tags);
+            imagesMap.push(tagsNodeList);
             imagesMap[galleryID].options = userOptions;
 
             [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
