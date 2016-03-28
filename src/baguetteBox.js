@@ -144,9 +144,9 @@
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        var gallery = document.querySelectorAll(selector);
-        galleries.push(gallery);
-        [].forEach.call(gallery, function(galleryElement) {
+        var nodeList = document.querySelectorAll(selector);
+        galleries.push(nodeList);
+        [].forEach.call(nodeList, function(galleryElement) {
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
             // Filter 'a' elements from those not linking to images
