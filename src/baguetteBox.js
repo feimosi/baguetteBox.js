@@ -43,7 +43,7 @@
         afterHide: null,
         // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
         onChange: null,
-        overlayBackgroundColor: 'rgba(0, 0, 0, .8)',
+        overlayBackgroundColor: 'rgba(0, 0, 0, .8)'
     };
     // Object containing information about features compatibility
     var supports = {};
