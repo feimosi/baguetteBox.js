@@ -168,6 +168,10 @@
                 return regex.test(element.href);
             });
             var gallery = [];
+            
+            if (tagsNodeList.length === 0) {
+                return;
+            }
             selectorData.galleries.push(gallery);
 
             [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
