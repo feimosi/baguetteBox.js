@@ -1,3 +1,7 @@
+/* jshint node:true */
+
+'use strict';
+
 var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
     browserSync = require('browser-sync'),
@@ -23,7 +27,7 @@ gulp.task('css', function() {
         // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(["last 2 version", "> 1%", "ie 8", "ie 7", 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
         // Concatenate all styles
         .pipe(plugins.concat('baguetteBox.css'))
         // Where to store the finalized CSS
@@ -35,7 +39,7 @@ gulp.task('css-min', function() {
         // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(["last 2 version", "> 1%", "ie 8", "ie 7", 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
         // Minify CSS
         .pipe(plugins.cssmin())
         // Concatenate all styles
@@ -64,23 +68,23 @@ gulp.task('js-min', function() {
         // Concatenate all JS files into one
         .pipe(plugins.concat('baguetteBox.min.js'))
         // Minify JS
-        .pipe(plugins.uglify({preserveComments: 'some'}))
+        .pipe(plugins.uglify({ preserveComments: 'some' }))
         // Where to store the finalized JS
         .pipe(gulp.dest(dist.js));
 });
 
 // Bump to a new version
 gulp.task('bump-minor', function () {
-  return gulp.src(['./bower.json', './package.json'])
-    .pipe(plugins.bump({type:'minor'}))
-    .pipe(gulp.dest('./'));
+    return gulp.src(['./bower.json', './package.json'])
+        .pipe(plugins.bump({ type:'minor' }))
+        .pipe(gulp.dest('./'));
 });
 
 // Bump to a new version
 gulp.task('bump-patch', function () {
-  return gulp.src(['./bower.json', './package.json'])
-    .pipe(plugins.bump({type:'patch'}))
-    .pipe(gulp.dest('./'));
+    return gulp.src(['./bower.json', './package.json'])
+        .pipe(plugins.bump({ type:'patch' }))
+        .pipe(gulp.dest('./'));
 });
 
 // Update version number in project files
@@ -109,15 +113,15 @@ gulp.task('watch', ['browser-sync'], function() {
 
 // Live browser reload
 gulp.task('browser-sync', ['js', 'css'], function () {
-   var files = [
-      build.html + '*.html',
-      build.css + '*.css',
-      build.js + '*.js'
+    var files = [
+       build.html + '*.html',
+       build.css + '*.css',
+       build.js + '*.js'
    ];
 
     browserSync.init(files, {
         server: {
-            baseDir: "./build/"
+            baseDir: './build/'
         }
     });
 });
