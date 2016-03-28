@@ -575,9 +575,9 @@
         unbindImageClickListeners();
         unbind(document, 'keydown', keyDownHandler);
         document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
-        currentIndex = 0;
-        currentGallery = [];
         data = {};
+        currentGallery = [];
+        currentIndex = 0;
     }
 
     return {
