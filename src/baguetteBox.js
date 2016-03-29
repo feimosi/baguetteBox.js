@@ -149,8 +149,14 @@
         [].forEach.call(gallery, function(galleryElement) {
             if(userOptions && userOptions.filter)
                 regex = userOptions.filter;
+
+            if(galleryElement.tagName === 'A')
+                var tags = [galleryElement];
+            else {
+                var tags = galleryElement.getElementsByTagName('a');
+            }
+
             // Filter 'a' elements from those not linking to images
-            var tags = galleryElement.getElementsByTagName('a');
             tags = [].filter.call(tags, function(element) {
                 return regex.test(element.href);
             });
