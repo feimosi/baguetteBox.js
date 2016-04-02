@@ -136,8 +136,9 @@
             /* jshint -W030 */
             c = this;
             d = [];
-            for (e = 0; e < c.length; e++)
-                a.call(b, c[e], e, c) && d.push(c[e]);
+            for (e = 0; e < c.length; e++) {
+                a.call( b, c[e], e, c ) && d.push( c[e] );
+            }
             return d;
         };
     }
@@ -174,7 +175,7 @@
             var gallery = [];
             
             if (tagsNodeList.length === 0) {
-                return
+                return;
             }
             selectorData.galleries.push(gallery);
 
