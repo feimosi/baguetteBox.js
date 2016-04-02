@@ -18,7 +18,7 @@ var src = {
     },
     dist = {
         css: './dist/',
-        js: './dist/',
+        js: './dist/'
     };
 
 // CSS tasks
@@ -100,7 +100,9 @@ gulp.task('update-version', function () {
             })
             .pipe(plugins.injectVersion({
                 replace: '%%INJECT_VERSION%%',
-            prepend: { toString: function() { return ''; } }
+                prepend: {
+                    toString: function() { return ''; }
+                }
             }))
             .pipe(gulp.dest('./'));
 });

@@ -554,20 +554,25 @@
         if (index - currentIndex >= options.preload) {
             return;
         }
-        loadImage(index + 1, function() { preloadNext(index + 1); });
+        loadImage(index + 1, function() {
+            preloadNext(index + 1);
+        });
     }
 
     function preloadPrev(index) {
         if (currentIndex - index >= options.preload) {
             return;
         }
-        loadImage(index - 1, function() { preloadPrev(index - 1); });
+        loadImage(index - 1, function() {
+            preloadPrev(index - 1);
+        });
     }
 
     function bind(element, event, callback) {
         if (element.addEventListener) {
             element.addEventListener(event, callback, false);
-        } else {    // IE8 fallback
+        } else {
+            // IE8 fallback
             element.attachEvent('on' + event, callback);
         }
     }
@@ -575,7 +580,8 @@
     function unbind(element, event, callback) {
         if (element.removeEventListener) {
             element.removeEventListener(event, callback, false);
-        } else {    // IE8 fallback
+        } else {
+            // IE8 fallback
             element.detachEvent('on' + event, callback);
         }
     }
