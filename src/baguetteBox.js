@@ -78,18 +78,15 @@
         }
     };
     var previousButtonClickHandler = function(event) {
-        /* jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
         showPreviousImage();
     };
     var nextButtonClickHandler = function(event) {
-        /* jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
         showNextImage();
     };
     var closeButtonClickHandler = function(event) {
-        /* jshint -W030 */
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
         hideOverlay();
     };
     var touchstartHandler = function(event) {
@@ -102,8 +99,7 @@
         if (touchFlag) {
             return;
         }
-        /* jshint -W030 */
-        event.preventDefault ? event.preventDefault() : event.returnValue = false;
+        event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
         var touch = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
         if (touch.pageX - touchStartX > 40) {
@@ -123,6 +119,7 @@
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
+    /* jshint ignore:start */
     if (![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
             for (var i = 0; i < this.length; i++) {
@@ -135,7 +132,6 @@
     // https://gist.github.com/eliperelman/1031656
     if (![].filter) {
         Array.prototype.filter = function(a, b, c, d, e) {
-            /* jshint -W030 */
             c = this;
             d = [];
             for (e = 0; e < c.length; e++)
@@ -143,6 +139,7 @@
             return d;
         };
     }
+    /* jshint ignore:end */
 
     // Script entry point
     function run(selector, userOptions) {
@@ -175,8 +172,7 @@
 
             [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
-                    /* jshint -W030 */
-                    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+                    event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
                     prepareOverlay(galleryID);
                     showOverlay(imageIndex);
                 };
