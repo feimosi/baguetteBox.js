@@ -24,10 +24,16 @@ h1, h2, h3, footer, .gallery {
 }
 
 pre {
-    max-width: 340px;
+    width: 340px;
     margin: 0 auto;
     border: dashed 1px #aaa;
     margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+    pre {
+        max-width: 98%;
+    }
 }
 
 header, footer {
