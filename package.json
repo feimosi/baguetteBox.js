@@ -13,6 +13,9 @@
     "url": "https://github.com/feimosi/baguetteBox.js/issues"
   },
   "main": "dist/baguetteBox.min.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "gulp test"
   },
