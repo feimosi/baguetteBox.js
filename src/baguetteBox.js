@@ -5,7 +5,10 @@
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
+/* global define, module */
+
 (function (root, factory) {
+    'use strict';
     if (typeof define === 'function' && define.amd) {
         define(factory);
     } else if (typeof exports === 'object') {
@@ -14,6 +17,7 @@
         root.baguetteBox = factory();
     }
 }(this, function () {
+    'use strict';
 
     // SVG shapes used on the buttons
     var leftArrow = '<svg width="44" height="60">' +
@@ -30,21 +34,22 @@
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             '</g></svg>';
     // Global options and their defaults
-    var options = {}, defaults = {
-        captions: true,
-        fullScreen: false,
-        noScrollbars: false,
-        titleTag: false,
-        buttons: 'auto',
-        async: false,
-        preload: 2,
-        animation: 'slideIn',
-        afterShow: null,
-        afterHide: null,
-        // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
-        onChange: null,
-        overlayBackgroundColor: 'rgba(0, 0, 0, .8)',
-    };
+    var options = {},
+        defaults = {
+            captions: true,
+            fullScreen: false,
+            noScrollbars: false,
+            titleTag: false,
+            buttons: 'auto',
+            async: false,
+            preload: 2,
+            animation: 'slideIn',
+            afterShow: null,
+            afterHide: null,
+            // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
+            onChange: null,
+            overlayBackgroundColor: 'rgba(0, 0, 0, .8)'
+        };
     // Object containing information about features compatibility
     var supports = {};
     // DOM Elements references
@@ -68,21 +73,22 @@
     var imagedEventHandlers = {};
     var overlayClickHandler = function(event) {
         // When clicked on the overlay (outside displayed image) close it
-        if(event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION')
+        if (event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION') {
             hideOverlay();
+        }
     };
     var previousButtonClickHandler = function(event) {
-        /*jshint -W030 */
+        /* jshint -W030 */
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
         showPreviousImage();
     };
     var nextButtonClickHandler = function(event) {
-        /*jshint -W030 */
+        /* jshint -W030 */
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
         showNextImage();
     };
     var closeButtonClickHandler = function(event) {
-        /*jshint -W030 */
+        /* jshint -W030 */
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
         hideOverlay();
     };
@@ -93,13 +99,14 @@
     };
     var touchmoveHandler = function(event) {
         // If action was already triggered return
-        if(touchFlag)
+        if (touchFlag) {
             return;
-        /*jshint -W030 */
+        }
+        /* jshint -W030 */
         event.preventDefault ? event.preventDefault() : event.returnValue = false;
-        touch = event.touches[0] || event.changedTouches[0];
+        var touch = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
-        if(touch.pageX - touchStartX > 40) {
+        if (touch.pageX - touchStartX > 40) {
             touchFlag = true;
             showPreviousImage();
         } else if (touch.pageX - touchStartX < -40) {
@@ -110,25 +117,30 @@
             hideOverlay();
         }
     };
-    var touchendHandler = function(event) {
+    var touchendHandler = function() {
         touchFlag = false;
     };
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
-    if(![].forEach) {
+    if (![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
-            for(var i = 0; i < this.length; i++)
+            for (var i = 0; i < this.length; i++) {
                 callback.call(thisArg, this[i], i, this);
+            }
         };
     }
 
     // filter polyfill for IE8
     // https://gist.github.com/eliperelman/1031656
-    if(![].filter) {
+    if (![].filter) {
         Array.prototype.filter = function(a, b, c, d, e) {
-            /*jshint -W030 */
-            c=this;d=[];for(e=0;e<c.length;e++)a.call(b,c[e],e,c)&&d.push(c[e]);return d;
+            /* jshint -W030 */
+            c = this;
+            d = [];
+            for (e = 0; e < c.length; e++)
+                a.call(b, c[e], e, c) && d.push(c[e]);
+            return d;
         };
     }
 
@@ -147,8 +159,9 @@
         var gallery = document.querySelectorAll(selector);
         galleries.push(gallery);
         [].forEach.call(gallery, function(galleryElement) {
-            if(userOptions && userOptions.filter)
+            if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
+            }
             // Filter 'a' elements from those not linking to images
             var tags = galleryElement.getElementsByTagName('a');
             tags = [].filter.call(tags, function(element) {
@@ -162,7 +175,7 @@
 
             [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
-                    /*jshint -W030 */
+                    /* jshint -W030 */
                     event.preventDefault ? event.preventDefault() : event.returnValue = false;
                     prepareOverlay(galleryID);
                     showOverlay(imageIndex);
@@ -175,9 +188,9 @@
 
     function unbindImageClickListeners() {
         galleries.forEach(function(gallery) {
-            [].forEach.call(gallery, function(galleryElement) {
+            [].forEach.call(gallery, function() {
                 var galleryID = imagesMap.length - 1;
-                [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+                [].forEach.call(imagesMap[galleryID], function(imageElement) {
                     unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
                 });
                 imagesMap.pop();
@@ -188,7 +201,7 @@
     function buildOverlay() {
         overlay = getByID('baguetteBox-overlay');
         // Check if the overlay already exists
-        if(overlay) {
+        if (overlay) {
             slider = getByID('baguetteBox-slider');
             previousButton = getByID('previous-button');
             nextButton = getByID('next-button');
@@ -225,7 +238,7 @@
     }
 
     function keyDownHandler(event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 37: // Left arrow
                 showPreviousImage();
                 break;
@@ -260,17 +273,19 @@
 
     function prepareOverlay(galleryIndex) {
         // If the same gallery is being opened prevent from loading it once again
-        if(currentGallery === galleryIndex)
+        if (currentGallery === galleryIndex) {
             return;
+        }
         currentGallery = galleryIndex;
         // Update gallery specific options
         setOptions(imagesMap[galleryIndex].options);
         // Empty slider of previous contents (more effective than .innerHTML = "")
-        while(slider.firstChild)
+        while (slider.firstChild) {
             slider.removeChild(slider.firstChild);
+        }
         imagesElements.length = 0;
         // Prepare and append images containers
-        for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
+        for (var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
@@ -280,21 +295,24 @@
     }
 
     function setOptions(newOptions) {
-        if(!newOptions)
+        if (!newOptions) {
             newOptions = {};
+        }
         // Fill options object
-        for(var item in defaults) {
+        for (var item in defaults) {
             options[item] = defaults[item];
-            if(typeof newOptions[item] !== 'undefined')
+            if (typeof newOptions[item] !== 'undefined') {
                 options[item] = newOptions[item];
+            }
         }
         /* Apply new options */
         // Change transition for proper animation
         slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' :
             options.animation === 'slideIn' ? '' : 'none');
         // Hide buttons if necessary
-        if(options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1))
+        if (options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1)) {
             options.buttons = false;
+        }
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
         // Set overlay color
@@ -302,10 +320,12 @@
     }
 
     function showOverlay(chosenImageIndex) {
-        if(options.noScrollbars)
+        if (options.noScrollbars) {
             document.body.style.overflow = 'hidden';
-        if(overlay.style.display === 'block')
+        }
+        if (overlay.style.display === 'block') {
             return;
+        }
 
         bind(document, 'keydown', keyDownHandler);
         currentIndex = chosenImageIndex;
@@ -316,41 +336,48 @@
 
         updateOffset();
         overlay.style.display = 'block';
-        if(options.fullScreen)
+        if (options.fullScreen) {
             enterFullScreen();
+        }
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
-            if(options.afterShow)
+            if (options.afterShow) {
                 options.afterShow();
+            }
         }, 50);
-        if(options.onChange)
+        if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
+        }
     }
 
     function enterFullScreen() {
-        if(overlay.requestFullscreen)
+        if (overlay.requestFullscreen) {
             overlay.requestFullscreen();
-        else if(overlay.webkitRequestFullscreen )
+        } else if (overlay.webkitRequestFullscreen) {
             overlay.webkitRequestFullscreen();
-        else if(overlay.mozRequestFullScreen)
+        } else if (overlay.mozRequestFullScreen) {
             overlay.mozRequestFullScreen();
+        }
     }
 
     function exitFullscreen() {
-        if(document.exitFullscreen)
+        if (document.exitFullscreen) {
             document.exitFullscreen();
-        else if(document.mozCancelFullScreen)
+        } else if (document.mozCancelFullScreen) {
             document.mozCancelFullScreen();
-        else if(document.webkitExitFullscreen)
+        } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
+        }
     }
 
     function hideOverlay() {
-        if(options.noScrollbars)
+        if (options.noScrollbars) {
             document.body.style.overflow = 'auto';
-        if(overlay.style.display === 'none')
+        }
+        if (overlay.style.display === 'none') {
             return;
+        }
 
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
@@ -358,28 +385,31 @@
         setTimeout(function() {
             overlay.style.display = 'none';
             exitFullscreen();
-            if(options.afterHide)
+            if (options.afterHide) {
                 options.afterHide();
+            }
         }, 500);
     }
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        if(typeof imageContainer === 'undefined')
+        if (typeof imageContainer === 'undefined') {
             return;
+        }
 
         // If image is already loaded run callback and return
-        if(imageContainer.getElementsByTagName('img')[0]) {
-            if(callback)
+        if (imageContainer.getElementsByTagName('img')[0]) {
+            if (callback) {
                 callback();
+            }
             return;
         }
         // Get element reference, optional caption and source path
-        imageElement = imagesMap[currentGallery][index];
-        imageCaption = (typeof(options.captions) === 'function') ?
-                            options.captions.call(imagesMap[currentGallery], imageElement) :
-                            imageElement.getAttribute('data-caption') || imageElement.title;
-        imageSrc = getImageSrc(imageElement);
+        var imageElement = imagesMap[currentGallery][index];
+        var imageCaption = typeof options.captions === 'function' ?
+                           options.captions.call(imagesMap[currentGallery], imageElement) :
+                           imageElement.getAttribute('data-caption') || imageElement.title;
+        var imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = create('figure');
         var image = create('img');
@@ -395,45 +425,50 @@
             // Remove loader element
             var spinner = document.querySelector('#baguette-img-' + index + ' .spinner');
             figure.removeChild(spinner);
-            if(!options.async && callback)
+            if (!options.async && callback) {
                 callback();
+            }
         };
         image.setAttribute('src', imageSrc);
-        if(options.titleTag && imageCaption)
+        if (options.titleTag && imageCaption) {
             image.title = imageCaption;
+        }
         figure.appendChild(image);
         // Insert caption if available
-        if(options.captions && imageCaption) {
+        if (options.captions && imageCaption) {
             figcaption.innerHTML = imageCaption;
             figure.appendChild(figcaption);
         }
         // Run callback
-        if(options.async && callback)
+        if (options.async && callback) {
             callback();
+        }
     }
 
     // Get image source location, mostly used for responsive images
     function getImageSrc(image) {
         // Set default image path from href
-        var result = imageElement.href;
+        var result = image.href;
         // If dataset is supported find the most suitable image
-        if(image.dataset) {
+        if (image.dataset) {
             var srcs = [];
             // Get all possible image versions depending on the resolution
-            for(var item in image.dataset) {
-                if(item.substring(0, 3) === 'at-' && !isNaN(item.substring(3)))
+            for (var item in image.dataset) {
+                if (item.substring(0, 3) === 'at-' && !isNaN(item.substring(3))) {
                     srcs[item.replace('at-', '')] = image.dataset[item];
+                }
             }
             // Sort resolutions ascending
-            keys = Object.keys(srcs).sort(function(a, b) {
-                return parseInt(a) < parseInt(b) ? -1 : 1;
+            var keys = Object.keys(srcs).sort(function(a, b) {
+                return parseInt(a, 10) < parseInt(b, 10) ? -1 : 1;
             });
             // Get real screen resolution
             var width = window.innerWidth * window.devicePixelRatio;
             // Find the first image bigger than or equal to the current width
             var i = 0;
-            while(i < keys.length - 1 && keys[i] < width)
+            while (i < keys.length - 1 && keys[i] < width) {
                 i++;
+            }
             result = srcs[keys[i]] || result;
         }
         return result;
@@ -443,20 +478,21 @@
     function showNextImage() {
         var returnValue;
         // Check if next image exists
-        if(currentIndex <= imagesElements.length - 2) {
+        if (currentIndex <= imagesElements.length - 2) {
             currentIndex++;
             updateOffset();
             preloadNext(currentIndex);
             returnValue = true;
-        } else if(options.animation) {
+        } else if (options.animation) {
             slider.className = 'bounce-from-right';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
             returnValue = false;
         }
-        if(options.onChange)
+        if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
+        }
         return returnValue;
     }
 
@@ -464,36 +500,37 @@
     function showPreviousImage() {
         var returnValue;
         // Check if previous image exists
-        if(currentIndex >= 1) {
+        if (currentIndex >= 1) {
             currentIndex--;
             updateOffset();
             preloadPrev(currentIndex);
             returnValue = true;
-        } else if(options.animation) {
+        } else if (options.animation) {
             slider.className = 'bounce-from-left';
             setTimeout(function() {
                 slider.className = '';
             }, 400);
             returnValue = false;
         }
-        if(options.onChange)
+        if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
+        }
         return returnValue;
     }
 
     function updateOffset() {
         var offset = -currentIndex * 100 + '%';
-        if(options.animation === 'fadeIn') {
+        if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
-                /*jshint -W030 */
+                /* jshint -W030 */
                 supports.transforms ?
                     slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                     : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
-            /*jshint -W030 */
+            /* jshint -W030 */
             supports.transforms ?
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
@@ -510,33 +547,37 @@
     function testSVGSupport() {
         var div = create('div');
         div.innerHTML = '<svg/>';
-        return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
+        return (div.firstChild && div.firstChild.namespaceURI) === 'http://www.w3.org/2000/svg';
     }
 
     function preloadNext(index) {
-        if(index - currentIndex >= options.preload)
+        if (index - currentIndex >= options.preload) {
             return;
+        }
         loadImage(index + 1, function() { preloadNext(index + 1); });
     }
 
     function preloadPrev(index) {
-        if(currentIndex - index >= options.preload)
+        if (currentIndex - index >= options.preload) {
             return;
+        }
         loadImage(index - 1, function() { preloadPrev(index - 1); });
     }
 
     function bind(element, event, callback) {
-        if(element.addEventListener)
+        if (element.addEventListener) {
             element.addEventListener(event, callback, false);
-        else // IE8 fallback
+        } else {    // IE8 fallback
             element.attachEvent('on' + event, callback);
+        }
     }
 
     function unbind(element, event, callback) {
-        if(element.removeEventListener)
+        if (element.removeEventListener) {
             element.removeEventListener(event, callback, false);
-        else // IE8 fallback
+        } else {    // IE8 fallback
             element.detachEvent('on' + event, callback);
+        }
     }
 
     function getByID(id) {
