@@ -416,14 +416,14 @@
         var figcaption = create('figcaption');
         imageContainer.appendChild(figure);
         // Add loader element
-        figure.innerHTML = '<div class="spinner">' +
-            '<div class="double-bounce1"></div>' +
-            '<div class="double-bounce2"></div>' +
+        figure.innerHTML = '<div class="baguetteBox-spinner">' +
+            '<div class="baguetteBox-double-bounce1"></div>' +
+            '<div class="baguetteBox-double-bounce2"></div>' +
             '</div>';
         // Set callback function when image loads
         image.onload = function() {
             // Remove loader element
-            var spinner = document.querySelector('#baguette-img-' + index + ' .spinner');
+            var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
             figure.removeChild(spinner);
             if (!options.async && callback) {
                 callback();
