@@ -137,4 +137,4 @@ gulp.task('patch', function() {
     runSequence('bump-patch', 'build', 'update-version');
 });
 
-gulp.task('build', ['css', 'js', 'css-min', 'js-min']);
+gulp.task('build', runSequence('css', 'js', 'css-min', 'js-min', 'update-version'));
