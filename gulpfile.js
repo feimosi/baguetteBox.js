@@ -21,13 +21,23 @@ var src = {
         js: './dist/'
     };
 
+var autoprefixerBrowsers = [
+    'last 2 version',
+    '> 1%',
+    'Edge >= 12',
+    'Explorer >= 8',
+    'Firefox 3.6',
+    'Firefox ESR',
+    'Opera 12.1'
+];
+
 // CSS tasks
 gulp.task('css', function() {
     return gulp.src(src.css)
         // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Concatenate all styles
         .pipe(plugins.concat('baguetteBox.css'))
         // Where to store the finalized CSS
@@ -39,7 +49,7 @@ gulp.task('css-min', function() {
         // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Minify CSS
         .pipe(plugins.cssmin())
         // Concatenate all styles
