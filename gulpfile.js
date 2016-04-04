@@ -35,7 +35,7 @@ var autoprefixerBrowsers = [
 gulp.task('css', function() {
     return gulp.src(src.css)
         // Compile Sass
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
         // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Concatenate all styles
@@ -47,7 +47,7 @@ gulp.task('css', function() {
 gulp.task('css-min', function() {
     return gulp.src(src.css)
         // Compile Sass
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
         // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Minify CSS
@@ -78,7 +78,7 @@ gulp.task('js-min', function() {
 });
 
 gulp.task('lint', function() {
-    return gulp.src(src.js)
+    return gulp.src([src.js, 'gulpfile.js'])
         // Run JSHint for syntax errors
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
