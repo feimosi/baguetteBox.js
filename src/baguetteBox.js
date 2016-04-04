@@ -29,7 +29,7 @@
               'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
             '</svg>',
         closeX = '<svg width="30" height="30">' +
-            '<g stroke="rgb(160, 160, 160)" stroke-width="4">' +
+            '<g stroke="rgb(160,160,160)" stroke-width="4">' +
             '<line x1="5" y1="5" x2="25" y2="25"/>' +
             '<line x1="5" y1="25" x2="25" y2="5"/>' +
             '</g></svg>';
@@ -48,7 +48,7 @@
             afterHide: null,
             // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
             onChange: null,
-            overlayBackgroundColor: 'rgba(0, 0, 0, .8)'
+            overlayBackgroundColor: 'rgba(0,0,0,.8)'
         };
     // Object containing information about features compatibility
     var supports = {};
