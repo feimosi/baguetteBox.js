@@ -123,6 +123,10 @@
     font: 1.6em sans-serif;
     transition: background-color .4s ease;
 
+    &:focus {
+        background-color: rgba(50,50,50,.9);
+    }
+
     &:hover {
         background-color: rgba(50,50,50,.9);
     }
