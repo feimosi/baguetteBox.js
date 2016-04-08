@@ -63,6 +63,14 @@
     var imagesMap = [];
     // Array containing temporary images DOM elements
     var imagesElements = [];
+    // Array containing temporary images figcaption IDs for aria-labelledby property
+    var imagesCaptionsIds = [];
+    // Array containing temporary images figcaption IDs for aria-describedby property
+    var imagesFiguresIds = [];
+    // variable that will keep track of the last focused element before opening the overlay
+    var lastFocus = '';
+    // variable used to track status of overlay
+    var overlayStatus = false;
     // Event handlers
     var imagedEventHandlers = {};
     var overlayClickHandler = function(event) {
@@ -107,6 +115,15 @@
     };
     var touchendHandler = function(event) {
         touchFlag = false;
+    };
+    
+    //traps focus inside baguetteBox Popup when active
+    // https://www.nczonline.net/blog/2013/02/12/making-an-accessible-dialog-box/
+    var trapFocusHandler = function(event) {
+        if ( true === overlayStatus && !overlay.contains(event.target) ) {
+            event.stopPropagation();
+            nextButton.focus();
+        }
     };
 
     // forEach polyfill for IE8
@@ -192,6 +209,7 @@
         }
         // Create overlay element
         overlay = create('div');
+        overlay.setAttribute('role', 'dialog');
         overlay.id = 'baguetteBox-overlay';
         document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
@@ -241,6 +259,7 @@
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
+        bind(document, 'focus', trapFocusHandler, true);
     }
 
     function unbindEvents() {
@@ -264,14 +283,22 @@
         while(slider.firstChild)
             slider.removeChild(slider.firstChild);
         imagesElements.length = 0;
-        // Prepare and append images containers
+        // Prepare and append images containers and populates figure and captions IDs arrays
         for(var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
             imagesElements.push(fullImage);
+            // populates figure and captions IDs arrays
+            imagesCaptionsIds.push('figcaption-' + i);
+            imagesFiguresIds.push('figure-' + i);
             slider.appendChild(imagesElements[i]);
         }
+        // adds wai-aria attributes following accessibility best practices
+        // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_dialog_role
+        // https://www.w3.org/TR/wai-aria/
+        overlay.setAttribute('aria-labelledby', imagesCaptionsIds.join(" "));
+        overlay.setAttribute('aria-describedby', imagesFiguresIds.join(" "));
     }
 
     function setOptions(newOptions) {
@@ -321,6 +348,15 @@
         }, 50);
         if(options.onChange)
             options.onChange(currentIndex, imagesElements.length);
+        overlayStatus = true;
+        lastFocus = document.activeElement;
+        // change focus to next button if more than one image. Otherwise, focus on close button
+        if ( 1 < imagesElements.length ) {
+            nextButton.focus();
+        }
+        else {
+            closeButton.focus();
+        }
     }
 
     function enterFullScreen() {
@@ -356,6 +392,8 @@
             if(options.afterHide)
                 options.afterHide();
         }, 500);
+        // change focus to the element which opened overlay;
+        lastFocus.focus();
     }
 
     function loadImage(index, callback) {
@@ -379,6 +417,10 @@
         var figure = create('figure');
         var image = create('img');
         var figcaption = create('figcaption');
+        // following wai-aria best practices adds IDs to figure and figcaption elements
+        // to be referenced by labeledby and describedby on overlay aria attributes 
+        figure.id = 'figure' + index;
+        figcaption.id = 'figcaption' + index;
         imageContainer.appendChild(figure);
         // Add loader element
         figure.innerHTML = '<div class="spinner">' +
@@ -520,9 +562,14 @@
         loadImage(index - 1, function() { preloadPrev(index - 1); });
     }
 
-    function bind(element, event, callback) {
+    // modified to allow useCapture option. Needed for trapFocusHandler and
+    // to conform to wai-aria accessibility guidelines on modals/popup
+    function bind(element, event, callback, useCapture) {
+        if (useCapture === undefined) {
+              useCapture = false;
+        } 
         if(element.addEventListener)
-            element.addEventListener(event, callback, false);
+            element.addEventListener(event, callback, useCapture);
         else // IE8 fallback
             element.attachEvent('on' + event, callback);
     }
