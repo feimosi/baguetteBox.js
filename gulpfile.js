@@ -18,16 +18,26 @@ var src = {
     },
     dist = {
         css: './dist/',
-        js: './dist/',
+        js: './dist/'
     };
+
+var autoprefixerBrowsers = [
+    'last 2 version',
+    '> 1%',
+    'Edge >= 12',
+    'Explorer >= 8',
+    'Firefox 3.6',
+    'Firefox ESR',
+    'Opera 12.1'
+];
 
 // CSS tasks
 gulp.task('css', function() {
     return gulp.src(src.css)
         // Compile Sass
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Concatenate all styles
         .pipe(plugins.concat('baguetteBox.css'))
         // Where to store the finalized CSS
@@ -37,9 +47,9 @@ gulp.task('css', function() {
 gulp.task('css-min', function() {
     return gulp.src(src.css)
         // Compile Sass
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
         // parse CSS and add vendor-prefixed CSS properties
-        .pipe(plugins.autoprefixer(['last 2 version', '> 1%', 'ie 8', 'ie 7', 'ff 3.6', 'Opera 12.1', 'Firefox ESR']))
+        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         // Minify CSS
         .pipe(plugins.cssmin())
         // Concatenate all styles
@@ -51,9 +61,6 @@ gulp.task('css-min', function() {
 // JS tasks
 gulp.task('js', function () {
     return gulp.src(src.js)
-        // Run JSHint for syntax errors
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.reporter('jshint-stylish'))
         // Concatenate all JS files into one
         .pipe(plugins.concat('baguetteBox.js'))
         // Where to store the finalized JS
@@ -62,9 +69,6 @@ gulp.task('js', function () {
 
 gulp.task('js-min', function() {
     return gulp.src(src.js)
-        // Run JSHint for syntax errors
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.reporter('jshint-stylish'))
         // Concatenate all JS files into one
         .pipe(plugins.concat('baguetteBox.min.js'))
         // Minify JS
@@ -73,17 +77,25 @@ gulp.task('js-min', function() {
         .pipe(gulp.dest(dist.js));
 });
 
+gulp.task('lint', function() {
+    return gulp.src([src.js, 'gulpfile.js'])
+        // Run JSHint for syntax errors
+        .pipe(plugins.jshint())
+        .pipe(plugins.jshint.reporter('jshint-stylish'))
+        .pipe(plugins.jshint.reporter('fail'));
+});
+
 // Bump to a new version
 gulp.task('bump-minor', function () {
     return gulp.src(['./bower.json', './package.json'])
-        .pipe(plugins.bump({ type:'minor' }))
+        .pipe(plugins.bump({ type: 'minor' }))
         .pipe(gulp.dest('./'));
 });
 
 // Bump to a new version
 gulp.task('bump-patch', function () {
     return gulp.src(['./bower.json', './package.json'])
-        .pipe(plugins.bump({ type:'patch' }))
+        .pipe(plugins.bump({ type: 'patch' }))
         .pipe(gulp.dest('./'));
 });
 
@@ -95,12 +107,14 @@ gulp.task('update-version', function () {
             dist.js + '*.js'
             ], {
                 base: './'
-        })
-        .pipe(plugins.injectVersion({
-            replace: '%%INJECT_VERSION%%',
-            prepend: { toString: function() { return ''; } }
-        }))
-        .pipe(gulp.dest('./'));
+            })
+            .pipe(plugins.injectVersion({
+                replace: '%%INJECT_VERSION%%',
+                prepend: {
+                    toString: function() { return ''; }
+                }
+            }))
+            .pipe(gulp.dest('./'));
 });
 
 // Watch files for changes
@@ -114,10 +128,10 @@ gulp.task('watch', ['browser-sync'], function() {
 // Live browser reload
 gulp.task('browser-sync', ['js', 'css'], function () {
     var files = [
-       build.html + '*.html',
-       build.css + '*.css',
-       build.js + '*.js'
-   ];
+        build.html + '*.html',
+        build.css + '*.css',
+        build.js + '*.js'
+    ];
 
     browserSync.init(files, {
         server: {
@@ -127,7 +141,7 @@ gulp.task('browser-sync', ['js', 'css'], function () {
 });
 
 // Default task
-gulp.task('default', ['css', 'js', 'watch', 'browser-sync']);
+gulp.task('default', ['css', 'js', 'lint', 'watch', 'browser-sync']);
 
 gulp.task('release', function() {
     runSequence('bump-minor', 'build', 'update-version');
@@ -137,4 +151,8 @@ gulp.task('patch', function() {
     runSequence('bump-patch', 'build', 'update-version');
 });
 
-gulp.task('build', ['css', 'js', 'css-min', 'js-min']);
+gulp.task('build', function() {
+    runSequence(['css', 'js', 'css-min', 'js-min'], 'update-version');
+});
+
+gulp.task('test', ['build', 'lint']);

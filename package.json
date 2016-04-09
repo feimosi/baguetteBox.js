@@ -13,8 +13,11 @@
     "url": "https://github.com/feimosi/baguetteBox.js/issues"
   },
   "main": "dist/baguetteBox.min.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "dependencies": {},
   "devDependencies": {
