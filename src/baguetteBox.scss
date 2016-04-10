@@ -32,7 +32,8 @@
 
         figure {
             display: inline;
-            height: 100%; // Opera 12 image stretching fix
+            margin: 0;      // needed for mobile
+            height: 100%;   // Opera 12 image stretching fix
         }
 
         img {
