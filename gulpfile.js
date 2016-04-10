@@ -122,7 +122,7 @@ gulp.task('watch', ['browser-sync'], function() {
     // Watch Sass files
     gulp.watch(src.css, ['css']);
     // Watch JS files
-    gulp.watch(src.js, ['js']);
+    gulp.watch(src.js, ['js', 'lint']);
 });
 
 // Live browser reload
@@ -141,14 +141,14 @@ gulp.task('browser-sync', ['js', 'css'], function () {
 });
 
 // Default task
-gulp.task('default', ['css', 'js', 'lint', 'watch', 'browser-sync']);
+gulp.task('default', ['watch']);
 
 gulp.task('release', function() {
-    runSequence('bump-minor', 'build', 'update-version');
+    runSequence('bump-minor', 'build');
 });
 
 gulp.task('patch', function() {
-    runSequence('bump-patch', 'build', 'update-version');
+    runSequence('bump-patch', 'build');
 });
 
 gulp.task('build', function() {
