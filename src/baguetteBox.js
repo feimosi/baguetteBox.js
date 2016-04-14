@@ -318,7 +318,9 @@
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
         // Set overlay color
-        overlay.style.backgroundColor = options.overlayBackgroundColor;
+        try {
+            overlay.style.backgroundColor = options.overlayBackgroundColor;
+        } catch(e) {}
     }
 
     function showOverlay(chosenImageIndex) {
