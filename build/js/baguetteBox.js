@@ -214,24 +214,26 @@
         overlay.appendChild(slider);
         // Create all necessary buttons
         previousButton = create('button');
+        previousButton.setAttribute('type', 'button');
         previousButton.id = 'previous-button';
         previousButton.setAttribute('aria-label', 'Previous');
         previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
         overlay.appendChild(previousButton);
 
         nextButton = create('button');
+        nextButton.setAttribute('type', 'button');
         nextButton.id = 'next-button';
         nextButton.setAttribute('aria-label', 'Next');
         nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
         overlay.appendChild(nextButton);
 
         closeButton = create('button');
+        closeButton.setAttribute('type', 'button');
         closeButton.id = 'close-button';
         closeButton.setAttribute('aria-label', 'Close');
         closeButton.innerHTML = supports.svg ? closeX : '&times';
         overlay.appendChild(closeButton);
 
-        previousButton.type = nextButton.type = closeButton.type = 'button';
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
 
         bindEvents();
@@ -316,7 +318,9 @@
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
         // Set overlay color
-        overlay.style.backgroundColor = options.overlayBackgroundColor;
+        try {
+            overlay.style.backgroundColor = options.overlayBackgroundColor;
+        } catch(e) {}
     }
 
     function showOverlay(chosenImageIndex) {
