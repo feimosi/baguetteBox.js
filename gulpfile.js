@@ -5,6 +5,7 @@
 var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
     browserSync = require('browser-sync'),
+    jsonfile = require('jsonfile'),
     runSequence = require('run-sequence');
 
 var src = {
@@ -138,6 +139,16 @@ gulp.task('browser-sync', ['js', 'css'], function () {
             baseDir: './build/'
         }
     });
+});
+
+gulp.task('deploy', function() {
+    var packageJson = jsonfile.readFileSync('./package.json');
+
+    return gulp.src('./build/**/*')
+        .pipe(plugins.ghPages({
+            push: false,
+            message: 'v' + packageJson.version
+        }));
 });
 
 // Default task

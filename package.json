@@ -27,6 +27,7 @@
     "gulp-bump": "~2.1.0",
     "gulp-concat": "~2.6.0",
     "gulp-cssmin": "~0.1.7",
+    "gulp-gh-pages": "^0.5.4",
     "gulp-if": "~2.0.0",
     "gulp-inject-version": "~1.0.0",
     "gulp-jshint": "~2.0.0",
@@ -37,6 +38,7 @@
     "gulp-usemin": "~0.3.14",
     "jshint": "~2.9.1",
     "jshint-stylish": "~2.1.0",
+    "jsonfile": "^2.2.3",
     "run-sequence": "~1.1.5"
   },
   "keywords": [
