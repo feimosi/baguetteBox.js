@@ -160,7 +160,7 @@
                 regex = userOptions.filter;
             }
             var tags = [];
-            if(galleryElement.tagName === 'A') {
+            if (galleryElement.tagName === 'A') {
                 tags = [galleryElement];
             } else {
                 tags = galleryElement.getElementsByTagName('a');
