@@ -1,9 +1,10 @@
-baguetteBox.js
-==============
+# baguetteBox.js
 
-[![GitHub version](https://badge.fury.io/gh/feimosi%2FbaguetteBox.js.svg)](https://badge.fury.io/gh/feimosi%2FbaguetteBox.js)
-[![Dependency Status](https://img.shields.io/david/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js)
-[![GitHub license](https://img.shields.io/npm/l/baguettebox.js.svg)]()
+[![GitHub Release](https://img.shields.io/github/release/feimosi/baguetteBox.js.svg)](https://github.com/feimosi/baguetteBox.js/releases)
+![dependency Status](https://img.shields.io/badge/dependencies-none-blue.svg)
+[![devDependency Status](https://img.shields.io/david/dev/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js#info=devDependencies)
+[![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](http://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/feimosi/baguetteBox.js.svg?branch=master)](https://travis-ci.org/feimosi/baguetteBox.js)
 
 Simple and easy to use lightbox script.
 
@@ -14,7 +15,7 @@ Simple and easy to use lightbox script.
 ## Features
 
 * Written in pure JavaScript, no dependencies required
-* Multiple-gallery support, allows custom options for each 
+* Multiple-gallery support, allows custom options for each
 * Supports swipe gestures on touch-screen devices
 * Full screen mode available
 * Modern and minimal look
@@ -28,11 +29,15 @@ Simple and easy to use lightbox script.
 
 ### npm
 
-`npm install baguettebox.js`
+```shell
+npm install baguettebox.js
+```
 
 ### Bower
 
-`bower install baguettebox.js`
+```shell
+bower install baguettebox.js
+```
 
 ### Manually
 
@@ -47,15 +52,18 @@ Simple and easy to use lightbox script.
 ## Usage
 
 Initialize the script by running:
+
 ```js
 baguetteBox.run('.gallery');
 ```
+
 where the first argument is a selector to a gallery (or galleries) containing `a` tags. The HTML code may look like this:
+
 ```html
 <div class="gallery">
-	<a href="img/2-1.jpg" data-caption="Image caption"><img src="img/thumbs/2-1.jpg"></a>
-	<a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg"></a>
-  ...
+    <a href="img/2-1.jpg" data-caption="Image caption"><img src="img/thumbs/2-1.jpg" alt="First image"></a>
+    <a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg" alt="Second image"></a>
+    ...
 </div>
 ```
 
@@ -63,12 +71,14 @@ To use captions put `title` or `data-caption` attribute on `a` tag.
 
 ## Customization
 
-You can pass an object with custom options as a second parameter. 
+You can pass an object with custom options as a second parameter.
+
 ```js
 baguetteBox.run('.gallery', {
-  // Custom options
+    // Custom options
 });
 ```
+
 The following options are available:
 
 | Option | Type | Default | Description |
@@ -94,24 +104,26 @@ The following options are available:
 * `showPrevious` - switch to the previous image
 * `destroy` - remove the plugin with any event bindings
 
-The first two methods return true on success or false if there's no more images to be loaded.
+The first two methods return true on success or false if there are no more images to be loaded.
 
 ## Responsive images
 
-To use this feature, simply put `data-at-{width}` attributes on `a` tags with value being a path to the desired image. `{width}` should be the maximum screen width the image can be displayed at. The script chooses the first image with `{width}` greater than or equal to the current screen width for best user experience.
-That last `data-at-X` image is used also in the case of a screen larger than X.
+To use this feature, simply put `data-at-{width}` attributes on `a` tags with a value being the path to the desired image. `{width}` should be the maximum screen width the image can be displayed at. The script chooses the first image with `{width}` greater than or equal to the current screen width for best user experience.
+That last `data-at-X` image is also used in the case of a screen larger than X.
 
 Here's an example of what the HTML code can look like:
+
 ```html
-<a href="img/2-1.jpg" 
-  data-at-450="img/thumbs/2-1.jpg" 
-  data-at-800="img/small/2-1.jpg" 
-  data-at-1366="img/medium/2-1.jpg" 
+<a href="img/2-1.jpg"
+  data-at-450="img/thumbs/2-1.jpg"
+  data-at-800="img/small/2-1.jpg"
+  data-at-1366="img/medium/2-1.jpg"
   data-at-1920="img/big/2-1.jpg">
     <img src="img/thumbs/2-1.jpg">
 </a>
 ```
-If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
+
+If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep the `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
 
 ## Compatibility
 

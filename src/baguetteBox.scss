@@ -32,8 +32,8 @@
 
         figure {
             display: inline;
-            margin: 0;
-            height: 100%; // Opera 12 image stretching fix
+            margin: 0;      // needed for mobile
+            height: 100%;   // Opera 12 image stretching fix
         }
 
         img {
@@ -158,18 +158,19 @@
     Borrowed from http://tobiasahlin.com/spinkit/
 */
 
-.spinner {
+.baguetteBox-spinner {
     width: 40px;
     height: 40px;
     display: inline-block;
-    position: absolute;;
+    position: absolute;
     top: 50%;
     left: 50%;
     margin-top: -20px;
     margin-left: -20px;
 }
 
-.double-bounce1, .double-bounce2 {
+.baguetteBox-double-bounce1,
+.baguetteBox-double-bounce2 {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -178,17 +179,17 @@
     position: absolute;
     top: 0;
     left: 0;
-    animation: bounce 2.0s infinite ease-in-out;
+    animation: bounce 2s infinite ease-in-out;
 }
 
-.double-bounce2 {
-    animation-delay: -1.0s;
+.baguetteBox-double-bounce2 {
+    animation-delay: -1s;
 }
 
 @keyframes bounce {
     0%, 100% {
         transform: scale(0);
     } 50% {
-        transform: scale(1.0);
+        transform: scale(1);
     }
 }
