@@ -17,6 +17,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "gulp",
     "test": "gulp test"
   },
   "dependencies": {},
