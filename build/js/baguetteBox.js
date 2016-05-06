@@ -72,8 +72,8 @@
     // Event handlers
     var imagedEventHandlers = {};
     var overlayClickHandler = function(event) {
-        // When clicked on the overlay (outside displayed image) close it
-        if (event.target && event.target.nodeName !== 'IMG' && event.target.nodeName !== 'FIGCAPTION') {
+        // Close the overlay when user clicks directly on the background
+        if (event.target.id.indexOf('baguette-img') !== -1) {
             hideOverlay();
         }
     };
