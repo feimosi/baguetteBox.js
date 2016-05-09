@@ -107,6 +107,7 @@ The following options are available:
 * `showNext` - switch to the next image
 * `showPrevious` - switch to the previous image
 * `destroy` - remove the plugin with any event bindings
+* `showGallery` - show the gallery with the given id (returned from `run`)
 
 The first two methods return true on success or false if there are no more images to be loaded.
 
