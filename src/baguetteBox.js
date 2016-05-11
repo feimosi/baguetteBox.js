@@ -54,8 +54,10 @@
     var supports = {};
     // DOM Elements references
     var overlay, slider, previousButton, nextButton, closeButton;
-    // Current image index inside the slider and displayed gallery index
-    var currentIndex = 0, currentGallery = -1;
+    // An array with all images in the current gallery
+    var currentGallery = [];
+    // Current image index inside the slider
+    var currentIndex = 0;
     // Touch event start position (for slide gesture)
     var touchStartX;
     var touchStartY;
@@ -63,14 +65,10 @@
     var touchFlag = false;
     // Regex pattern to match image files
     var regex = /.+\.(gif|jpe?g|png|webp)/i;
-    // Array of all used galleries (Array od NodeList elements)
-    var galleries = [];
-    // 2D array of galleries and images inside them
-    var imagesMap = [];
+    // Object of all used galleries
+    var data = {};
     // Array containing temporary images DOM elements
     var imagesElements = [];
-    // Event handlers
-    var imagedEventHandlers = {};
     var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -148,50 +146,75 @@
         supports.svg = testSVGSupport();
 
         buildOverlay();
+        removeFromCache(selector);
         bindImageClickListeners(selector, userOptions);
     }
 
     function bindImageClickListeners(selector, userOptions) {
         // For each gallery bind a click event to every image inside it
-        var gallery = document.querySelectorAll(selector);
-        galleries.push(gallery);
-        [].forEach.call(gallery, function(galleryElement) {
+        var galleryNodeList = document.querySelectorAll(selector);
+        var selectorData = {
+                galleries: [],
+                nodeList: galleryNodeList
+            };
+        data[selector] = selectorData;
+        
+        [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
             // Filter 'a' elements from those not linking to images
-            var tags = galleryElement.getElementsByTagName('a');
-            tags = [].filter.call(tags, function(element) {
+            var tagsNodeList = galleryElement.getElementsByTagName('a');
+            tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
+            var gallery = [];
+            
+            if (tagsNodeList.length === 0) {
+                return;
+            }
+            selectorData.galleries.push(gallery);
 
-            // Get all gallery images and save them in imagesMap with custom options
-            var galleryID = imagesMap.length;
-            imagesMap.push(tags);
-            imagesMap[galleryID].options = userOptions;
-
-            [].forEach.call(imagesMap[galleryID], function(imageElement, imageIndex) {
+            [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
-                    prepareOverlay(galleryID);
+                    prepareOverlay(gallery, userOptions);
                     showOverlay(imageIndex);
                 };
-                imagedEventHandlers[galleryID + '_' + imageElement] = imageElementClickHandler;
+                var imageItem = {
+                    eventHandler: imageElementClickHandler,
+                    imageElement: imageElement
+                };
                 bind(imageElement, 'click', imageElementClickHandler);
+                gallery.push(imageItem);
             });
         });
     }
 
-    function unbindImageClickListeners() {
-        galleries.forEach(function(gallery) {
-            [].forEach.call(gallery, function() {
-                var galleryID = imagesMap.length - 1;
-                [].forEach.call(imagesMap[galleryID], function(imageElement) {
-                    unbind(imageElement, 'click', imagedEventHandlers[galleryID + '_' + imageElement]);
-                });
-                imagesMap.pop();
+    function clearCachedData() {
+        for (var selector in data) {
+            if (data.hasOwnProperty(selector)) {
+                removeFromCache(selector);
+            }
+        }
+    }
+    
+    function removeFromCache(selector) {
+        if (!data.hasOwnProperty(selector)) {
+            return;
+        }
+        var galleries = data[selector].galleries;
+        [].forEach.call(galleries, function(gallery) {
+            [].forEach.call(gallery, function(imageItem) {
+                unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
+            
+            if (currentGallery === gallery) {
+                currentGallery = [];
+            }
         });
+        
+        delete data[selector];
     }
 
     function buildOverlay() {
@@ -273,21 +296,21 @@
         unbind(overlay, 'touchend', touchendHandler);
     }
 
-    function prepareOverlay(galleryIndex) {
+    function prepareOverlay(gallery, userOptions) {
         // If the same gallery is being opened prevent from loading it once again
-        if (currentGallery === galleryIndex) {
+        if (currentGallery === gallery) {
             return;
         }
-        currentGallery = galleryIndex;
+        currentGallery = gallery;
         // Update gallery specific options
-        setOptions(imagesMap[galleryIndex].options);
+        setOptions(userOptions);
         // Empty slider of previous contents (more effective than .innerHTML = "")
         while (slider.firstChild) {
             slider.removeChild(slider.firstChild);
         }
         imagesElements.length = 0;
         // Prepare and append images containers
-        for (var i = 0, fullImage; i < imagesMap[galleryIndex].length; i++) {
+        for (var i = 0, fullImage; i < gallery.length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
@@ -312,7 +335,7 @@
         slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' :
             options.animation === 'slideIn' ? '' : 'none');
         // Hide buttons if necessary
-        if (options.buttons === 'auto' && ('ontouchstart' in window || imagesMap[currentGallery].length === 1)) {
+        if (options.buttons === 'auto' && ('ontouchstart' in window || currentGallery.length === 1)) {
             options.buttons = false;
         }
         // Set buttons style to hide or display them
@@ -409,10 +432,10 @@
             return;
         }
         // Get element reference, optional caption and source path
-        var imageElement = imagesMap[currentGallery][index];
+        var imageElement = currentGallery[index].imageElement;
         var imageCaption = typeof options.captions === 'function' ?
-                           options.captions.call(imagesMap[currentGallery], imageElement) :
-                           imageElement.getAttribute('data-caption') || imageElement.title;
+                            options.captions.call(currentGallery, imageElement) :
+                            imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = getImageSrc(imageElement);
         // Prepare image container elements
         var figure = create('figure');
@@ -600,13 +623,12 @@
 
     function destroyPlugin() {
         unbindEvents();
-        unbindImageClickListeners();
+        clearCachedData();
         unbind(document, 'keydown', keyDownHandler);
         document.getElementsByTagName('body')[0].removeChild(document.getElementById('baguetteBox-overlay'));
+        data = {};
+        currentGallery = [];
         currentIndex = 0;
-        currentGallery = -1;
-        galleries.length = 0;
-        imagesMap.length = 0;
     }
 
     return {
