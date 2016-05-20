@@ -368,7 +368,8 @@
 
     function showOverlay(chosenImageIndex) {
         if (options.noScrollbars) {
-            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflowY = 'hidden';
+            document.body.style.overflowY = 'scroll';
         }
         if (overlay.style.display === 'block') {
             return;
@@ -430,7 +431,8 @@
 
     function hideOverlay() {
         if (options.noScrollbars) {
-            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflowY = 'auto';
+            document.body.style.overflowY = 'auto';
         }
         if (overlay.style.display === 'none') {
             return;
