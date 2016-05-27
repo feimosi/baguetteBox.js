@@ -158,7 +158,7 @@
                 nodeList: galleryNodeList
             };
         data[selector] = selectorData;
-        
+
         [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
@@ -169,7 +169,7 @@
                 return regex.test(element.href);
             });
             var gallery = [];
-            
+
             if (tagsNodeList.length === 0) {
                 return;
             }
@@ -198,7 +198,7 @@
             }
         }
     }
-    
+
     function removeFromCache(selector) {
         if (!data.hasOwnProperty(selector)) {
             return;
@@ -208,12 +208,12 @@
             [].forEach.call(gallery, function(imageItem) {
                 unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
-            
+
             if (currentGallery === gallery) {
                 currentGallery = [];
             }
         });
-        
+
         delete data[selector];
     }
 
@@ -343,7 +343,7 @@
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function showOverlay(chosenImageIndex) {
