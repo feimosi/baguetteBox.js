@@ -595,18 +595,18 @@
         });
     }
 
-    function bind(element, event, callback) {
+    function bind(element, event, callback, useCapture) {
         if (element.addEventListener) {
-            element.addEventListener(event, callback, false);
+            element.addEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
             element.attachEvent('on' + event, callback);
         }
     }
 
-    function unbind(element, event, callback) {
+    function unbind(element, event, callback, useCapture) {
         if (element.removeEventListener) {
-            element.removeEventListener(event, callback, false);
+            element.removeEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
             element.detachEvent('on' + event, callback);
