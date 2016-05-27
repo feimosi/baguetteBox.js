@@ -129,7 +129,7 @@
   font: 1.6em sans-serif;
   -webkit-transition: background-color .4s ease;
   transition: background-color .4s ease; }
-  .baguetteBox-button:hover {
+  .baguetteBox-button:focus, .baguetteBox-button:hover {
     background-color: rgba(50, 50, 50, 0.9); }
   .baguetteBox-button#next-button {
     right: 2%; }
