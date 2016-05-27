@@ -69,6 +69,8 @@
     var data = {};
     // Array containing temporary images DOM elements
     var imagesElements = [];
+    // The last focused element before opening the overlay
+    var documentLastFocus = null;
     var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -115,6 +117,13 @@
         touchFlag = false;
     };
 
+    var trapFocusInsideOverlay = function(event) {
+        if (overlay.style.display === 'block' && !overlay.contains(event.target)) {
+            event.stopPropagation();
+            initFocus();
+        }
+    };
+
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
     /* jshint ignore:start */
@@ -158,7 +167,7 @@
                 nodeList: galleryNodeList
             };
         data[selector] = selectorData;
-        
+
         [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
@@ -169,7 +178,7 @@
                 return regex.test(element.href);
             });
             var gallery = [];
-            
+
             if (tagsNodeList.length === 0) {
                 return;
             }
@@ -198,7 +207,7 @@
             }
         }
     }
-    
+
     function removeFromCache(selector) {
         if (!data.hasOwnProperty(selector)) {
             return;
@@ -208,12 +217,12 @@
             [].forEach.call(gallery, function(imageItem) {
                 unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
-            
+
             if (currentGallery === gallery) {
                 currentGallery = [];
             }
         });
-        
+
         delete data[selector];
     }
 
@@ -229,6 +238,7 @@
         }
         // Create overlay element
         overlay = create('div');
+        overlay.setAttribute('role', 'dialog');
         overlay.id = 'baguetteBox-overlay';
         document.getElementsByTagName('body')[0].appendChild(overlay);
         // Create gallery slider element
@@ -284,6 +294,7 @@
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
+        bind(document, 'focus', trapFocusInsideOverlay, true);
     }
 
     function unbindEvents() {
@@ -294,6 +305,7 @@
         unbind(overlay, 'touchstart', touchstartHandler);
         unbind(overlay, 'touchmove', touchmoveHandler);
         unbind(overlay, 'touchend', touchendHandler);
+        unbind(document, 'focus', trapFocusInsideOverlay, true);
     }
 
     function prepareOverlay(gallery, userOptions) {
@@ -309,14 +321,22 @@
             slider.removeChild(slider.firstChild);
         }
         imagesElements.length = 0;
-        // Prepare and append images containers
+
+        var imagesFiguresIds = [];
+        var imagesCaptionsIds = [];
+        // Prepare and append images containers and populate figure and captions IDs arrays
         for (var i = 0, fullImage; i < gallery.length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
             imagesElements.push(fullImage);
+
+            imagesFiguresIds.push('baguetteBox-figure-' + i);
+            imagesCaptionsIds.push('baguetteBox-figcaption-' + i);
             slider.appendChild(imagesElements[i]);
         }
+        overlay.setAttribute('aria-labelledby', imagesFiguresIds.join(' '));
+        overlay.setAttribute('aria-describedby', imagesCaptionsIds.join(' '));
     }
 
     function setOptions(newOptions) {
@@ -343,7 +363,7 @@
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function showOverlay(chosenImageIndex) {
@@ -375,6 +395,16 @@
         }, 50);
         if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
+        }
+        documentLastFocus = document.activeElement;
+        initFocus();
+    }
+
+    function initFocus() {
+        if (options.buttons) {
+            previousButton.focus();
+        } else {
+            closeButton.focus();
         }
     }
 
@@ -416,6 +446,7 @@
                 options.afterHide();
             }
         }, 500);
+        documentLastFocus.focus();
     }
 
     function loadImage(index, callback) {
@@ -441,6 +472,10 @@
         var figure = create('figure');
         var image = create('img');
         var figcaption = create('figcaption');
+
+        figure.id = 'baguetteBox-figure-' + index;
+        figcaption.id = 'baguetteBox-figcaption-' + index;
+
         imageContainer.appendChild(figure);
         // Add loader element
         figure.innerHTML = '<div class="baguetteBox-spinner">' +
@@ -595,18 +630,18 @@
         });
     }
 
-    function bind(element, event, callback) {
+    function bind(element, event, callback, useCapture) {
         if (element.addEventListener) {
-            element.addEventListener(event, callback, false);
+            element.addEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
             element.attachEvent('on' + event, callback);
         }
     }
 
-    function unbind(element, event, callback) {
+    function unbind(element, event, callback, useCapture) {
         if (element.removeEventListener) {
-            element.removeEventListener(event, callback, false);
+            element.removeEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
             element.detachEvent('on' + event, callback);
