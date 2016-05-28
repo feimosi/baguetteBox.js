@@ -129,7 +129,7 @@
     /* jshint ignore:start */
     if (![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
-            for (var i = 0; i < this.length; i++) {
+            for (var i = 0, len = this.length; i < len; i++) {
                 callback.call(thisArg, this[i], i, this);
             }
         };
@@ -163,9 +163,9 @@
         // For each gallery bind a click event to every image inside it
         var galleryNodeList = document.querySelectorAll(selector);
         var selectorData = {
-                galleries: [],
-                nodeList: galleryNodeList
-            };
+            galleries: [],
+            nodeList: galleryNodeList
+        };
         data[selector] = selectorData;
 
         [].forEach.call(galleryNodeList, function(galleryElement) {
@@ -332,7 +332,7 @@
         var imagesFiguresIds = [];
         var imagesCaptionsIds = [];
         // Prepare and append images containers and populate figure and captions IDs arrays
-        for (var i = 0, fullImage; i < gallery.length; i++) {
+        for (var i = 0, fullImage, len = gallery.length; i < len; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
