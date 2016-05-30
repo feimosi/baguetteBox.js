@@ -61,17 +61,21 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 
 ```html
 <div class="gallery">
-    <a href="img/2-1.jpg" data-caption="Image caption"><img src="img/thumbs/2-1.jpg" alt="First image"></a>
-    <a href="img/2-2.jpg"><img src="img/thumbs/2-2.jpg" alt="Second image"></a>
+    <a href="img/2-1.jpg" data-caption="Image caption">
+        <img src="img/thumbs/2-1.jpg" alt="First image">
+    </a>
+    <a href="img/2-2.jpg">
+        <img src="img/thumbs/2-2.jpg" alt="Second image">
+    </a>
     ...
 </div>
 ```
 
-To use captions put `title` or `data-caption` attribute on `a` tag.
+To use captions put a `title` or `data-caption` attribute on the `a` tag.
 
 ## Customization
 
-You can pass an object with custom options as a second parameter.
+You can pass an object with custom options as the second parameter.
 
 ```js
 baguetteBox.run('.gallery', {
@@ -145,4 +149,4 @@ Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](
 
 Copyright (c) 2016 [feimosi](https://github.com/feimosi/)
 
-This content is released under the [MIT License](http://opensource.org/licenses/MIT).
+This content is released under the [MIT License](https://opensource.org/licenses/MIT).
