@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.7.0
+ * @version %%INJECT_VERSION%%
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -172,18 +172,24 @@
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
+            
+            // Get nodes from gallery elements or single-element galleries
+            var tagsNodeList = [];
+            if (galleryElement.tagName === 'A') {
+                tagsNodeList = [galleryElement];
+            } else {
+                tagsNodeList = galleryElement.getElementsByTagName('a');
+            }
+            
             // Filter 'a' elements from those not linking to images
-            var tagsNodeList = galleryElement.getElementsByTagName('a');
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
-            var gallery = [];
-
             if (tagsNodeList.length === 0) {
                 return;
             }
-            selectorData.galleries.push(gallery);
-
+            
+            var gallery = [];
             [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
@@ -197,6 +203,7 @@
                 bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
             });
+            selectorData.galleries.push(gallery);
         });
     }
 
