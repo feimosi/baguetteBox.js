@@ -9,18 +9,20 @@ var gulp = require('gulp'),
     runSequence = require('run-sequence');
 
 var src = {
-        css: ['./src/*.scss', './src/*.css'],
-        js: './src/*.js'
-    },
-    build = {
-        css: './build/css/',
-        js: './build/js/',
-        html: './build/'
-    },
-    dist = {
-        css: './dist/',
-        js: './dist/'
-    };
+    css: ['./src/*.scss', './src/*.css'],
+    js: './src/*.js'
+};
+var demo = {
+    allFiles: './demo/**/*',
+    css: './demo/css/',
+    js: './demo/js/',
+    html: './demo/',
+    base: './demo/'
+};
+var dist = {
+    css: './dist/',
+    js: './dist/'
+};
 
 var autoprefixerBrowsers = [
     'last 2 version',
@@ -32,111 +34,93 @@ var autoprefixerBrowsers = [
     'Opera 12.1'
 ];
 
-// CSS tasks
-gulp.task('css', function() {
+gulp.task('build.demo-css', function() {
     return gulp.src(src.css)
-        // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
-        // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
-        // Concatenate all styles
         .pipe(plugins.concat('baguetteBox.css'))
-        // Where to store the finalized CSS
-        .pipe(gulp.dest(build.css));
+        .pipe(gulp.dest(demo.css));
 });
 
-gulp.task('css-min', function() {
+gulp.task('build.demo-js', function () {
+    return gulp.src(src.js)
+        .pipe(plugins.concat('baguetteBox.js'))
+        .pipe(gulp.dest(demo.js));
+});
+
+gulp.task('build.dist-css', function() {
     return gulp.src(src.css)
-        // Compile Sass
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
-        // parse CSS and add vendor-prefixed CSS properties
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
-        // Minify CSS
-        .pipe(plugins.cssmin())
-        // Concatenate all styles
+        .pipe(plugins.concat('baguetteBox.css'))
+        .pipe(gulp.dest(dist.css))
         .pipe(plugins.concat('baguetteBox.min.css'))
-        // Where to store the finalized CSS
+        .pipe(plugins.cssmin())
         .pipe(gulp.dest(dist.css));
 });
 
-// JS tasks
-gulp.task('js', function () {
+gulp.task('build.dist-js', function() {
     return gulp.src(src.js)
-        // Concatenate all JS files into one
         .pipe(plugins.concat('baguetteBox.js'))
-        // Where to store the finalized JS
-        .pipe(gulp.dest(build.js));
-});
-
-gulp.task('js-min', function() {
-    return gulp.src(src.js)
-        // Concatenate all JS files into one
+        .pipe(gulp.dest(dist.js))
         .pipe(plugins.concat('baguetteBox.min.js'))
-        // Minify JS
         .pipe(plugins.uglify({ preserveComments: 'some' }))
-        // Where to store the finalized JS
         .pipe(gulp.dest(dist.js));
 });
 
+gulp.task('build.demo', ['build.demo-css', 'build.demo-js']);
+
+gulp.task('build.dist', ['build.dist-css', 'build.dist-js']);
+
 gulp.task('lint', function() {
     return gulp.src([src.js, 'gulpfile.js'])
-        // Run JSHint for syntax errors
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.jshint.reporter('fail'));
 });
 
-// Bump to a new version
 gulp.task('bump-minor', function () {
     return gulp.src(['./bower.json', './package.json'])
         .pipe(plugins.bump({ type: 'minor' }))
         .pipe(gulp.dest('./'));
 });
 
-// Bump to a new version
 gulp.task('bump-patch', function () {
     return gulp.src(['./bower.json', './package.json'])
         .pipe(plugins.bump({ type: 'patch' }))
         .pipe(gulp.dest('./'));
 });
 
-// Update version number in project files
 gulp.task('update-version', function () {
-    return gulp.src([build.css + '*.css',
-            build.js + '*.js',
+    return gulp.src([demo.css + '*.css',
+            demo.js + '*.js',
             dist.css + '*.css',
             dist.js + '*.js'
-            ], {
-                base: './'
-            })
-            .pipe(plugins.injectVersion({
-                replace: '%%INJECT_VERSION%%',
-                prepend: {
-                    toString: function() { return ''; }
-                }
-            }))
-            .pipe(gulp.dest('./'));
+        ], {
+            base: './'
+        })
+        .pipe(plugins.injectVersion({
+            replace: '%%INJECT_VERSION%%',
+            prepend: ''
+        }))
+        .pipe(gulp.dest('./'));
 });
 
-// Watch files for changes
-gulp.task('watch', ['browser-sync'], function() {
-    // Watch Sass files
-    gulp.watch(src.css, ['css']);
-    // Watch JS files
-    gulp.watch(src.js, ['js', 'lint']);
+gulp.task('watch', ['watch.browser-sync'], function() {
+    gulp.watch(src.css, ['build.demo-css']);
+    gulp.watch(src.js, ['build.demo-js', 'lint']);
 });
 
-// Live browser reload
-gulp.task('browser-sync', ['js', 'css'], function () {
+gulp.task('watch.browser-sync', ['build.demo'], function () {
     var files = [
-        build.html + '*.html',
-        build.css + '*.css',
-        build.js + '*.js'
+        demo.html + '*.html',
+        demo.css + '*.css',
+        demo.js + '*.js'
     ];
 
     browserSync.init(files, {
         server: {
-            baseDir: './build/'
+            baseDir: demo.base
         }
     });
 });
@@ -144,15 +128,12 @@ gulp.task('browser-sync', ['js', 'css'], function () {
 gulp.task('deploy', function() {
     var packageJson = jsonfile.readFileSync('./package.json');
 
-    return gulp.src('./build/**/*')
+    return gulp.src(demo.allFiles)
         .pipe(plugins.ghPages({
             push: false,
             message: 'v' + packageJson.version
         }));
 });
-
-// Default task
-gulp.task('default', ['watch']);
 
 gulp.task('release', function() {
     runSequence('bump-minor', 'build');
@@ -163,7 +144,9 @@ gulp.task('patch', function() {
 });
 
 gulp.task('build', function() {
-    runSequence(['css', 'js', 'css-min', 'js-min'], 'update-version');
+    runSequence(['build.demo', 'build.dist'], 'update-version');
 });
 
 gulp.task('test', ['build', 'lint']);
+
+gulp.task('default', ['watch']);
