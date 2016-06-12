@@ -1,2 +1,5 @@
-/node_modules/
-/assets/
+.publish/
+node_modules/
+assets/
+demo/js/baguetteBox.js
+demo/css/baguetteBox.css
