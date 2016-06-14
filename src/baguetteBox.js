@@ -163,16 +163,16 @@
         // For each gallery bind a click event to every image inside it
         var galleryNodeList = document.querySelectorAll(selector);
         var selectorData = {
-                galleries: [],
-                nodeList: galleryNodeList
-            };
+            galleries: [],
+            nodeList: galleryNodeList
+        };
         data[selector] = selectorData;
 
         [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
-            
+
             // Get nodes from gallery elements or single-element galleries
             var tagsNodeList = [];
             if (galleryElement.tagName === 'A') {
@@ -180,7 +180,7 @@
             } else {
                 tagsNodeList = galleryElement.getElementsByTagName('a');
             }
-            
+
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
@@ -188,7 +188,7 @@
             if (tagsNodeList.length === 0) {
                 return;
             }
-            
+
             var gallery = [];
             [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
