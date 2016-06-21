@@ -59,8 +59,7 @@
     // Current image index inside the slider
     var currentIndex = 0;
     // Touch event start position (for slide gesture)
-    var touchStartX;
-    var touchStartY;
+    var touch = {};
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
@@ -90,30 +89,38 @@
         hideOverlay();
     };
     var touchstartHandler = function(event) {
+        touch.count++;
+        if (touch.count > 1) {
+            touch.multitouch = true;
+        }
         // Save x and y axis position
-        touchStartX = event.changedTouches[0].pageX;
-        touchStartY = event.changedTouches[0].pageY;
+        touch.startX = event.changedTouches[0].pageX;
+        touch.startY = event.changedTouches[0].pageY;
     };
     var touchmoveHandler = function(event) {
-        // If action was already triggered return
-        if (touchFlag) {
+        // If action was already triggered or multitouch return
+        if (touchFlag || touch.multitouch) {
             return;
         }
         event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
-        var touch = event.touches[0] || event.changedTouches[0];
+        var touchEvent = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
-        if (touch.pageX - touchStartX > 40) {
+        if (touchEvent.pageX - touch.startX > 40) {
             touchFlag = true;
             showPreviousImage();
-        } else if (touch.pageX - touchStartX < -40) {
+        } else if (touchEvent.pageX - touch.startX < -40) {
             touchFlag = true;
             showNextImage();
         // Move 100 pixels up to close the overlay
-        } else if (touchStartY - touch.pageY > 100) {
+        } else if (touch.startY - touchEvent.pageY > 100) {
             hideOverlay();
         }
     };
     var touchendHandler = function() {
+        touch.count--;
+        if (touch.count <= 0) {
+            touch.multitouch = false;
+        }
         touchFlag = false;
     };
 
@@ -384,6 +391,11 @@
 
         bind(document, 'keydown', keyDownHandler);
         currentIndex = chosenImageIndex;
+        touch = {
+            count: 0,
+            startX: null,
+            startY: null
+        };
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
