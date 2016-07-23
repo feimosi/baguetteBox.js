@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.7.0
+ * @version 1.8.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -59,8 +59,7 @@
     // Current image index inside the slider
     var currentIndex = 0;
     // Touch event start position (for slide gesture)
-    var touchStartX;
-    var touchStartY;
+    var touch = {};
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
@@ -90,30 +89,38 @@
         hideOverlay();
     };
     var touchstartHandler = function(event) {
+        touch.count++;
+        if (touch.count > 1) {
+            touch.multitouch = true;
+        }
         // Save x and y axis position
-        touchStartX = event.changedTouches[0].pageX;
-        touchStartY = event.changedTouches[0].pageY;
+        touch.startX = event.changedTouches[0].pageX;
+        touch.startY = event.changedTouches[0].pageY;
     };
     var touchmoveHandler = function(event) {
-        // If action was already triggered return
-        if (touchFlag) {
+        // If action was already triggered or multitouch return
+        if (touchFlag || touch.multitouch) {
             return;
         }
         event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
-        var touch = event.touches[0] || event.changedTouches[0];
+        var touchEvent = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
-        if (touch.pageX - touchStartX > 40) {
+        if (touchEvent.pageX - touch.startX > 40) {
             touchFlag = true;
             showPreviousImage();
-        } else if (touch.pageX - touchStartX < -40) {
+        } else if (touchEvent.pageX - touch.startX < -40) {
             touchFlag = true;
             showNextImage();
         // Move 100 pixels up to close the overlay
-        } else if (touchStartY - touch.pageY > 100) {
+        } else if (touch.startY - touchEvent.pageY > 100) {
             hideOverlay();
         }
     };
     var touchendHandler = function() {
+        touch.count--;
+        if (touch.count <= 0) {
+            touch.multitouch = false;
+        }
         touchFlag = false;
     };
 
@@ -163,27 +170,33 @@
         // For each gallery bind a click event to every image inside it
         var galleryNodeList = document.querySelectorAll(selector);
         var selectorData = {
-                galleries: [],
-                nodeList: galleryNodeList
-            };
+            galleries: [],
+            nodeList: galleryNodeList
+        };
         data[selector] = selectorData;
 
         [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
+
+            // Get nodes from gallery elements or single-element galleries
+            var tagsNodeList = [];
+            if (galleryElement.tagName === 'A') {
+                tagsNodeList = [galleryElement];
+            } else {
+                tagsNodeList = galleryElement.getElementsByTagName('a');
+            }
+
             // Filter 'a' elements from those not linking to images
-            var tagsNodeList = galleryElement.getElementsByTagName('a');
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 return regex.test(element.href);
             });
-            var gallery = [];
-
             if (tagsNodeList.length === 0) {
                 return;
             }
-            selectorData.galleries.push(gallery);
 
+            var gallery = [];
             [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
@@ -197,6 +210,7 @@
                 bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
             });
+            selectorData.galleries.push(gallery);
         });
     }
 
@@ -377,6 +391,11 @@
 
         bind(document, 'keydown', keyDownHandler);
         currentIndex = chosenImageIndex;
+        touch = {
+            count: 0,
+            startX: null,
+            startY: null
+        };
         loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
@@ -464,27 +483,33 @@
             }
             return;
         }
+
         // Get element reference, optional caption and source path
         var imageElement = currentGallery[index].imageElement;
+        var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = getImageSrc(imageElement);
-        // Prepare image container elements
+
+        // Prepare figure element
         var figure = create('figure');
-        var image = create('img');
-        var figcaption = create('figcaption');
-
         figure.id = 'baguetteBox-figure-' + index;
-        figcaption.id = 'baguetteBox-figcaption-' + index;
-
-        imageContainer.appendChild(figure);
-        // Add loader element
         figure.innerHTML = '<div class="baguetteBox-spinner">' +
             '<div class="baguetteBox-double-bounce1"></div>' +
             '<div class="baguetteBox-double-bounce2"></div>' +
             '</div>';
-        // Set callback function when image loads
+        // Insert caption if available
+        if (options.captions && imageCaption) {
+            var figcaption = create('figcaption');
+            figcaption.id = 'baguetteBox-figcaption-' + index;
+            figcaption.innerHTML = imageCaption;
+            figure.appendChild(figcaption);
+        }
+        imageContainer.appendChild(figure);
+
+        // Prepare gallery img element
+        var image = create('img');
         image.onload = function() {
             // Remove loader element
             var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
@@ -494,15 +519,12 @@
             }
         };
         image.setAttribute('src', imageSrc);
+        image.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
         if (options.titleTag && imageCaption) {
             image.title = imageCaption;
         }
         figure.appendChild(image);
-        // Insert caption if available
-        if (options.captions && imageCaption) {
-            figcaption.innerHTML = imageCaption;
-            figure.appendChild(figcaption);
-        }
+
         // Run callback
         if (options.async && callback) {
             callback();
