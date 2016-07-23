@@ -483,8 +483,10 @@
             }
             return;
         }
+
         // Get element reference, optional caption and source path
         var imageElement = currentGallery[index].imageElement;
+        var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
@@ -513,6 +515,7 @@
             }
         };
         image.setAttribute('src', imageSrc);
+        image.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
         if (options.titleTag && imageCaption) {
             image.title = imageCaption;
         }
