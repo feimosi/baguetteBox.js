@@ -484,8 +484,15 @@
             return;
         }
 
+        var galleryItem = currentGallery[index];
+        // It's possible that the decision to preload is made,
+        // but by the time the load happens, the element is gone.
+        if (typeof galleryItem  === 'undefined') {
+            return;
+        }
+
         // Get element reference, optional caption and source path
-        var imageElement = currentGallery[index].imageElement;
+        var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
