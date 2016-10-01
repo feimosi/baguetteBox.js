@@ -603,6 +603,15 @@
         }
         return returnValue;
     }
+    
+    // opens specific image
+    function showImage(selector, imageIndex) {
+	    if ( null === imageIndex || undefined === imageIndex || '' === imageIndex ){
+		    imageIndex = 0;
+	    }
+	    var activeImage = baguetteBox.data[selector].galleries[0][imageIndex];
+	    activeImage.eventHandler(activeImage);
+    }
 
     function updateOffset() {
         var offset = -currentIndex * 100 + '%';
@@ -692,9 +701,11 @@
 
     return {
         run: run,
+        data: data,
         destroy: destroyPlugin,
         showNext: showNextImage,
-        showPrevious: showPreviousImage
+        showPrevious: showPreviousImage,
+        showImage: showImage,
     };
 
 }));
