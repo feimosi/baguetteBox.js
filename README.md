@@ -39,9 +39,21 @@ npm install baguettebox.js
 bower install baguettebox.js
 ```
 
+### CDN
+1. Go to [cdnjs](https://cdnjs.com/libraries/baguettebox.js/) and copy URLs of the latest version:
+
+  https://cdnjs.com/libraries/baguettebox.js/  
+
+2. Paste the URLs in your HTML file:
+
+  ```html
+<link rel="stylesheet" href="<CSS URL>">
+<script src="<JS URL>" async></script>
+  ```
+
 ### Manually
 
-1. Download `baguetteBox.min.css` and `baguetteBox.min.js` files from `dist` folder.
+1. Download `baguetteBox.min.css` and `baguetteBox.min.js` files from the `dist` folder.
 2. Include them somewhere in your document:
 
   ```html
