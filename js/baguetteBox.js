@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.8.0
+ * @version 1.8.1
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -278,7 +278,7 @@
         closeButton.setAttribute('type', 'button');
         closeButton.id = 'close-button';
         closeButton.setAttribute('aria-label', 'Close');
-        closeButton.innerHTML = supports.svg ? closeX : '&times';
+        closeButton.innerHTML = supports.svg ? closeX : '&times;';
         overlay.appendChild(closeButton);
 
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
