@@ -472,7 +472,11 @@
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        if (typeof imageContainer === 'undefined') {
+        var galleryItem = currentGallery[index];
+
+        // Return if the index exceeds prepared images in the overlay
+        // or if the current gallery has been changed / closed
+        if (imageContainer === undefined || galleryItem === undefined) {
             return;
         }
 
@@ -481,13 +485,6 @@
             if (callback) {
                 callback();
             }
-            return;
-        }
-
-        var galleryItem = currentGallery[index];
-        // It's possible that the decision to preload is made,
-        // but by the time the load happens, the element is gone.
-        if (typeof galleryItem  === 'undefined') {
             return;
         }
 
