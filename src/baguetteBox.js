@@ -472,7 +472,11 @@
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        if (typeof imageContainer === 'undefined') {
+        var galleryItem = currentGallery[index];
+
+        // Return if the index exceeds prepared images in the overlay
+        // or if the current gallery has been changed / closed
+        if (imageContainer === undefined || galleryItem === undefined) {
             return;
         }
 
@@ -485,7 +489,7 @@
         }
 
         // Get element reference, optional caption and source path
-        var imageElement = currentGallery[index].imageElement;
+        var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
