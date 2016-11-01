@@ -29,20 +29,29 @@ Simple and easy to use lightbox script.
 
 ### npm
 
-```shell
-npm install baguettebox.js
+```sh
+npm install baguettebox.js --save
+```
+
+### Yarn
+```sh
+yarn add baguettebox.js
 ```
 
 ### Bower
 
-```shell
-bower install baguettebox.js
+```sh
+bower install baguettebox.js --save
 ```
 
 ### CDN
-1. Go to [cdnjs](https://cdnjs.com/libraries/baguettebox.js/) and copy URLs of the latest version:
+1. Use one of the following CDN providers:
 
-  https://cdnjs.com/libraries/baguettebox.js/  
+  https://cdnjs.com/libraries/baguettebox.js
+
+  http://jsdelivr.com/projects/baguettebox.js
+  
+3. Copy URLs of the latest version (both `.js` and `.css` files)
 
 2. Paste the URLs in your HTML file:
 
