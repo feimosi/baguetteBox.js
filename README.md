@@ -119,7 +119,7 @@ The following options are available:
 | `afterShow` | `function` | `null` | Callback to be run after showing the overlay |
 | `afterHide` | `function` | `null` | Callback to be run after hiding the overlay |
 | `onChange` | `function(currentIndex, imagesCount)` | `null` | Callback to be run when image changes |
-| `overlayBackgroundColor` | `String` | `'rgba (0,0,0,.8)'` | Background color for the lightbox overlay |
+| `overlayBackgroundColor` | `String` | `'rgba`<br>`(0,0,0.8)'` | Background color for the lightbox overlay |
 | `filter` | `RegExp` | `/.+\.(gif|jpe?g|png|webp)/i` | Pattern to match image files. Applied to the `a.href` attribute |
 
 ## API
