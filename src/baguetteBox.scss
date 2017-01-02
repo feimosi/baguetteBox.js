@@ -36,7 +36,7 @@
             height: 100%;   // Opera 12 image stretching fix
         }
 
-        img {
+        img, video {
             // IE8 fix
             display: inline-block;
             width: auto;
@@ -47,6 +47,7 @@
             vertical-align: middle;
             box-shadow: 0 0 8px rgba(0,0,0,.6);
         }
+
 
         figcaption {
             display: block;
