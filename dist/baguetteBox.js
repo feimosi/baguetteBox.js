@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.8.1
+ * @version %%INJECT_VERSION%%
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -62,8 +62,10 @@
     var touch = {};
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
-    // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)/i;
+    // Regex pattern to match image & video files
+    var regex = /.+\.(gif|jpe?g|png|webp|mp4|webm)/i;
+    // Pattern to match only videos
+    var videoRegex = /.+\.(mp4|webm)/i;
     // Object of all used galleries
     var data = {};
     // Array containing temporary images DOM elements
@@ -467,17 +469,42 @@
                 options.afterHide();
             }
         }, 500);
+
+        pauseAnyVideoPlaying();
+
         documentLastFocus.focus();
+    }
+
+    function pauseAnyVideoPlaying(){
+        [].forEach.call(imagesElements, function(imageElement) {
+            if(imageElement.getElementsByTagName('video').length > 0)imageElement.getElementsByTagName('video')[0].pause()
+        });
     }
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        if (typeof imageContainer === 'undefined') {
+        var galleryItem = currentGallery[index];
+        var isVideo = false;
+        if(imageContainer != undefined) isVideo = videoRegex.test(galleryItem.imageElement.href);
+        console.log("isVideo", isVideo);
+        console.log("imageContainer", imageContainer);
+
+        // Return if the index exceeds prepared images in the overlay
+        // or if the current gallery has been changed / closed
+        if (imageContainer === undefined || galleryItem === undefined) {
             return;
         }
 
         // If image is already loaded run callback and return
-        if (imageContainer.getElementsByTagName('img')[0]) {
+        if (imageContainer.getElementsByTagName('img')[0] && !isVideo) {
+            if (callback) {
+                callback();
+            }
+            return;
+        }
+
+        // If video is already loaded run callback and return
+        if (imageContainer.getElementsByTagName('video')[0] && isVideo) {
             if (callback) {
                 callback();
             }
@@ -485,12 +512,16 @@
         }
 
         // Get element reference, optional caption and source path
-        var imageElement = currentGallery[index].imageElement;
-        var thumbnailElement = imageElement.getElementsByTagName('img')[0];
+        var imageElement = galleryItem.imageElement;
+        var thumbnailElement = null;
+        if(isVideo) thumbnailElement = imageElement.getElementsByTagName('video')[0];
+        else thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
-        var imageSrc = getImageSrc(imageElement);
+        var imageSrc = null;
+        if(isVideo) imageSrc = getVideoSrc(imageElement);
+        else imageSrc = getImageSrc(imageElement);
 
         // Prepare figure element
         var figure = create('figure');
@@ -508,27 +539,79 @@
         }
         imageContainer.appendChild(figure);
 
-        // Prepare gallery img element
-        var image = create('img');
-        image.onload = function() {
-            // Remove loader element
-            var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
-            figure.removeChild(spinner);
-            if (!options.async && callback) {
-                callback();
+        if(isVideo){
+            // Prepare gallery video element
+            var video = create('video');
+            //video.onload = function(){
+            video.addEventListener('loadeddata', function() {
+                //Remove loader element
+                var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
+                figure.removeChild(spinner);
+                if (!options.async && callback) {
+                    callback();
+                }
+            });
+            var source = create('source');
+            source.setAttribute('src', imageSrc);
+            video.appendChild(source);
+            if (options.titleTag && imageCaption) {
+                video.title = imageCaption;
             }
-        };
-        image.setAttribute('src', imageSrc);
-        image.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
-        if (options.titleTag && imageCaption) {
-            image.title = imageCaption;
+            figure.appendChild(video);
         }
-        figure.appendChild(image);
+        else
+        {
+            // Prepare gallery img element
+            var image = create('img');
+            image.onload = function() {
+                // Remove loader element
+                var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
+                figure.removeChild(spinner);
+                if (!options.async && callback) {
+                    callback();
+                }
+            };
+            image.setAttribute('src', imageSrc);
+            image.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
+            if (options.titleTag && imageCaption) {
+                image.title = imageCaption;
+            }
+            figure.appendChild(image);
+        }
 
         // Run callback
         if (options.async && callback) {
             callback();
         }
+    }
+
+    // Get video source location, mostly used for responsive images
+    function getVideoSrc(image) {
+        // Set default image path from href
+        var result = image.getElementsByTagName('video')[0].getElementsByTagName('source')[0].src;
+        // If dataset is supported find the most suitable image
+        if (image.dataset) {
+            var srcs = [];
+            // Get all possible image versions depending on the resolution
+            for (var item in image.dataset) {
+                if (item.substring(0, 3) === 'at-' && !isNaN(item.substring(3))) {
+                    srcs[item.replace('at-', '')] = image.dataset[item];
+                }
+            }
+            // Sort resolutions ascending
+            var keys = Object.keys(srcs).sort(function(a, b) {
+                return parseInt(a, 10) < parseInt(b, 10) ? -1 : 1;
+            });
+            // Get real screen resolution
+            var width = window.innerWidth * window.devicePixelRatio;
+            // Find the first image bigger than or equal to the current width
+            var i = 0;
+            while (i < keys.length - 1 && keys[i] < width) {
+                i++;
+            }
+            result = srcs[keys[i]] || result;
+        }
+        return result;
     }
 
     // Get image source location, mostly used for responsive images
@@ -605,6 +688,7 @@
     }
 
     function updateOffset() {
+        pauseAnyVideoPlaying();
         var offset = -currentIndex * 100 + '%';
         if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
@@ -621,6 +705,8 @@
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
         }
+        if(imagesElements[currentIndex].getElementsByTagName('video').length > 0)
+            imagesElements[currentIndex].getElementsByTagName('video')[0].play();
     }
 
     // CSS 3D Transforms test
