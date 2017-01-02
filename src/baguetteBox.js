@@ -486,8 +486,6 @@
         var galleryItem = currentGallery[index];
         var isVideo = false;
         if(imageContainer != undefined) isVideo = videoRegex.test(galleryItem.imageElement.href);
-        console.log("isVideo", isVideo);
-        console.log("imageContainer", imageContainer);
 
         // Return if the index exceeds prepared images in the overlay
         // or if the current gallery has been changed / closed
