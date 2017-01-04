@@ -477,7 +477,9 @@
 
     function pauseAnyVideoPlaying(){
         [].forEach.call(imagesElements, function(imageElement) {
-            if(imageElement.getElementsByTagName('video').length > 0)imageElement.getElementsByTagName('video')[0].pause()
+            if(imageElement.getElementsByTagName('video').length > 0){
+                imageElement.getElementsByTagName('video')[0].pause();
+            }
         });
     }
 
@@ -485,7 +487,9 @@
         var imageContainer = imagesElements[index];
         var galleryItem = currentGallery[index];
         var isVideo = false;
-        if(imageContainer != undefined) isVideo = videoRegex.test(galleryItem.imageElement.href);
+        if(imageContainer != undefined) {
+            isVideo = videoRegex.test(galleryItem.imageElement.href);
+        }
 
         // Return if the index exceeds prepared images in the overlay
         // or if the current gallery has been changed / closed
@@ -518,8 +522,12 @@
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = null;
-        if(isVideo) imageSrc = getVideoSrc(imageElement);
-        else imageSrc = getImageSrc(imageElement);
+        if(isVideo) {
+            imageSrc = getVideoSrc(imageElement);
+        }
+        else {
+            imageSrc = getImageSrc(imageElement);
+        }
 
         // Prepare figure element
         var figure = create('figure');
@@ -703,8 +711,9 @@
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
         }
-        if(imagesElements[currentIndex].getElementsByTagName('video').length > 0)
+        if(imagesElements[currentIndex].getElementsByTagName('video').length > 0) {
             imagesElements[currentIndex].getElementsByTagName('video')[0].play();
+        }
     }
 
     // CSS 3D Transforms test
