@@ -8,8 +8,7 @@
 /* global define, module */
 
 
-
-(function (root, factory) {
+(function(root, factory) {
   'use strict';
   if (typeof define === 'function' && define.amd) {
     define(factory);
@@ -18,7 +17,7 @@
   } else {
     root.baguetteBox = factory();
   }
-}(this, function () {
+}(this, function() {
   'use strict';
 
   // SVG shapes used on the buttons
@@ -189,12 +188,14 @@
       if (galleryElement.tagName === 'A') {
         tagsNodeList = [galleryElement];
       } else {
-        tagsNodeList = galleryElement.querySelectorAll('a:not(.'+ options.ignoreClass +')');
+        tagsNodeList = galleryElement.querySelectorAll('a');
       }
 
       // Filter 'a' elements from those not linking to images
       tagsNodeList = [].filter.call(tagsNodeList, function(element) {
-        return regex.test(element.href);
+        if (!element.className.includes('baguetteBox-disabled')) {
+          return regex.test(element.href);
+        }
       });
       if (tagsNodeList.length === 0) {
         return;
@@ -381,7 +382,8 @@
     // Set overlay color
     try {
       overlay.style.backgroundColor = options.overlayBackgroundColor;
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 
   function showOverlay(chosenImageIndex) {
