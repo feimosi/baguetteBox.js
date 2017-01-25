@@ -39,6 +39,8 @@
             captions: true,
             fullScreen: false,
             noScrollbars: false,
+            bodyClass: 'baguetteBox-open',
+            ignoreClass: 'baguetteBox-disabled',
             titleTag: false,
             buttons: 'auto',
             async: false,
@@ -190,7 +192,9 @@
 
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
-                return regex.test(element.href);
+                if (!element.className.includes(options.ignoreClass) {
+                    return regex.test(element.href);
+                }
             });
             if (tagsNodeList.length === 0) {
                 return;
@@ -409,6 +413,13 @@
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
+            if (options.bodyClass) {
+                document.body.classList.add(options.bodyClass);
+            }
+            if (options.noScrollbars) {
+                document.documentElement.style.overflowY = 'hidden';
+                document.body.style.overflowY = 'scroll';
+            }
             if (options.afterShow) {
                 options.afterShow();
             }
@@ -460,6 +471,9 @@
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
+        if (options.bodyClass) {
+            document.body.classList.remove(options.bodyClass);
+        }
         setTimeout(function() {
             overlay.style.display = 'none';
             exitFullscreen();
