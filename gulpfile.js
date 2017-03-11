@@ -1,4 +1,4 @@
-/* jshint node:true */
+/* eslint-env node */
 
 'use strict';
 
@@ -36,7 +36,7 @@ var autoprefixerBrowsers = [
 
 gulp.task('build.demo-css', function() {
     return gulp.src(src.css)
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(demo.css));
@@ -50,7 +50,7 @@ gulp.task('build.demo-js', function () {
 
 gulp.task('build.dist-css', function() {
     return gulp.src(src.css)
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true }))) // jshint ignore:line
+        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer(autoprefixerBrowsers))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(dist.css))
@@ -73,10 +73,10 @@ gulp.task('build.demo', ['build.demo-css', 'build.demo-js']);
 gulp.task('build.dist', ['build.dist-css', 'build.dist-js']);
 
 gulp.task('lint', function() {
-    return gulp.src([src.js, 'gulpfile.js'])
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.reporter('jshint-stylish'))
-        .pipe(plugins.jshint.reporter('fail'));
+    return gulp.src([src.js, 'gulpfile.js', '.eslintrc.js'])
+        .pipe(plugins.eslint())
+        .pipe(plugins.eslint.format())
+        .pipe(plugins.eslint.failAfterError());
 });
 
 gulp.task('bump-minor', function () {
@@ -93,17 +93,17 @@ gulp.task('bump-patch', function () {
 
 gulp.task('update-version', function () {
     return gulp.src([demo.css + '*.css',
-            demo.js + '*.js',
-            dist.css + '*.css',
-            dist.js + '*.js'
-        ], {
-            base: './'
-        })
-        .pipe(plugins.injectVersion({
-            replace: '%%INJECT_VERSION%%',
-            prepend: ''
-        }))
-        .pipe(gulp.dest('./'));
+        demo.js + '*.js',
+        dist.css + '*.css',
+        dist.js + '*.js'
+    ], {
+        base: './'
+    })
+    .pipe(plugins.injectVersion({
+        replace: '%%INJECT_VERSION%%',
+        prepend: ''
+    }))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', ['watch.browser-sync'], function() {

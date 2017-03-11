@@ -77,15 +77,15 @@
         }
     };
     var previousButtonClickHandler = function(event) {
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showPreviousImage();
     };
     var nextButtonClickHandler = function(event) {
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showNextImage();
     };
     var closeButtonClickHandler = function(event) {
-        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // jshint ignore:line
+        event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         hideOverlay();
     };
     var touchstartHandler = function(event) {
@@ -102,7 +102,7 @@
         if (touchFlag || touch.multitouch) {
             return;
         }
-        event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
+        event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
         var touchEvent = event.touches[0] || event.changedTouches[0];
         // Move at least 40 pixels to trigger the action
         if (touchEvent.pageX - touch.startX > 40) {
@@ -133,7 +133,7 @@
 
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
-    /* jshint ignore:start */
+    /* eslint-disable */
     if (![].forEach) {
         Array.prototype.forEach = function(callback, thisArg) {
             for (var i = 0; i < this.length; i++) {
@@ -153,7 +153,7 @@
             return d;
         };
     }
-    /* jshint ignore:end */
+    /* eslint-enable */
 
     // Script entry point
     function run(selector, userOptions) {
@@ -199,7 +199,7 @@
             var gallery = [];
             [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
                 var imageElementClickHandler = function(event) {
-                    event.preventDefault ? event.preventDefault() : event.returnValue = false; // jshint ignore:line
+                    event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
                     prepareOverlay(gallery, userOptions);
                     showOverlay(imageIndex);
                 };
@@ -478,7 +478,7 @@
 
         // Return if the index exceeds prepared images in the overlay
         // or if the current gallery has been changed / closed
-        if (imageContainer === undefined || galleryItem === undefined) {
+        if (typeof imageContainer === 'undefined' || typeof galleryItem === 'undefined') {
             return;
         }
 
@@ -615,14 +615,12 @@
         if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
-                /* jshint -W030 */
                 supports.transforms ?
                     slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                     : slider.style.left = offset;
                 slider.style.opacity = 1;
             }, 400);
         } else {
-            /* jshint -W030 */
             supports.transforms ?
                 slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                 : slider.style.left = offset;
