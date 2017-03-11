@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.8.1
+ * @version 1.8.2
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -125,7 +125,7 @@
     };
 
     var trapFocusInsideOverlay = function(event) {
-        if (overlay.style.display === 'block' && !overlay.contains(event.target)) {
+        if (overlay.style.display === 'block' && (overlay.contains && !overlay.contains(event.target))) {
             event.stopPropagation();
             initFocus();
         }
@@ -288,15 +288,15 @@
 
     function keyDownHandler(event) {
         switch (event.keyCode) {
-            case 37: // Left arrow
-                showPreviousImage();
-                break;
-            case 39: // Right arrow
-                showNextImage();
-                break;
-            case 27: // Esc
-                hideOverlay();
-                break;
+        case 37: // Left arrow
+            showPreviousImage();
+            break;
+        case 39: // Right arrow
+            showNextImage();
+            break;
+        case 27: // Esc
+            hideOverlay();
+            break;
         }
     }
 
@@ -377,7 +377,9 @@
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
-        } catch (e) {}
+        } catch (e) {
+            // Silence the error and continue
+        }
     }
 
     function showOverlay(chosenImageIndex) {
@@ -472,7 +474,11 @@
 
     function loadImage(index, callback) {
         var imageContainer = imagesElements[index];
-        if (typeof imageContainer === 'undefined') {
+        var galleryItem = currentGallery[index];
+
+        // Return if the index exceeds prepared images in the overlay
+        // or if the current gallery has been changed / closed
+        if (imageContainer === undefined || galleryItem === undefined) {
             return;
         }
 
@@ -485,7 +491,7 @@
         }
 
         // Get element reference, optional caption and source path
-        var imageElement = currentGallery[index].imageElement;
+        var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
@@ -659,7 +665,12 @@
             element.addEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
-            element.attachEvent('on' + event, callback);
+            element.attachEvent('on' + event, function(event) {
+                // `event` and `event.target` are not provided in IE8
+                event = event || window.event;
+                event.target = event.target || event.srcElement;
+                callback(event);
+            });
         }
     }
 
@@ -696,5 +707,4 @@
         showNext: showNextImage,
         showPrevious: showPreviousImage
     };
-
 }));
