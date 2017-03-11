@@ -663,7 +663,12 @@
             element.addEventListener(event, callback, useCapture);
         } else {
             // IE8 fallback
-            element.attachEvent('on' + event, callback);
+            element.attachEvent('on' + event, function(event) {
+                // `event` and `event.target` are not provided in IE8
+                event = event || window.event;
+                event.target = event.target || event.srcElement;
+                callback(event);
+            });
         }
     }
 
