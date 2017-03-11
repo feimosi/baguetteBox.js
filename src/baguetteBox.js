@@ -288,15 +288,15 @@
 
     function keyDownHandler(event) {
         switch (event.keyCode) {
-            case 37: // Left arrow
-                showPreviousImage();
-                break;
-            case 39: // Right arrow
-                showNextImage();
-                break;
-            case 27: // Esc
-                hideOverlay();
-                break;
+        case 37: // Left arrow
+            showPreviousImage();
+            break;
+        case 39: // Right arrow
+            showNextImage();
+            break;
+        case 27: // Esc
+            hideOverlay();
+            break;
         }
     }
 
@@ -377,7 +377,9 @@
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
-        } catch (e) {}
+        } catch (e) {
+            // Silence the error and continue
+        }
     }
 
     function showOverlay(chosenImageIndex) {
@@ -705,5 +707,4 @@
         showNext: showNextImage,
         showPrevious: showPreviousImage
     };
-
 }));
