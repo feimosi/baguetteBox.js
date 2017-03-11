@@ -162,7 +162,8 @@
     function run(selector, userOptions) {
         // Fill supports object
         supports.transforms = testTransformsSupport();
-        supports.svg = testSVGSupport();
+        supports.svg = testSvgSupport();
+        supports.passiveEvents = testPassiveEventsSupport();
 
         buildOverlay();
         removeFromCache(selector);
@@ -306,25 +307,27 @@
     }
 
     function bindEvents() {
+        var options = supports.passiveEvents ? { passive: true } : null;
         bind(overlay, 'click', overlayClickHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
         bind(slider, 'contextmenu', contextmenuHandler);
-        bind(overlay, 'touchstart', touchstartHandler);
-        bind(overlay, 'touchmove', touchmoveHandler);
+        bind(overlay, 'touchstart', touchstartHandler, options);
+        bind(overlay, 'touchmove', touchmoveHandler, options);
         bind(overlay, 'touchend', touchendHandler);
         bind(document, 'focus', trapFocusInsideOverlay, true);
     }
 
     function unbindEvents() {
+        var options = supports.passiveEvents ? { passive: true } : null;
         unbind(overlay, 'click', overlayClickHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
         unbind(closeButton, 'click', closeButtonClickHandler);
         unbind(slider, 'contextmenu', contextmenuHandler);
-        unbind(overlay, 'touchstart', touchstartHandler);
-        unbind(overlay, 'touchmove', touchmoveHandler);
+        unbind(overlay, 'touchstart', touchstartHandler, options);
+        unbind(overlay, 'touchmove', touchmoveHandler, options);
         unbind(overlay, 'touchend', touchendHandler);
         unbind(document, 'focus', trapFocusInsideOverlay, true);
     }
@@ -647,10 +650,25 @@
     }
 
     // Inline SVG test
-    function testSVGSupport() {
+    function testSvgSupport() {
         var div = create('div');
         div.innerHTML = '<svg/>';
         return (div.firstChild && div.firstChild.namespaceURI) === 'http://www.w3.org/2000/svg';
+    }
+
+    // Borrowed from https://github.com/seiyria/bootstrap-slider/pull/680/files
+    function testPassiveEventsSupport() {
+        var passiveEvents = false;
+        try {
+            var opts = Object.defineProperty({}, 'passive', {
+                get: function() {
+                    passiveEvents = true;
+                }
+            });
+            window.addEventListener('test', null, opts);
+        } catch (e) { /* Silence the error and continue */ }
+
+        return passiveEvents;
     }
 
     function preloadNext(index) {
@@ -671,9 +689,9 @@
         });
     }
 
-    function bind(element, event, callback, useCapture) {
+    function bind(element, event, callback, options) {
         if (element.addEventListener) {
-            element.addEventListener(event, callback, useCapture);
+            element.addEventListener(event, callback, options);
         } else {
             // IE8 fallback
             element.attachEvent('on' + event, function(event) {
@@ -685,9 +703,9 @@
         }
     }
 
-    function unbind(element, event, callback, useCapture) {
+    function unbind(element, event, callback, options) {
         if (element.removeEventListener) {
-            element.removeEventListener(event, callback, useCapture);
+            element.removeEventListener(event, callback, options);
         } else {
             // IE8 fallback
             element.detachEvent('on' + event, callback);
