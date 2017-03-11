@@ -55,7 +55,7 @@ gulp.task('build.dist-css', function() {
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(dist.css))
         .pipe(plugins.concat('baguetteBox.min.css'))
-        .pipe(plugins.cssmin())
+        .pipe(plugins.cssmin({ compatibility: 'ie8' }))
         .pipe(gulp.dest(dist.css));
 });
 
