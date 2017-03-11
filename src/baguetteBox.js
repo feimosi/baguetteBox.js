@@ -125,7 +125,7 @@
     };
 
     var trapFocusInsideOverlay = function(event) {
-        if (overlay.style.display === 'block' && !overlay.contains(event.target)) {
+        if (overlay.style.display === 'block' && (overlay.contains && !overlay.contains(event.target))) {
             event.stopPropagation();
             initFocus();
         }
