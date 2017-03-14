@@ -15,9 +15,9 @@ Simple and easy to use lightbox script.
 ## Features
 
 * Written in pure JavaScript, no dependencies required
-* Multiple-gallery support, allows custom options for each
+* Multiple-gallery support allows custom options for each
 * Supports swipe gestures on touch-screen devices
-* Full screen mode available
+* Full-screen mode available
 * Modern and minimal look
 * Image captions support
 * Responsive images
@@ -158,9 +158,9 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 * Opera 12+
 * Safari 5+
 
-## Notes
+## Contributing
 
-Feel free to report any issues!
+Feel free to report any issues! If you wish to contribute by fixing a bug or implementing a new feature, please first see [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Credits
 
@@ -168,6 +168,6 @@ Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](
 
 ## License
 
-Copyright (c) 2016 [feimosi](https://github.com/feimosi/)
+Copyright (c) 2017 [feimosi](https://github.com/feimosi/)
 
 This content is released under the [MIT License](https://opensource.org/licenses/MIT).
