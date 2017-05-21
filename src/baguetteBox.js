@@ -339,7 +339,7 @@
         var imagesFiguresIds = [];
         var imagesCaptionsIds = [];
         // Prepare and append images containers and populate figure and captions IDs arrays
-        for (var i = 0, fullImage; i < gallery.length; i++) {
+        for (var i = 0, fullImage, len = gallery.length; i < len; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
