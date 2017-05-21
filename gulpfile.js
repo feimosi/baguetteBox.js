@@ -37,7 +37,7 @@ var autoprefixerBrowsers = [
 gulp.task('build.demo-css', function() {
     return gulp.src(src.css)
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
-        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
+        .pipe(plugins.autoprefixer({ browsers: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(demo.css));
 });
@@ -51,7 +51,7 @@ gulp.task('build.demo-js', function () {
 gulp.task('build.dist-css', function() {
     return gulp.src(src.css)
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
-        .pipe(plugins.autoprefixer(autoprefixerBrowsers))
+        .pipe(plugins.autoprefixer({ browsers: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(dist.css))
         .pipe(plugins.concat('baguetteBox.min.css'))
@@ -64,7 +64,7 @@ gulp.task('build.dist-js', function() {
         .pipe(plugins.concat('baguetteBox.js'))
         .pipe(gulp.dest(dist.js))
         .pipe(plugins.concat('baguetteBox.min.js'))
-        .pipe(plugins.uglify({ preserveComments: 'some' }))
+        .pipe(plugins.uglify({ output: { comments: /^!/ }, ie8: true }))
         .pipe(gulp.dest(dist.js));
 });
 
