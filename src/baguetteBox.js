@@ -497,16 +497,8 @@
             return;
         }
 
-        // If image is already loaded run callback and return
-        if (imageContainer.getElementsByTagName('img')[0] && !isVideo) {
-            if (callback) {
-                callback();
-            }
-            return;
-        }
-
-        // If video is already loaded run callback and return
-        if (imageContainer.getElementsByTagName('video')[0] && isVideo) {
+        // If image is already loaded run callback and return OR If video is already loaded run callback and return
+        if ((imageContainer.getElementsByTagName('img')[0] && !isVideo) || (imageContainer.getElementsByTagName('video')[0] && isVideo)) {
             if (callback) {
                 callback();
             }
