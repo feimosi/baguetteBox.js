@@ -520,7 +520,7 @@
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = isVideo ? getVideoSrc(imageElement) : getImageSrc(imageElement);
-        
+
         // Prepare figure element
         var figure = create('figure');
         figure.id = 'baguetteBox-figure-' + index;
