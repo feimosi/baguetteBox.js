@@ -475,9 +475,9 @@
         documentLastFocus.focus();
     }
 
-    function pauseAnyVideoPlaying(){
+    function pauseAnyVideoPlaying() {
         [].forEach.call(imagesElements, function(imageElement) {
-            if (imageElement.getElementsByTagName('video').length > 0){
+            if (imageElement.getElementsByTagName('video').length > 0) {
                 imageElement.getElementsByTagName('video')[0].pause();
             }
         });
@@ -493,7 +493,7 @@
 
         // Return if the index exceeds prepared images in the overlay
         // or if the current gallery has been changed / closed
-        if (typeof imageContainer === 'undefined'|| typeof galleryItem === 'undefined') {
+        if (typeof imageContainer === 'undefined' || typeof galleryItem === 'undefined') {
             return;
         }
 
@@ -527,8 +527,7 @@
         var imageSrc = null;
         if (isVideo) {
             imageSrc = getVideoSrc(imageElement);
-        }
-        else {
+        } else {
             imageSrc = getImageSrc(imageElement);
         }
 
@@ -548,10 +547,10 @@
         }
         imageContainer.appendChild(figure);
 
-        if (isVideo){
+        if (isVideo) {
             // Prepare gallery video element
             var video = create('video');
-            //video.onload = function(){
+            //video.onload = function() {
             video.addEventListener('loadeddata', function() {
                 //Remove loader element
                 var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
@@ -567,9 +566,7 @@
                 video.title = imageCaption;
             }
             figure.appendChild(video);
-        }
-        else
-        {
+        } else {
             // Prepare gallery img element
             var image = create('img');
             image.onload = function() {
