@@ -487,7 +487,7 @@
         var imageContainer = imagesElements[index];
         var galleryItem = currentGallery[index];
         var isVideo = false;
-        if typeof imageContainer !== 'undefined' {
+        if (typeof imageContainer !== 'undefined') {
             isVideo = videoRegex.test(galleryItem.imageElement.href);
         }
 
@@ -515,22 +515,12 @@
 
         // Get element reference, optional caption and source path
         var imageElement = galleryItem.imageElement;
-        var thumbnailElement = null;
-        if (isVideo) {
-            thumbnailElement = imageElement.getElementsByTagName('video')[0];
-        } else {
-            thumbnailElement = imageElement.getElementsByTagName('img')[0];
-        }
+        var thumbnailElement = isVideo ? imageElement.getElementsByTagName('video')[0] : imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
                             options.captions.call(currentGallery, imageElement) :
                             imageElement.getAttribute('data-caption') || imageElement.title;
-        var imageSrc = null;
-        if (isVideo) {
-            imageSrc = getVideoSrc(imageElement);
-        } else {
-            imageSrc = getImageSrc(imageElement);
-        }
-
+        var imageSrc = isVideo ? getVideoSrc(imageElement) : getImageSrc(imageElement);
+        
         // Prepare figure element
         var figure = create('figure');
         figure.id = 'baguetteBox-figure-' + index;
