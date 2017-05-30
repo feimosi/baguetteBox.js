@@ -498,7 +498,7 @@
         }
 
         // If image is already loaded run callback and return OR If video is already loaded run callback and return
-        if ((imageContainer.getElementsByTagName('img')[0] && !isVideo) || (imageContainer.getElementsByTagName('video')[0] && isVideo)) {
+        if (imageContainer.getElementsByTagName('img').length > 0 || imageContainer.getElementsByTagName('video').length > 0) {
             if (callback) {
                 callback();
             }
