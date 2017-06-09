@@ -230,7 +230,17 @@ var oldIE = true;
 <![endif]-->
 <script>
 window.onload = function() {
-    baguetteBox.run('.baguetteBoxOne');
+    var shouldLoop = false;
+    baguetteBox.run('.baguetteBoxOne', {
+        onChange: function(currentIndex, imagesCount) {
+            if (currentIndex + 1 === imagesCount && !shouldLoop) {
+                shouldLoop = true;
+            } else if  (shouldLoop) {
+                shouldLoop = false;
+                baguetteBox.show(0);
+            }
+        }
+    });
     baguetteBox.run('.baguetteBoxTwo');
     baguetteBox.run('.baguetteBoxThree', {
         animation: 'fadeIn',

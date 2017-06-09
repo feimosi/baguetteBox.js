@@ -610,16 +610,21 @@
             showOverlay(index);
             return true;
         }
+
         if (index < 0) {
             if (options.animation) {
                 bounceAnimation('left');
             }
+            options.onChange &&
+                options.onChange(index, imagesElements.length, true);
             return false;
         }
         if (index >= imagesElements.length) {
             if (options.animation) {
                 bounceAnimation('right');
             }
+            options.onChange &&
+                options.onChange(index, imagesElements.length, true);
             return false;
         }
 
