@@ -96,6 +96,9 @@
         // Save x and y axis position
         touch.startX = event.changedTouches[0].pageX;
         touch.startY = event.changedTouches[0].pageY;
+        document.getElementById('baguetteBox-slider').oncontextmenu = function() {
+            touchendHandler();
+        };
     };
     var touchmoveHandler = function(event) {
         // If action was already triggered or multitouch return
