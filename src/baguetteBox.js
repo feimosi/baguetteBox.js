@@ -96,9 +96,6 @@
         // Save x and y axis position
         touch.startX = event.changedTouches[0].pageX;
         touch.startY = event.changedTouches[0].pageY;
-        document.getElementById('baguetteBox-slider').oncontextmenu = function() {
-            touchendHandler();
-        };
     };
     var touchmoveHandler = function(event) {
         // If action was already triggered or multitouch return
@@ -125,6 +122,11 @@
             touch.multitouch = false;
         }
         touchFlag = false;
+    };
+    var contextmenuHandler = function() {
+        document.getElementById('baguetteBox-slider').oncontextmenu = function() {
+            touchendHandler();
+        };
     };
 
     var trapFocusInsideOverlay = function(event) {
@@ -308,6 +310,7 @@
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
+        bind(overlay, 'touchstart', contextmenuHandler);
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
