@@ -39,6 +39,7 @@
             captions: true,
             fullScreen: false,
             noScrollbars: false,
+            bodyClass: 'baguetteBox-open',
             titleTag: false,
             buttons: 'auto',
             async: false,
@@ -190,7 +191,9 @@
 
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
-                return regex.test(element.href);
+                if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
+                    return regex.test(element.href);
+                }
             });
             if (tagsNodeList.length === 0) {
                 return;
@@ -411,6 +414,9 @@
         // Fade in overlay
         setTimeout(function() {
             overlay.className = 'visible';
+            if (options.bodyClass && document.body.classList) {
+                document.body.classList.add(options.bodyClass);
+            }
             if (options.afterShow) {
                 options.afterShow();
             }
@@ -465,6 +471,9 @@
         setTimeout(function() {
             overlay.style.display = 'none';
             exitFullscreen();
+            if (options.bodyClass && document.body.classList) {
+                document.body.classList.remove(options.bodyClass);
+            }
             if (options.afterHide) {
                 options.afterHide();
             }
