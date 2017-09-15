@@ -192,7 +192,7 @@
 
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
-                if (!element.className.includes(options.ignoreClass) {
+                if (!element.className.includes(options.ignoreClass)) {
                     return regex.test(element.href);
                 }
             });
