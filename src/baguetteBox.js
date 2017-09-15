@@ -469,7 +469,7 @@
                 options.afterHide();
             }
         }, 500);
-        documentLastFocus.focus();
+        documentLastFocus && documentLastFocus.focus();
     }
 
     function loadImage(index, callback) {
