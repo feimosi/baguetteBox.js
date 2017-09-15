@@ -92,18 +92,19 @@ gulp.task('bump-patch', function () {
 });
 
 gulp.task('update-version', function () {
-    return gulp.src([demo.css + '*.css',
-        demo.js + '*.js',
-        dist.css + '*.css',
-        dist.js + '*.js'
-    ], {
-        base: './'
-    })
-    .pipe(plugins.injectVersion({
-        replace: '%%INJECT_VERSION%%',
-        prepend: ''
-    }))
-    .pipe(gulp.dest('./'));
+    return gulp
+        .src([demo.css + '*.css',
+            demo.js + '*.js',
+            dist.css + '*.css',
+            dist.js + '*.js'
+        ], {
+            base: './'
+        })
+        .pipe(plugins.injectVersion({
+            replace: '%%INJECT_VERSION%%',
+            prepend: ''
+        }))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', ['watch.browser-sync'], function() {

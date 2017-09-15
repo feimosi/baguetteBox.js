@@ -339,7 +339,7 @@
         var imagesFiguresIds = [];
         var imagesCaptionsIds = [];
         // Prepare and append images containers and populate figure and captions IDs arrays
-        for (var i = 0, fullImage, len = gallery.length; i < len; i++) {
+        for (var i = 0, fullImage; i < gallery.length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
@@ -494,8 +494,8 @@
         var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
         var imageCaption = typeof options.captions === 'function' ?
-                            options.captions.call(currentGallery, imageElement) :
-                            imageElement.getAttribute('data-caption') || imageElement.title;
+            options.captions.call(currentGallery, imageElement) :
+            imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = getImageSrc(imageElement);
 
         // Prepare figure element
