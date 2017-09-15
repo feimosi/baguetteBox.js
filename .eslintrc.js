@@ -1,24 +1,20 @@
 module.exports = {
     env: {
-        "browser": true
+        'browser': true
     },
-    globals: {
-        baguetteBox: true,
-        hljs: true
-    },
-    extends: "eslint:recommended",
+    extends: 'eslint:recommended',
     rules: {
-        "indent": [
-            "error",
+        'indent': [
+            'error',
             4
         ],
-        "quotes": [
-            "error",
-            "single"
+        'quotes': [
+            'error',
+            'single'
         ],
-        "semi": [
-            "error",
-            "always"
+        'semi': [
+            'error',
+            'always'
         ]
     }
 };
