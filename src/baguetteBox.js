@@ -37,17 +37,16 @@
     var options = {},
         defaults = {
             captions: true,
+            buttons: 'auto',
             fullScreen: false,
             noScrollbars: false,
             bodyClass: 'baguetteBox-open',
             titleTag: false,
-            buttons: 'auto',
             async: false,
             preload: 2,
             animation: 'slideIn',
             afterShow: null,
             afterHide: null,
-            // callback when image changes with `currentIndex` and `imagesElements.length` as parameters
             onChange: null,
             overlayBackgroundColor: 'rgba(0,0,0,.8)'
         };
@@ -710,8 +709,8 @@
 
     return {
         run: run,
-        destroy: destroyPlugin,
         showNext: showNextImage,
-        showPrevious: showPreviousImage
+        showPrevious: showPreviousImage,
+        destroy: destroyPlugin
     };
 }));

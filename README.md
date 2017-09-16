@@ -4,9 +4,10 @@
 [![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](http://opensource.org/licenses/MIT)
 ![dependency Status](https://img.shields.io/badge/dependencies-none-blue.svg)
 [![devDependency Status](https://img.shields.io/david/dev/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js#info=devDependencies)
+[![npm](https://img.shields.io/npm/dm/baguettebox.js.svg)](https://github.com/feimosi/baguetteBox.js)
 [![Build Status](https://travis-ci.org/feimosi/baguetteBox.js.svg?branch=master)](https://travis-ci.org/feimosi/baguetteBox.js)
 
-Simple and easy to use lightbox script.
+Simple and easy to use lightbox script written in pure JavaScript.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
 
@@ -23,9 +24,11 @@ Simple and easy to use lightbox script.
 * Responsive images
 * CSS3 transitions
 * SVG buttons, no extra files to download
-* Around 2.7KB gzipped
+* Around 3.2KB gzipped
 
 ## Installation
+
+You can use one of the following methods:
 
 ### npm
 
@@ -46,10 +49,8 @@ bower install baguettebox.js --save
 
 ### CDN
 1. Use one of the following CDN providers:
-
-  https://cdnjs.com/libraries/baguettebox.js
-
-  http://jsdelivr.com/projects/baguettebox.js
+  - https://cdnjs.com/libraries/baguettebox.js
+  - http://jsdelivr.com/projects/baguettebox.js
 
 3. Copy URLs of the latest version (both `.js` and `.css` files)
 
@@ -83,10 +84,10 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 ```html
 <div class="gallery">
     <a href="img/2-1.jpg" data-caption="Image caption">
-        <img src="img/thumbs/2-1.jpg" alt="First image">
+        <img src="img/thumbnails/2-1.jpg" alt="First image">
     </a>
     <a href="img/2-2.jpg">
-        <img src="img/thumbs/2-2.jpg" alt="Second image">
+        <img src="img/thumbnails/2-2.jpg" alt="Second image">
     </a>
     ...
 </div>
@@ -112,6 +113,8 @@ The following options are available:
 | `buttons` | `Boolean` \| `'auto'` | `'auto'` | Display buttons. `'auto'` hides buttons on touch-enabled devices or when only one image is available |
 | `fullScreen` | `Boolean` | `false` | Enable full screen mode |
 | `noScrollbars` | `Boolean` | `false` | Hide scrollbars when gallery is displayed |
+| `bodyClass` | `String` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible |
+| `ignoreClass` | `String` | `null` | It will ignore images with given class put on `a` tag |
 | `titleTag` | `Boolean` | `false` | Use caption value also in the gallery `img.title` attribute |
 | `async` | `Boolean` | `false` | Load files asynchronously |
 | `preload` | `Number` | `2` | How many files should be preloaded |
@@ -129,7 +132,7 @@ The following options are available:
 * `showPrevious` - switch to the previous image
 * `destroy` - remove the plugin with any event bindings
 
-The first two methods return true on success or false if there are no more images to be loaded.
+`showNext` and `showPrevious` return true on success or false if there are no more images to be loaded.
 
 ## Responsive images
 
@@ -152,15 +155,20 @@ If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"
 
 ## Compatibility
 
+Desktop:
 * IE 8+
 * Chrome
 * Firefox 3.6+
 * Opera 12+
 * Safari 5+
 
+Mobile:
+* Safari on iOS
+* Chrome on Android
+
 ## Contributing
 
-Feel free to report any issues! If you wish to contribute by fixing a bug or implementing a new feature, please first see [CONTRIBUTING](./CONTRIBUTING.md).
+Feel free to report any issues! If you wish to contribute by fixing a bug or implementing a new feature, please first read the [CONTRIBUTING](./CONTRIBUTING.md) guide.
 
 ## Credits
 
