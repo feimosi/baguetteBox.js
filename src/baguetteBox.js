@@ -124,9 +124,7 @@
         touchFlag = false;
     };
     var contextmenuHandler = function() {
-        document.getElementById('baguetteBox-slider').oncontextmenu = function() {
-            touchendHandler();
-        };
+        touchendHandler();
     };
 
     var trapFocusInsideOverlay = function(event) {
@@ -310,7 +308,7 @@
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
-        bind(overlay, 'touchstart', contextmenuHandler);
+        bind(slider, 'contextmenu', contextmenuHandler);
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
