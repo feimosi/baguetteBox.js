@@ -45,6 +45,12 @@ Push changes
 git push
 ```
 
+Merge `master` branch
+```sh
+git checkout master
+git merge --ff-only dev
+```
+
 Add a tag
 ```sh
 git tag v1.8.0
@@ -54,8 +60,9 @@ git push --tags
 Deploy the new demo page
 ```sh
 gulp deploy
-cd ./publish
+cd .publish
 git push
+cd ..
 ```
 
 Publish the new version to `npm`
