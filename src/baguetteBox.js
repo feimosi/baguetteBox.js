@@ -481,8 +481,8 @@
             if (options.afterHide) {
                 options.afterHide();
             }
+            documentLastFocus && documentLastFocus.focus();
         }, 500);
-        documentLastFocus && documentLastFocus.focus();
     }
 
     function loadImage(index, callback) {
