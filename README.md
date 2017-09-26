@@ -113,7 +113,7 @@ The following options are available:
 | `buttons` | `Boolean` \| `'auto'` | `'auto'` | Display buttons. `'auto'` hides buttons on touch-enabled devices or when only one image is available |
 | `fullScreen` | `Boolean` | `false` | Enable full screen mode |
 | `noScrollbars` | `Boolean` | `false` | Hide scrollbars when gallery is displayed |
-| `bodyClass` | `String` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible |
+| `bodyClass` | `String` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible (works in IE 10+) |
 | `ignoreClass` | `String` | `null` | It will ignore images with given class put on `a` tag |
 | `titleTag` | `Boolean` | `false` | Use caption value also in the gallery `img.title` attribute |
 | `async` | `Boolean` | `false` | Load files asynchronously |
