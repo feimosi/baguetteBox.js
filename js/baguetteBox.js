@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.9.0
+ * @version %%INJECT_VERSION%%
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -122,6 +122,9 @@
             touch.multitouch = false;
         }
         touchFlag = false;
+    };
+    var contextmenuHandler = function() {
+        touchendHandler();
     };
 
     var trapFocusInsideOverlay = function(event) {
@@ -307,6 +310,7 @@
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
+        bind(slider, 'contextmenu', contextmenuHandler);
         bind(overlay, 'touchstart', touchstartHandler);
         bind(overlay, 'touchmove', touchmoveHandler);
         bind(overlay, 'touchend', touchendHandler);
@@ -318,6 +322,7 @@
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
         unbind(closeButton, 'click', closeButtonClickHandler);
+        unbind(slider, 'contextmenu', contextmenuHandler);
         unbind(overlay, 'touchstart', touchstartHandler);
         unbind(overlay, 'touchmove', touchmoveHandler);
         unbind(overlay, 'touchend', touchendHandler);
@@ -476,8 +481,8 @@
             if (options.afterHide) {
                 options.afterHide();
             }
+            documentLastFocus && documentLastFocus.focus();
         }, 500);
-        documentLastFocus && documentLastFocus.focus();
     }
 
     function loadImage(index, callback) {
