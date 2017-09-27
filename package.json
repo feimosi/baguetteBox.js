@@ -40,7 +40,7 @@
     "gulp-uglify": "~3.0.0",
     "gulp-usemin": "~0.3.28",
     "jsonfile": "~4.0.0",
-    "run-sequence": "~2.1.0"
+    "run-sequence": "~2.2.0"
   },
   "keywords": [
     "lightbox",
