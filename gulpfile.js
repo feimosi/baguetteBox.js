@@ -5,7 +5,6 @@
 var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
     browserSync = require('browser-sync'),
-    jsonfile = require('jsonfile'),
     runSequence = require('run-sequence');
 
 var src = {
@@ -13,11 +12,11 @@ var src = {
     js: './src/*.js'
 };
 var demo = {
-    allFiles: './demo/**/*',
-    css: './demo/css/',
-    js: './demo/js/',
-    html: './demo/',
-    base: './demo/'
+    allFiles: './docs/**/*',
+    css: './docs/css/',
+    js: './docs/js/',
+    html: './docs/',
+    base: './docs/'
 };
 var dist = {
     css: './dist/',
@@ -39,12 +38,20 @@ gulp.task('build.demo-css', function() {
         .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer({ browsers: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
+        .pipe(plugins.injectVersion({
+            replace: '%%INJECT_VERSION%%',
+            prepend: ''
+        }))
         .pipe(gulp.dest(demo.css));
 });
 
 gulp.task('build.demo-js', function () {
     return gulp.src(src.js)
         .pipe(plugins.concat('baguetteBox.js'))
+        .pipe(plugins.injectVersion({
+            replace: '%%INJECT_VERSION%%',
+            prepend: ''
+        }))
         .pipe(gulp.dest(demo.js));
 });
 
@@ -124,16 +131,6 @@ gulp.task('watch.browser-sync', ['build.demo'], function () {
             baseDir: demo.base
         }
     });
-});
-
-gulp.task('deploy', function() {
-    var packageJson = jsonfile.readFileSync('./package.json');
-
-    return gulp.src(demo.allFiles)
-        .pipe(plugins.ghPages({
-            push: false,
-            message: 'v' + packageJson.version
-        }));
 });
 
 gulp.task('release', function() {
