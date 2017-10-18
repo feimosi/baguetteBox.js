@@ -31,7 +31,7 @@
       margin: 0;
       height: 100%; }
     #baguetteBox-overlay .full-image img {
-      display: inline-block;
+      display: block;
       width: auto;
       height: auto;
       max-height: 100%;
@@ -39,7 +39,14 @@
       vertical-align: middle;
       -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
          -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-              box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); }
+              box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+         -moz-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%); }
     #baguetteBox-overlay .full-image figcaption {
       display: block;
       position: absolute;
