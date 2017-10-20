@@ -755,7 +755,7 @@
     // zooming on mobile functions
     function resetZoom(img) {
         img.style = null;
-        img.style.transition = "all 150ms ease-in-out";
+        img.style.transition = 'all 150ms ease-in-out';
         zoomPercentage = 100;
         isZoomed = false;
         window.setTimeout(function() {
@@ -768,41 +768,41 @@
         var imgComputedLeft = parseInt(window.getComputedStyle(img,null).getPropertyValue('left'));
         var imgComputedTop = parseInt(window.getComputedStyle(img,null).getPropertyValue('top'));
 
-        img.style.transition = "all 150ms ease-in-out";
+        img.style.transition = 'all 150ms ease-in-out';
         
         if (imgComputedWidth >= window.innerWidth) {
             if (imgComputedLeft > (imgComputedWidth/2)) {
-                img.style.left = (imgComputedWidth/2) + "px";
-                img.style.right = "auto";
+                img.style.left = (imgComputedWidth/2) + 'px';
+                img.style.right = 'auto';
             } else if (imgComputedLeft < -1*(imgComputedWidth - window.innerWidth - (imgComputedWidth/2))) {
-                img.style.left = -1*(imgComputedWidth - window.innerWidth - (imgComputedWidth/2)) + "px";
-                img.style.right = "auto";
+                img.style.left = -1*(imgComputedWidth - window.innerWidth - (imgComputedWidth/2)) + 'px';
+                img.style.right = 'auto';
             }
         } else if (imgComputedWidth < window.innerWidth) {
             if (imgComputedLeft < (imgComputedWidth/2)) {
-                img.style.left = (imgComputedWidth/2) + "px";
-                img.style.right = "auto";
+                img.style.left = (imgComputedWidth/2) + 'px';
+                img.style.right = 'auto';
             } else if (imgComputedLeft > window.innerWidth - imgComputedWidth + (imgComputedWidth/2)) {
-                img.style.left = window.innerWidth - imgComputedWidth + (imgComputedWidth/2) + "px";
-                img.style.right = "auto";
+                img.style.left = window.innerWidth - imgComputedWidth + (imgComputedWidth/2) + 'px';
+                img.style.right = 'auto';
             }
         }
         
         if (imgComputedHeight >= window.innerHeight) {
             if (imgComputedTop > (imgComputedHeight/2)) {
-                img.style.top = (imgComputedHeight/2) + "px";
-                img.style.bottom = "auto";
+                img.style.top = (imgComputedHeight/2) + 'px';
+                img.style.bottom = 'auto';
             } else if (imgComputedTop < -1*(imgComputedHeight - window.innerHeight - (imgComputedHeight/2))) {
-                img.style.top = -1*(imgComputedHeight - window.innerHeight - (imgComputedHeight/2)) + "px";
-                img.style.bottom = "auto";
+                img.style.top = -1*(imgComputedHeight - window.innerHeight - (imgComputedHeight/2)) + 'px';
+                img.style.bottom = 'auto';
             }
         } else if (imgComputedHeight < window.innerHeight) {
             if (imgComputedTop < (imgComputedHeight/2)) {
-                img.style.top = (imgComputedHeight/2) + "px";
-                img.style.bottom = "auto";
+                img.style.top = (imgComputedHeight/2) + 'px';
+                img.style.bottom = 'auto';
             } else if (imgComputedTop > window.innerHeight - imgComputedHeight + (imgComputedHeight/2)) {
-                img.style.top = window.innerHeight - imgComputedHeight + (imgComputedHeight/2) + "px";
-                img.style.bottom = "auto";
+                img.style.top = window.innerHeight - imgComputedHeight + (imgComputedHeight/2) + 'px';
+                img.style.bottom = 'auto';
             }
         }
 
@@ -818,12 +818,12 @@
         var numericLeft = window.getComputedStyle(img,null).getPropertyValue('left');
         var numericTop = window.getComputedStyle(img,null).getPropertyValue('top');
         
-        img.style.position = "absolute";
+        img.style.position = 'absolute';
 
-        img.style.top = (parseInt(numericTop) + (y)) + "px";
-        img.style.left = (parseInt(numericLeft) + (x)) + "px";
-        img.style.right = "auto";
-        img.style.bottom = "auto";
+        img.style.top = (parseInt(numericTop) + (y)) + 'px';
+        img.style.left = (parseInt(numericLeft) + (x)) + 'px';
+        img.style.right = 'auto';
+        img.style.bottom = 'auto';
     }
     function zoomImage(img) {
         var imgComputedWidth = parseInt(window.getComputedStyle(img, null).getPropertyValue('width'));
