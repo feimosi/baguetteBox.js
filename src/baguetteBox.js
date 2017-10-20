@@ -755,7 +755,7 @@
     // zooming on mobile functions
     function resetZoom(img) {
         img.style = null;
-        img.style.transition = 'all 0.15s ease-in-out';
+        img.style.transition = "all 150ms ease-in-out";
         zoomPercentage = 100;
         isZoomed = false;
         window.setTimeout(function() {
@@ -763,50 +763,50 @@
         }, 160);
     }
     function checkCorners(img) {
+        var imgComputedWidth = parseInt(window.getComputedStyle(img,null).getPropertyValue('width'));
+        var imgComputedHeight = parseInt(window.getComputedStyle(img,null).getPropertyValue('height'));
+        var imgComputedLeft = parseInt(window.getComputedStyle(img,null).getPropertyValue('left'));
+        var imgComputedTop = parseInt(window.getComputedStyle(img,null).getPropertyValue('top'));
 
-        img.style.transition = 'all 0.15s ease-in-out';
+        img.style.transition = "all 150ms ease-in-out";
         
-        if (parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) >= window.innerWidth) {
-            if (parseInt(window.getComputedStyle(img,null).getPropertyValue('left')) > (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2)) {
-                img.style.left = (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2) + 'px';
-                img.style.right = 'auto';
-            } else if (parseInt(window.getComputedStyle(img,null).getPropertyValue('left')) < -1*(parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) - window.innerWidth - (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2))) {
-                img.style.left = -1*(parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) - window.innerWidth - (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2)) + 'px';
-                img.style.right = 'auto';
+        if (imgComputedWidth >= window.innerWidth) {
+            if (imgComputedLeft > (imgComputedWidth/2)) {
+                img.style.left = (imgComputedWidth/2) + "px";
+                img.style.right = "auto";
+            } else if (imgComputedLeft < -1*(imgComputedWidth - window.innerWidth - (imgComputedWidth/2))) {
+                img.style.left = -1*(imgComputedWidth - window.innerWidth - (imgComputedWidth/2)) + "px";
+                img.style.right = "auto";
+            }
+        } else if (imgComputedWidth < window.innerWidth) {
+            if (imgComputedLeft < (imgComputedWidth/2)) {
+                img.style.left = (imgComputedWidth/2) + "px";
+                img.style.right = "auto";
+            } else if (imgComputedLeft > window.innerWidth - imgComputedWidth + (imgComputedWidth/2)) {
+                img.style.left = window.innerWidth - imgComputedWidth + (imgComputedWidth/2) + "px";
+                img.style.right = "auto";
             }
         }
         
-        if (parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) >= window.innerHeight) {
-            if (parseInt(window.getComputedStyle(img,null).getPropertyValue('top')) > (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2)) {
-                img.style.top = (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2) + 'px';
-                img.style.bottom = 'auto';
-            } else if (parseInt(window.getComputedStyle(img,null).getPropertyValue('top')) < -1*(parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) - window.innerHeight - (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2))) {
-                img.style.top = -1*(parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) - window.innerHeight - (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2)) + 'px';
-                img.style.bottom = 'auto';
+        if (imgComputedHeight >= window.innerHeight) {
+            if (imgComputedTop > (imgComputedHeight/2)) {
+                img.style.top = (imgComputedHeight/2) + "px";
+                img.style.bottom = "auto";
+            } else if (imgComputedTop < -1*(imgComputedHeight - window.innerHeight - (imgComputedHeight/2))) {
+                img.style.top = -1*(imgComputedHeight - window.innerHeight - (imgComputedHeight/2)) + "px";
+                img.style.bottom = "auto";
+            }
+        } else if (imgComputedHeight < window.innerHeight) {
+            if (imgComputedTop < (imgComputedHeight/2)) {
+                img.style.top = (imgComputedHeight/2) + "px";
+                img.style.bottom = "auto";
+            } else if (imgComputedTop > window.innerHeight - imgComputedHeight + (imgComputedHeight/2)) {
+                img.style.top = window.innerHeight - imgComputedHeight + (imgComputedHeight/2) + "px";
+                img.style.bottom = "auto";
             }
         }
 
-        if (parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) <= window.innerHeight) {
-            if (parseInt(window.getComputedStyle(img,null).getPropertyValue('top')) < (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2)) {
-                img.style.top = (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2) + 'px';
-                img.style.bottom = 'auto';
-            } else if (parseInt(window.getComputedStyle(img,null).getPropertyValue('top')) > window.innerHeight - parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) + (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2)) {
-                img.style.top = window.innerHeight - parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) + (parseInt(window.getComputedStyle(img,null).getPropertyValue('height'))/2) + 'px';
-                img.style.bottom = 'auto';
-            }
-        }
-
-        if (parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) <= window.innerWidth) {
-            if (parseInt(window.getComputedStyle(img,null).getPropertyValue('left')) < (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2)) {
-                img.style.left = (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2) + 'px';
-                img.style.right = 'auto';
-            } else if (parseInt(window.getComputedStyle(img,null).getPropertyValue('left')) > window.innerWidth - parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) + (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2)) {
-                img.style.left = window.innerWidth - parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) + (parseInt(window.getComputedStyle(img,null).getPropertyValue('width'))/2) + 'px';
-                img.style.right = 'auto';
-            }
-        }
-
-        if (parseInt(window.getComputedStyle(img,null).getPropertyValue('width')) <= window.innerWidth && parseInt(window.getComputedStyle(img,null).getPropertyValue('height')) <= window.innerHeight) {
+        if (imgComputedWidth <= window.innerWidth && imgComputedHeight <= window.innerHeight) {
             resetZoom(img);
         }
 
@@ -815,23 +815,21 @@
         }, 160);
     }
     function moveImage(x, y, img) {
-        img.style.position = 'absolute';
+        var numericLeft = window.getComputedStyle(img,null).getPropertyValue('left');
+        var numericTop = window.getComputedStyle(img,null).getPropertyValue('top');
+        
+        img.style.position = "absolute";
 
-        var numericLeft = window
-            .getComputedStyle(img,null)
-            .getPropertyValue('left');
-        
-        var numericTop = window
-            .getComputedStyle(img,null)
-            .getPropertyValue('top');
-        
-        img.style.top = (parseInt(numericTop) + (y)) + 'px';
-        img.style.left = (parseInt(numericLeft) + (x)) + 'px';
-        img.style.right = 'auto';
-        img.style.bottom = 'auto';
+        img.style.top = (parseInt(numericTop) + (y)) + "px";
+        img.style.left = (parseInt(numericLeft) + (x)) + "px";
+        img.style.right = "auto";
+        img.style.bottom = "auto";
     }
     function zoomImage(img) {
-        if (zoomPercentage >= 50 && zoomPercentage <= 400 && parseInt(window.getComputedStyle(img, null).getPropertyValue('width')) < img.naturalWidth && parseInt(window.getComputedStyle(img, null).getPropertyValue('height')) < img.naturalHeight) {
+        var imgComputedWidth = parseInt(window.getComputedStyle(img, null).getPropertyValue('width'));
+        var imgComputedHeight = parseInt(window.getComputedStyle(img, null).getPropertyValue('height'));
+
+        if (zoomPercentage >= 50 && zoomPercentage <= 400 && imgComputedWidth < img.naturalWidth && imgComputedHeight < img.naturalHeight) {
             img.style.position = 'absolute';
             img.style.maxWidth = parseInt(zoomPercentage) + '%';
             img.style.maxHeight = parseInt(zoomPercentage) + '%';
@@ -841,7 +839,7 @@
             img.style.maxWidth = parseInt(zoomPercentage) + '%';
             img.style.maxHeight = parseInt(zoomPercentage) + '%';
             isZoomed = true;
-        } else if (parseInt(window.getComputedStyle(img, null).getPropertyValue('width')) >= img.naturalWidth || parseInt(window.getComputedStyle(img, null).getPropertyValue('height')) >= img.naturalHeight) {
+        } else if (imgComputedWidth >= img.naturalWidth || imgComputedHeight >= img.naturalHeight) {
             zoomPercentage = parseInt(img.style.maxWidth);
         } else if (zoomPercentage >= 400) {
             zoomPercentage = 400;
