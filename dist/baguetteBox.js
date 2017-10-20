@@ -123,7 +123,7 @@
             touchFlag = true;
             showNextImage();
         // Move 100 pixels up to close the overlay
-        } else if (!touchFlag && touch.clientY - touchEvent.pageY > 100 && !isZoomed && touchesLength === 1) {
+        } else if (!touchFlag && touchEvent.clientY - touch.startY > 100 && !isZoomed && touchesLength === 1) {
             hideOverlay();
         } else if (touchesLength === 2) {
             touchFlag = true;
