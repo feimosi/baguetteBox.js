@@ -1,10 +1,10 @@
 # baguetteBox.js
 
 [![GitHub Release](https://img.shields.io/github/release/feimosi/baguetteBox.js.svg)](https://github.com/feimosi/baguetteBox.js/releases)
-[![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](http://opensource.org/licenses/MIT)
-![dependency Status](https://img.shields.io/badge/dependencies-none-blue.svg)
-[![devDependency Status](https://img.shields.io/david/dev/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js#info=devDependencies)
-[![npm](https://img.shields.io/npm/dm/baguettebox.js.svg)](https://github.com/feimosi/baguetteBox.js)
+[![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](https://github.com/feimosi/baguetteBox.js/blob/dev/LICENSE)
+[![dependency Status](https://img.shields.io/badge/dependencies-none-blue.svg)](https://david-dm.org/feimosi/baguetteBox.js)
+[![devDependency Status](https://img.shields.io/david/dev/feimosi/baguetteBox.js.svg)](https://david-dm.org/feimosi/baguetteBox.js?type=dev)
+[![npm](https://img.shields.io/npm/dm/baguettebox.js.svg)](https://www.npmjs.com/package/baguettebox.js)
 [![Build Status](https://travis-ci.org/feimosi/baguetteBox.js.svg?branch=master)](https://travis-ci.org/feimosi/baguetteBox.js)
 
 Simple and easy to use lightbox script written in pure JavaScript.
