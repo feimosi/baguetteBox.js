@@ -7,6 +7,9 @@
 [![npm](https://img.shields.io/npm/dm/baguettebox.js.svg)](https://www.npmjs.com/package/baguettebox.js)
 [![Build Status](https://travis-ci.org/feimosi/baguetteBox.js.svg?branch=master)](https://travis-ci.org/feimosi/baguetteBox.js)
 
+[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20baguetteBox.js%20-%20simple%20and%20easy%20to%20use%20lightbox%20script%20written%20in%20pure%20JavaScript%0Ahttps%3A%2F%2Fgithub.com%2Ffeimosi%2FbaguetteBox.js)
+[![Twitter Follow](https://img.shields.io/twitter/follow/feimosi.svg?style=social&label=Follow%20the%20author)](https://twitter.com/feimosi)
+
 Simple and easy to use lightbox script written in pure JavaScript.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
