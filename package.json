@@ -27,7 +27,7 @@
     "browser-sync": "~2.18.13",
     "gulp": "~3.9.0",
     "gulp-autoprefixer": "~4.0.0",
-    "gulp-bump": "~2.7.0",
+    "gulp-bump": "~2.8.0",
     "gulp-concat": "~2.6.1",
     "gulp-cssmin": "~0.2.0",
     "gulp-eslint": "~4.0.0",
