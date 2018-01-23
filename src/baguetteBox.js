@@ -600,9 +600,9 @@
 
     /**
      * Move the gallery to a specific index
-     * @param {number} index the position of the image
-     * @param {array} gallery which should be opened
-     * @return {boolean} the status of the operation
+     * @param `index` {number} - the position of the image
+     * @param `gallery` {array} - gallery which should be opened, if omitted assumes the currently opened one
+     * @return {boolean} - true on success or false if the index is invalid
      */
     function show(index, gallery) {
         if (!isOverlayVisible && index >= 0 && index < gallery.length) {

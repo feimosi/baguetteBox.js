@@ -130,12 +130,48 @@ The following options are available:
 
 ## API
 
-* `run` - initialize baguetteBox.js
-* `showNext` - switch to the next image
-* `showPrevious` - switch to the previous image
-* `destroy` - remove the plugin with any event bindings
+### `run(selector, userOptions)`
 
-`showNext` and `showPrevious` return true on success or false if there are no more images to be loaded.
+Initialize baguetteBox.js
+
+- @param `selector` {string} - valid CSS selector used by `querySelectorAll`
+- @param `userOptions` {object} - custom options (see [#Customization](#customization))
+- @return {array} - an array of gallery objects (reflects elements found by the selector)
+
+### `show(index, gallery)`
+
+Show (if hidden) and move the gallery to a specific index
+
+- @param `index` {number} - the position of the image
+- @param `gallery` {array} - gallery which should be opened, if omitted assumes the currently opened one
+- @return {boolean} - true on success or false if the index is invalid
+
+Usage:
+
+```js
+const gallery = baguetteBox.run('.gallery');
+baguetteBox.show(index, gallery[0]);
+```
+
+### `showNext`
+
+Switch to the next image
+
+- @return {boolean} - true on success or false if there are no more images to be loaded
+
+### `showPrevious`
+
+Switch to the previous image
+
+- @return {boolean} - true on success or false if there are no more images to be loaded
+
+### `hide`
+
+Hide the gallery
+
+### `destroy`
+
+Remove the plugin with any event bindings
 
 ## Responsive images
 
