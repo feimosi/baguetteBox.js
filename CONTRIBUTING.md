@@ -54,7 +54,7 @@ git merge --ff-only dev
 Add a tag
 ```sh
 git tag v1.8.0
-git push --tags
+git push --follow-tags
 ```
 
 Deploy the new demo page
