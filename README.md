@@ -215,6 +215,6 @@ Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](
 
 ## License
 
-Copyright (c) 2017 [feimosi](https://github.com/feimosi/)
+Copyright (c) 2018 [feimosi](https://github.com/feimosi/)
 
 This content is released under the [MIT License](https://opensource.org/licenses/MIT).
