@@ -16,6 +16,8 @@ Simple and easy to use lightbox script written in pure JavaScript.
 
 ![Demo Page screenshot](http://i.imgur.com/GMmnud0.jpg)
 
+## Table of contents
+
   * [Features](#features)
   * [Installation](#installation)
   * [Importing](#importing)
