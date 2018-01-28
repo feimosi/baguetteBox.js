@@ -28,6 +28,7 @@ Simple and easy to use lightbox script written in pure JavaScript.
 * CSS3 transitions
 * SVG buttons, no extra files to download
 * Around 3.2KB gzipped
+* With Accessibility in mind
 
 ## Installation
 
@@ -73,6 +74,30 @@ bower install baguettebox.js --save
 <link rel="stylesheet" href="css/baguetteBox.min.css">
 <script src="js/baguetteBox.min.js" async></script>
   ```
+
+## Importing
+
+### Traditional approach
+
+If you don't use JavaScript modules and include the file with a `<script>` tag, you don't have to import anything explicitly. `baguetteBox` will be available in the global scope.
+
+### CommonJS
+
+```js
+const baguetteBox = require('baguettebox.js');
+```
+
+### ES2015 modules
+
+```js
+import baguetteBox from 'baguettebox.js';
+```
+
+### Sass
+
+```scss
+@import 'baguettebox.js/dist/baguettebox.min.css';
+```
 
 ## Usage
 
