@@ -1,4 +1,4 @@
-# baguetteBox.js
+<h1 align="center">baguetteBox.js</h1>
 
 [![GitHub Release](https://img.shields.io/github/release/feimosi/baguetteBox.js.svg)](https://github.com/feimosi/baguetteBox.js/releases)
 [![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](https://github.com/feimosi/baguetteBox.js/blob/dev/LICENSE)
@@ -14,7 +14,19 @@ Simple and easy to use lightbox script written in pure JavaScript.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
 
-![Demo Page screenshot](http://i.imgur.com/uLSDpuW.png)
+![Demo Page screenshot](http://i.imgur.com/GMmnud0.jpg)
+
+  * [Features](#features)
+  * [Installation](#installation)
+  * [Importing](#importing)
+  * [Usage](#usage)
+  * [Customization](#customization)
+  * [API](#api)
+  * [Responsive images](#responsive-images)
+  * [Compatibility](#compatibility)
+  * [Contributing](#contributing)
+  * [Credits](#credits)
+  * [License](#license)
 
 ## Features
 
