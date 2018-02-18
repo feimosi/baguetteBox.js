@@ -153,6 +153,7 @@ The following options are available:
 | --- | --- | --- | --- |
 | `captions` | `Boolean` \| `function(element)` | `true` | Display image captions. Passing a function will use a string returned by this callback. The only argument is `a` element containing the image. Invoked in the context of the current gallery array |
 | `buttons` | `Boolean` \| `'auto'` | `'auto'` | Display buttons. `'auto'` hides buttons on touch-enabled devices or when only one image is available |
+| `previousButtonLabel`, `nextButtonLabel`, `closeButtonLabel` | `String` | `'Previous'`, `'Next'`, `'Close'` | ARIA label of buttons |
 | `fullScreen` | `Boolean` | `false` | Enable full screen mode |
 | `noScrollbars` | `Boolean` | `false` | Hide scrollbars when gallery is displayed |
 | `bodyClass` | `String` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible (works in IE 10+) |
