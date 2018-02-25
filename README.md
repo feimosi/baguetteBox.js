@@ -252,6 +252,8 @@ Feel free to report any issues! If you wish to contribute by fixing a bug or imp
 
 Creation of `baguetteBox.js` was inspired by a great jQuery plugin [touchTouch](https://github.com/martinaglv/touchTouch).
 
+Huge thanks for providing a testing platform go to [![BrowserStack](https://i.imgur.com/rlVVZwG.png)](http://browserstack.com/)
+
 ## License
 
 Copyright (c) 2018 [feimosi](https://github.com/feimosi/)
