@@ -110,7 +110,7 @@ import baguetteBox from 'baguettebox.js';
 ### Sass
 
 ```scss
-@import 'baguettebox.js/dist/baguettebox.min.css';
+@import 'baguettebox.js/dist/baguetteBox.min.css';
 ```
 
 ## Usage
