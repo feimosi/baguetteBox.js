@@ -219,7 +219,11 @@ footer {
 </div>
 <footer>
     <p>Images have been downloaded from: <a href="https://unsplash.com/">unsplash.com</a> and <a href="http://www.gratisography.com/">gratisography.com</a></p>
-    <p>Copyright &copy; 2016 <a href="https://github.com/feimosi/">feimosi</a></p>
+    <p>
+        Copyright &copy;
+        <span id="year"></span>
+        <a href="https://github.com/feimosi/">feimosi</a>
+    </p>
 </footer>
 <script src="js/baguetteBox.js" async></script>
 <script src="js/highlight.min.js" async></script>
@@ -248,6 +252,9 @@ window.onload = function() {
     if (typeof oldIE === 'undefined' && Object.keys) {
         hljs.initHighlighting();
     }
+
+    var year = document.getElementById('year');
+    year.innerText = new Date().getFullYear();
 };
 </script>
 </body>
