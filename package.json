@@ -13,6 +13,7 @@
     "url": "https://github.com/feimosi/baguetteBox.js/issues"
   },
   "main": "dist/baguetteBox.min.js",
+  "style": "dist/baguetteBox.min.css",
   "files": [
     "dist",
     "src"
