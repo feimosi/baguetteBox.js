@@ -307,6 +307,12 @@
         case 27: // Esc
             hideOverlay();
             break;
+        case 36: // Home
+            showFirstImage(event);
+            break;
+        case 35: // End
+            showLastImage(event);
+            break;
         }
     }
 
@@ -596,6 +602,22 @@
     // Return false at the left end of the gallery
     function showPreviousImage() {
         return show(currentIndex - 1);
+    }
+
+    // Return false at the left end of the gallery
+    function showFirstImage(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        return show(0);
+    }
+
+    // Return false at the right end of the gallery
+    function showLastImage(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        return show(currentGallery.length - 1);
     }
 
     /**
