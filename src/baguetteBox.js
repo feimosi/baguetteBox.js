@@ -76,12 +76,12 @@
         if (event.target.id.indexOf('baguette-img') !== -1) {
             handleImageClick();
         }
-    }
+    };
     var captionClickHandler = function(event) {
         if (event.target.id.indexOf('baguetteBox-figcaption') !== -1) {
             handleCaptionClick();
         }
-    }
+    };
     var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -483,13 +483,13 @@
         }
     }
     
-    function handleImageClick(index, gallery) {
+    function handleImageClick() {
         if (options.onImageClick) {
             options.onImageClick(currentIndex, imagesElements.length);
         }
     }
     
-    function handleCaptionClick(index, gallery) {
+    function handleCaptionClick() {
         if (options.onCaptionClick) {
             options.onCaptionClick(currentIndex, imagesElements.length);
         }
