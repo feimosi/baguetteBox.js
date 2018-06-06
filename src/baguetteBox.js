@@ -86,6 +86,11 @@
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
             hideOverlay();
+        } 
+        // bubble down image clicks and caption clicks
+        else {
+            imgClickHandler(event);
+            captionClickHandler(event);
         }
     };
     var previousButtonClickHandler = function(event) {
