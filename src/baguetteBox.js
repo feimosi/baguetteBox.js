@@ -488,7 +488,9 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
-            exitFullscreen();
+            if (document.fullscreen) {
+                exitFullscreen();
+            }
             if (options.bodyClass && document.body.classList) {
                 document.body.classList.remove(options.bodyClass);
             }
