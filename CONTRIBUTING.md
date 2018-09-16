@@ -54,7 +54,8 @@ git merge --ff-only dev
 Add a tag
 ```sh
 git tag v1.8.0
-git push --follow-tags
+git push
+git push --tags
 ```
 
 Deploy the new demo page
@@ -68,4 +69,5 @@ cd ..
 Publish the new version to `npm`
 ```sh
 npm publish
+git checkout dev
 ```
