@@ -703,6 +703,7 @@
     }
 
     // Borrowed from https://github.com/seiyria/bootstrap-slider/pull/680/files
+    /* eslint-disable getter-return */
     function testPassiveEventsSupport() {
         var passiveEvents = false;
         try {
@@ -716,6 +717,7 @@
 
         return passiveEvents;
     }
+    /* eslint-enable getter-return */
 
     function preloadNext(index) {
         if (index - currentIndex >= options.preload) {
