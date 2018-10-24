@@ -48,7 +48,10 @@
             afterShow: null,
             afterHide: null,
             onChange: null,
-            overlayBackgroundColor: 'rgba(0,0,0,.8)'
+            overlayBackgroundColor: 'rgba(0,0,0,.8)',
+            closeX: closeX,
+            leftArrow: leftArrow,
+            rightArrow: rightArrow,
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -166,7 +169,7 @@
         supports.transforms = testTransformsSupport();
         supports.svg = testSvgSupport();
         supports.passiveEvents = testPassiveEventsSupport();
-
+        copyNewOptions(userOptions);
         buildOverlay();
         removeFromCache(selector);
         return bindImageClickListeners(selector, userOptions);
@@ -274,21 +277,21 @@
         previousButton.setAttribute('type', 'button');
         previousButton.id = 'previous-button';
         previousButton.setAttribute('aria-label', 'Previous');
-        previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
+        previousButton.innerHTML = supports.svg ? options.leftArrow : '&lt;';
         overlay.appendChild(previousButton);
 
         nextButton = create('button');
         nextButton.setAttribute('type', 'button');
         nextButton.id = 'next-button';
         nextButton.setAttribute('aria-label', 'Next');
-        nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
+        nextButton.innerHTML = supports.svg ? options.rightArrow : '&gt;';
         overlay.appendChild(nextButton);
 
         closeButton = create('button');
         closeButton.setAttribute('type', 'button');
         closeButton.id = 'close-button';
         closeButton.setAttribute('aria-label', 'Close');
-        closeButton.innerHTML = supports.svg ? closeX : '&times;';
+        closeButton.innerHTML = supports.svg ? options.closeX : '&times;';
         overlay.appendChild(closeButton);
 
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
@@ -348,8 +351,7 @@
             return;
         }
         currentGallery = gallery;
-        // Update gallery specific options
-        setOptions(userOptions);
+
         // Empty slider of previous contents (more effective than .innerHTML = "")
         while (slider.firstChild) {
             slider.removeChild(slider.firstChild);
@@ -373,17 +375,23 @@
         overlay.setAttribute('aria-describedby', imagesCaptionsIds.join(' '));
     }
 
+    function copyNewOptions(newOptions) {
+      if (!newOptions) {
+          newOptions = {};
+      }
+      // Fill options object
+      for (var item in defaults) {
+          options[item] = defaults[item];
+          if (typeof newOptions[item] !== 'undefined') {
+              options[item] = newOptions[item];
+          }
+      }
+    }
+
+
     function setOptions(newOptions) {
-        if (!newOptions) {
-            newOptions = {};
-        }
-        // Fill options object
-        for (var item in defaults) {
-            options[item] = defaults[item];
-            if (typeof newOptions[item] !== 'undefined') {
-                options[item] = newOptions[item];
-            }
-        }
+        copyUserOptions(newOptions);
+
         /* Apply new options */
         // Change transition for proper animation
         slider.style.transition = slider.style.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' :
