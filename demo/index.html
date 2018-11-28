@@ -234,7 +234,9 @@ var oldIE = true;
 <![endif]-->
 <script>
 window.onload = function() {
-    baguetteBox.run('.baguetteBoxOne');
+    baguetteBox.run('.baguetteBoxOne', {
+        loop: true
+    });
     baguetteBox.run('.baguetteBoxTwo');
     baguetteBox.run('.baguetteBoxThree', {
         animation: 'fadeIn',
