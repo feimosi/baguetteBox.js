@@ -36,6 +36,7 @@
     // Global options and their defaults
     var options = {},
         defaults = {
+            loop: false,
             captions: true,
             buttons: 'auto',
             fullScreen: false,
@@ -634,14 +635,19 @@
             showOverlay(index);
             return true;
         }
+
         if (index < 0) {
-            if (options.animation) {
+            if (options.loop) {
+                show(imagesElements.length - 1, gallery);
+            } else if (options.animation) {
                 bounceAnimation('left');
             }
             return false;
         }
         if (index >= imagesElements.length) {
-            if (options.animation) {
+            if (options.loop) {
+                show(0, gallery);
+            } else if (options.animation) {
                 bounceAnimation('right');
             }
             return false;
