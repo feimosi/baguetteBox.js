@@ -317,7 +317,7 @@
     }
 
     function bindEvents() {
-        var options = supports.passiveEvents ? { passive: true } : null;
+        var options = supports.passiveEvents ? { passive: false } : null;
         bind(overlay, 'click', overlayClickHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
@@ -330,7 +330,7 @@
     }
 
     function unbindEvents() {
-        var options = supports.passiveEvents ? { passive: true } : null;
+        var options = supports.passiveEvents ? { passive: false } : null;
         unbind(overlay, 'click', overlayClickHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
