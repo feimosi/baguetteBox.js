@@ -28,14 +28,14 @@ Thank you to everyone who has contributed to baguetteBox.js!
 
 Build the script
 ```sh
-gulp build
+npm start build
 git add --update
 git commit -m "Build update"
 ```
 
 Bump the version
 ```sh
-gulp release # or gulp patch
+npm start release # or npm start patch
 git add --update
 git commit -m "v1.8.0"
 ```

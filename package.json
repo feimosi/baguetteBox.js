@@ -21,7 +21,10 @@
   "scripts": {
     "start": "gulp",
     "lint": "gulp lint",
-    "test": "gulp test"
+    "test": "gulp test",
+    "build": "gulp build",
+    "release": "gulp release",
+    "patch": "gulp patch"
   },
   "dependencies": {},
   "resolutions": {
