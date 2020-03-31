@@ -139,6 +139,16 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 
 To use captions put a `title` or `data-caption` attribute on the `a` tag.
 
+Note: if you import baguetteBox using the `<script>` tag, remember to run it after the document has loaded:
+
+```html
+<script>
+window.addEventListener('load', function() {
+  baguetteBox.run('.gallery');
+});
+</script>
+```
+
 ## Customization
 
 You can pass an object with custom options as the second parameter.
