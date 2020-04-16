@@ -38,6 +38,9 @@
         defaults = {
             captions: true,
             buttons: 'auto',
+            previousButtonLabel: 'Previous',
+            nextButtonLabel: 'Next',
+            closeButtonLabel: 'Close',
             fullScreen: false,
             noScrollbars: false,
             bodyClass: 'baguetteBox-open',
@@ -273,21 +276,18 @@
         previousButton = create('button');
         previousButton.setAttribute('type', 'button');
         previousButton.id = 'previous-button';
-        previousButton.setAttribute('aria-label', 'Previous');
         previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
         overlay.appendChild(previousButton);
 
         nextButton = create('button');
         nextButton.setAttribute('type', 'button');
         nextButton.id = 'next-button';
-        nextButton.setAttribute('aria-label', 'Next');
         nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
         overlay.appendChild(nextButton);
 
         closeButton = create('button');
         closeButton.setAttribute('type', 'button');
         closeButton.id = 'close-button';
-        closeButton.setAttribute('aria-label', 'Close');
         closeButton.innerHTML = supports.svg ? closeX : '&times;';
         overlay.appendChild(closeButton);
 
@@ -398,6 +398,10 @@
         }
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // Set buttons' aria-labels
+        previousButton.setAttribute('aria-label', options.previousButtonLabel);
+        nextButton.setAttribute('aria-label', options.nextButtonLabel);
+        closeButton.setAttribute('aria-label', options.closeButtonLabel);
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
