@@ -48,7 +48,8 @@
             afterShow: null,
             afterHide: null,
             onChange: null,
-            overlayBackgroundColor: 'rgba(0,0,0,.8)'
+            overlayBackgroundColor: 'rgba(0,0,0,.8)',
+            theme: null,
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -375,6 +376,11 @@
         }
         overlay.setAttribute('aria-labelledby', imagesFiguresIds.join(' '));
         overlay.setAttribute('aria-describedby', imagesCaptionsIds.join(' '));
+
+        // Add theme if specified
+        if (typeof options.theme === 'string') {
+            overlay.className = options.theme;
+        }
     }
 
     function setOptions(newOptions) {
@@ -434,7 +440,7 @@
         }
         // Fade in overlay
         setTimeout(function() {
-            overlay.className = 'visible';
+            overlay.classList.add('visible');
             if (options.bodyClass && document.body.classList) {
                 document.body.classList.add(options.bodyClass);
             }
@@ -489,7 +495,7 @@
 
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
-        overlay.className = '';
+        overlay.classList.remove('visible');
         setTimeout(function() {
             overlay.style.display = 'none';
             if (document.fullscreen) {
