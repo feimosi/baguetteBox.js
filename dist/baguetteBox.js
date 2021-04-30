@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.11.1
+ * @version 1.11.1 youtube iframe mod by kesha4
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -48,7 +48,9 @@
             afterShow: null,
             afterHide: null,
             onChange: null,
-            overlayBackgroundColor: 'rgba(0,0,0,.8)'
+            overlayBackgroundColor: 'rgba(0,0,0,.8)',
+            iframeWidth: 854,
+            iframeHeight: 480,
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -65,7 +67,7 @@
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)/i;
+    var regex = /.+(\.|youtube\.com\/)(gif|jpe?g|png|webp|embed)/i;
     // Object of all used galleries
     var data = {};
     // Array containing temporary images DOM elements
@@ -517,7 +519,7 @@
         }
 
         // If image is already loaded run callback and return
-        if (imageContainer.getElementsByTagName('img')[0]) {
+        if (imageContainer.getElementsByTagName('img')[0] || imageContainer.getElementsByTagName('iframe')[0]) {
             if (callback) {
                 callback();
             }
@@ -548,22 +550,45 @@
         }
         imageContainer.appendChild(figure);
 
-        // Prepare gallery img element
-        var image = create('img');
-        image.onload = function() {
-            // Remove loader element
-            var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
-            figure.removeChild(spinner);
-            if (!options.async && callback) {
-                callback();
+        if (imageSrc.indexOf('/embed') === -1) {
+            // Prepare gallery img element
+            var imgOrIframe = create('img');
+            imgOrIframe.onload = function() {
+                // Remove loader element
+                var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
+                figure.removeChild(spinner);
+                if (!options.async && callback) {
+                    callback();
+                }
+            };
+            imgOrIframe.setAttribute('src', imageSrc);
+            imgOrIframe.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
+            if (options.titleTag && imageCaption) {
+                imgOrIframe.title = imageCaption;
             }
-        };
-        image.setAttribute('src', imageSrc);
-        image.alt = thumbnailElement ? thumbnailElement.alt || '' : '';
-        if (options.titleTag && imageCaption) {
-            image.title = imageCaption;
+
+        } else {
+            // Prepare gallery iframe element
+            var imgOrIframe = create('iframe');
+            imgOrIframe.onload = function() {
+                // Remove loader element
+                var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
+                figure.removeChild(spinner);
+                if (!options.async && callback) {
+                    callback();
+                }
+            };
+            imgOrIframe.setAttribute('src', imageSrc);
+            imgOrIframe.setAttribute('width', options.iframeWidth);
+            imgOrIframe.setAttribute('height', options.iframeHeight);
+            imgOrIframe.setAttribute('frameborder', '0');
+            imgOrIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+            imgOrIframe.setAttribute('allowfullscreen', '');
+            if (options.titleTag && imageCaption) {
+                imgOrIframe.title = imageCaption;
+            }
         }
-        figure.appendChild(image);
+        figure.appendChild(imgOrIframe);
 
         // Run callback
         if (options.async && callback) {
