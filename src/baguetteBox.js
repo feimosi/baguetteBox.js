@@ -72,10 +72,25 @@
     var imagesElements = [];
     // The last focused element before opening the overlay
     var documentLastFocus = null;
+    var imgClickHandler = function(event) {
+        if (event.target.id.indexOf('baguette-img') !== -1) {
+            handleImageClick();
+        }
+    };
+    var captionClickHandler = function(event) {
+        if (event.target.id.indexOf('baguetteBox-figcaption') !== -1) {
+            handleCaptionClick();
+        }
+    };
     var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
             hideOverlay();
+        } 
+        // bubble down image clicks and caption clicks
+        else {
+            imgClickHandler(event);
+            captionClickHandler(event);
         }
     };
     var previousButtonClickHandler = function(event) {
@@ -465,6 +480,18 @@
             document.mozCancelFullScreen();
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
+        }
+    }
+    
+    function handleImageClick() {
+        if (options.onImageClick) {
+            options.onImageClick(currentIndex, imagesElements.length);
+        }
+    }
+    
+    function handleCaptionClick() {
+        if (options.onCaptionClick) {
+            options.onCaptionClick(currentIndex, imagesElements.length);
         }
     }
 
