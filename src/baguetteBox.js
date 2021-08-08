@@ -1,8 +1,8 @@
 /*!
- * baguetteBox.js
- * @author  feimosi
+ * baguetteBox.js double click trigger version
+ * @author  feimosi Paper-Folding
  * @version %%INJECT_VERSION%%
- * @url https://github.com/feimosi/baguetteBox.js
+ * @url https://github.com/Paper-Folding/baguetteBox.js
  */
 
 /* global define, module */
@@ -197,7 +197,7 @@
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
-                    return regex.test(element.href);
+                    return regex.test(element.getAttribute('dblHref'));
                 }
             });
             if (tagsNodeList.length === 0) {
@@ -215,7 +215,7 @@
                     eventHandler: imageElementClickHandler,
                     imageElement: imageElement
                 };
-                bind(imageElement, 'click', imageElementClickHandler);
+                bind(imageElement, 'dblclick', imageElementClickHandler);
                 gallery.push(imageItem);
             });
             selectorData.galleries.push(gallery);
@@ -574,7 +574,7 @@
     // Get image source location, mostly used for responsive images
     function getImageSrc(image) {
         // Set default image path from href
-        var result = image.href;
+        var result = image.getAttribute('dblHref');
         // If dataset is supported find the most suitable image
         if (image.dataset) {
             var srcs = [];
