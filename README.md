@@ -1,4 +1,4 @@
-<h1 align="center">baguetteBox.js</h1>
+<h1 align="center">baguetteBox.js - Double Click Trigger Only</h1>
 
 ### This project is forked from <https://github.com/feimosi/baguetteBox.js>
 ### This project is modified original version and trigger baguetteBox with double click only.
