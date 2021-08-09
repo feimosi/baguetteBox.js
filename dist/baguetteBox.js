@@ -75,7 +75,9 @@
     var imagesElements = [];
     // The last focused element before opening the overlay
     var documentLastFocus = null;
+    // If it is double clicking to open overlay
     var dblTrigger = false;
+    // When double click to open overlay is enabled, what shall do when single clicked
     var singleClickCallBack = function () {
     }
     var overlayClickHandler = function (event) {
@@ -331,8 +333,8 @@
     }
 
     function bindEvents() {
-        var passiveEvent = supports.passiveEvents ? {passive: false} : null;
-        var nonPassiveEvent = supports.passiveEvents ? {passive: true} : null;
+        var passiveEvent = supports.passiveEvents ? { passive: false } : null;
+        var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
 
         bind(overlay, 'click', overlayClickHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
@@ -346,8 +348,8 @@
     }
 
     function unbindEvents() {
-        var passiveEvent = supports.passiveEvents ? {passive: false} : null;
-        var nonPassiveEvent = supports.passiveEvents ? {passive: true} : null;
+        var passiveEvent = supports.passiveEvents ? { passive: false } : null;
+        var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
 
         unbind(overlay, 'click', overlayClickHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
@@ -775,6 +777,7 @@
         }
     }
 
+    // bind when double click option is enabled
     function bindSingleDoubleClickItems(element, e, callBackForSingleClick, callbackForDoubleClick, options) {
         if (e === 'dblclick') {
             let timeout, click = 0;
@@ -782,16 +785,15 @@
                 click++;
                 clearTimeout(timeout);
                 timeout = setTimeout(function () {
-                    if (click === 1)
+                    if (click === 1) // what shall do when double clicking enabled and user single clicked the images
                         callBackForSingleClick(event);
-                    if (click === 2)
+                    if (click === 2) // show overlay when user double clicked(double clicking enabled)
                         callbackForDoubleClick(event);
                     click = 0;
-                    // callback.call(self);
-                }, 300)
+                }, 300) // 300 is timeout judging if single click or double click
             }, options)
         } else if (e === 'click') {
-            bind(element, 'click', callbackForDoubleClick(element), options);
+            bind(element, 'click', callbackForDoubleClick(element), options); // what shall do when double clicking disabled and user single clicked the images
         }
     }
 
