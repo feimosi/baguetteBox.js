@@ -19,7 +19,7 @@
 >           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); }
 >    });
 > ```
-> ### then difine this `doSomething` function like this:
+> ### then define this `doSomething` function like this:
 > ```javascript
 >    function doSomething(element, msg) {
 >        console.log(element.srcElement.src); // the parameter 'element' here is the source image element which user click, for example, this example here will print the image's src attribute in console when user single clicked it.
