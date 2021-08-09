@@ -16,7 +16,7 @@
 > ```javascript
 >   baguetteBox.run('.grid', {
 >           dblTrigger: true,
->           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you passed me!'); }
+>           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); }
 >    });
 > ```
 > ### then difine this `doSomething` function like this:
