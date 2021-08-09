@@ -49,7 +49,9 @@
             afterHide: null,
             onChange: null,
             overlayBackgroundColor: 'rgba(0,0,0,.8)',
-            dblTrigger: false
+            dblTrigger: false,
+            singleClickCallBack: function () {
+            }
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -74,6 +76,8 @@
     // The last focused element before opening the overlay
     var documentLastFocus = null;
     var dblTrigger = false;
+    var singleClickCallBack = function () {
+    }
     var overlayClickHandler = function (event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -172,6 +176,9 @@
         buildOverlay();
         removeFromCache(selector);
         dblTrigger = userOptions.dblTrigger;
+        if (userOptions.singleClickCallBack != null) {
+            singleClickCallBack = userOptions.singleClickCallBack;
+        }
         return bindImageClickListeners(selector, userOptions);
     }
 
@@ -201,9 +208,9 @@
             tagsNodeList = [].filter.call(tagsNodeList, function (element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
                     if (dblTrigger)
-                        return regex.test(element.getAttribute('dblHref'));
+                        return regex.test(element.getAttribute('bagDblClick'));
                     else
-                        return regex.test(element.href);
+                        return regex.test(element.getAttribute('bagClick'));
                 }
             });
             if (tagsNodeList.length === 0) {
@@ -222,7 +229,7 @@
                     eventHandler: imageElementClickHandler,
                     imageElement: imageElement
                 };
-                bind(imageElement, triggerMethod, imageElementClickHandler);
+                bindSingleDoubleClickItems(imageElement, triggerMethod, singleClickCallBack, imageElementClickHandler);
                 gallery.push(imageItem);
             });
             selectorData.galleries.push(gallery);
@@ -583,9 +590,9 @@
         // Set default image path from href
         var result;
         if (dblTrigger)
-            result = image.getAttribute('dblHref');
+            result = image.getAttribute('bagDblClick');
         else
-            result = image.href;
+            result = image.getAttribute('bagClick');
         // If dataset is supported find the most suitable image
         if (image.dataset) {
             var srcs = [];
@@ -765,6 +772,26 @@
                 event.target = event.target || event.srcElement;
                 callback(event);
             });
+        }
+    }
+
+    function bindSingleDoubleClickItems(element, e, callBackForSingleClick, callbackForDoubleClick, options) {
+        if (e === 'dblclick') {
+            let timeout, click = 0;
+            element.addEventListener('click', function (event) {
+                click++;
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+                    if (click === 1)
+                        callBackForSingleClick(event);
+                    if (click === 2)
+                        callbackForDoubleClick(event);
+                    click = 0;
+                    // callback.call(self);
+                }, 300)
+            }, options)
+        } else if (e === 'click') {
+            bind(element, 'click', callbackForDoubleClick(element), options);
         }
     }
 
