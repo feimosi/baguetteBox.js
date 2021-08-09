@@ -4,7 +4,7 @@
 ## __[DECALRE]__ This project is forked from <https://github.com/feimosi/baguetteBox.js> and modified to add double click trigger functionality.
 ## __Documentation goes below:__
 ## To enable double click trigger function, you just need to:
-> ### 1. Add attribute `bagDblClick` for every `<a>` tag that open baguetteBox originally. Example are shown below:
+> ### 1. Add attribute `bagDblClick` for every `<a>` tag that open baguetteBox originally.
 > ### 2. then set `dblTrigger` option to `true` like below:
 > ```javascript
 > baguetteBox.run('.grid', {
