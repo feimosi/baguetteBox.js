@@ -65,18 +65,17 @@
         </div>
     </div>
 
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../dist/baguetteBox.js"></script>
     <script>
-        $(document).ready(function () {
+        (function () {
             if (document.querySelectorAll('.col-3').length > 0) {
                 baguetteBox.run('.container', {
                     dblTrigger: true,
                     singleClickCallBack: function (element, msg) { saySomething(element, 'Hello, you\'ve single clicked me! If you double click me, I won\'t be triggered! Do you like me?') }
                 });
             }
-        })
+        })();
 
         let i = 0;
 
