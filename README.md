@@ -11,7 +11,7 @@
 >                dblTrigger: true
 >            });
 > ```
-> ### __[IMPORTANT] Do not apply href to `<a>` tag(or use `href='javascript:void(0)'` instead, if you want to enable single click feature, see 3 below.)__
+> ### __[IMPORTANT] Do not apply href to `<a>` tag(or use `href='javascript:void(0)'` instead, if you want to enable single click feature, see step 3 below.)__
 > ### 3. __[Optional]__ Use step1 and step2 above are able to trigger baguetteBox by double click images. But you may still want to make single click images to do other things, in that case, first you need to add a option `singleClickCallBack` and specify a function to it like below:
 > ```javascript
 >   baguetteBox.run('.grid', {
