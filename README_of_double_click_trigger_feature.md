@@ -73,4 +73,4 @@
 > ### Trivia
 > ### Q: _Why do I abandoned href to trigger?_
 > ### A: _Because if href was still applied to `<a>` tag, it will do the default behavior that `<a>` tag is always do: like jump to another page, fly to an anchor and so on, no matter user is single clicking or double clicking the `<a>` tag, but you know `<a>` tag can respond to onclick,too, that's why I remove the `href` for every `<a>` tags that will open baguetteBox and used my custom defined attribute(`bagClick` and `dblBagClick` here)._
-> ## For a complete example of my modification, see `/demo/doubleClickExample.html` file for detail.
+> ## For a complete example of my modification, see this [double click demo file](/demo/doubleClickExample.html) for detail.

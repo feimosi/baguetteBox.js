@@ -127,10 +127,10 @@ where the first argument is a selector to a gallery (or galleries) containing `a
 
 ```html
 <div class="gallery">
-    <a href="img/2-1.jpg" data-caption="Image caption">
+    <a bagClick="img/2-1.jpg" data-caption="Image caption">
         <img src="img/thumbnails/2-1.jpg" alt="First image">
     </a>
-    <a href="img/2-2.jpg">
+    <a bagClick="img/2-2.jpg">
         <img src="img/thumbnails/2-2.jpg" alt="Second image">
     </a>
     ...
@@ -177,7 +177,9 @@ The following options are available:
 | `afterHide` | `function` | `null` | Callback to be run after hiding the overlay |
 | `onChange` | `function(currentIndex, imagesCount)` | `null` | Callback to be run when image changes |
 | `overlayBackgroundColor` | `String` | `'rgba`<br>`(0,0,0,0.8)'` | Background color for the lightbox overlay |
-| `filter` | `RegExp` | `/.+\.(gif\|jpe?g\|png\|webp)/i` | Pattern to match image files. Applied to the `a.href` attribute |
+| `filter` | `RegExp` | `/.+\.(gif\|jpe?g\|png\|webp)/i` | Pattern to match image files. Applied to the `a.bagClick` attribute |
+| `dblTrigger` | `Boolean` | `false` | Enable double clicks trigger feature. Applied to the `a.bagDblClick` attribute |
+| `singleClickCallBack` | `function` | `null` | External function to be run when dblTrigger is set to `true` and when user single click the `a` tag |
 
 ## API
 
@@ -232,7 +234,7 @@ That last `data-at-X` image is also used in the case of a screen larger than X.
 Here's an example of what the HTML code can look like:
 
 ```html
-<a href="img/2-1.jpg"
+<a bagClick="img/2-1.jpg"
   data-at-450="img/thumbs/2-1.jpg"
   data-at-800="img/small/2-1.jpg"
   data-at-1366="img/medium/2-1.jpg"
@@ -241,7 +243,11 @@ Here's an example of what the HTML code can look like:
 </a>
 ```
 
-If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep the `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
+## Double clicking to trigger
+
+To use this feature, please see [readme of double click trigger feature](README_of_double_click_trigger_feature.md) for more details.
+
+If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep the `bagClick` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
 
 ## Compatibility
 
