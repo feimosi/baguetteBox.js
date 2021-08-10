@@ -1,8 +1,8 @@
 /*!
- * baguetteBox.js double click trigger version
- * @author  feimosi Paper-Folding
- * @version %%INJECT_VERSION%%
- * @url https://github.com/Paper-Folding/baguetteBox.js
+ * baguetteBox.js
+ * @author  feimosi
+ * @version 1.11.1
+ * @url https://github.com/feimosi/baguetteBox.js
  */
 
 /* global define, module */
