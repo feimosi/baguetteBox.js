@@ -1,1 +1,5 @@
-.idea/
+.publish/
+assets/
+demo/css/baguetteBox.css
+demo/js/baguetteBox.js
+node_modules/
