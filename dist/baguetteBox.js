@@ -210,9 +210,9 @@
             tagsNodeList = [].filter.call(tagsNodeList, function (element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
                     if (dblTrigger)
-                        return regex.test(element.getAttribute('bagDblClick'));
+                        return regex.test(element.getAttribute('dblHref'));
                     else
-                        return regex.test(element.getAttribute('bagClick'));
+                        return regex.test(element.href);
                 }
             });
             if (tagsNodeList.length === 0) {
@@ -220,7 +220,6 @@
             }
 
             var gallery = [];
-            let triggerMethod = dblTrigger ? 'dblclick' : 'click';
             [].forEach.call(tagsNodeList, function (imageElement, imageIndex) {
                 var imageElementClickHandler = function (event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
@@ -231,7 +230,10 @@
                     eventHandler: imageElementClickHandler,
                     imageElement: imageElement
                 };
-                bindSingleDoubleClickItems(imageElement, triggerMethod, singleClickCallBack, imageElementClickHandler);
+                if (dblTrigger)
+                    bindSingleDoubleClickItems(imageElement, 'dblclick', singleClickCallBack, imageElementClickHandler);
+                else
+                    bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
             });
             selectorData.galleries.push(gallery);
@@ -592,9 +594,9 @@
         // Set default image path from href
         var result;
         if (dblTrigger)
-            result = image.getAttribute('bagDblClick');
+            result = image.getAttribute('dblHref');
         else
-            result = image.getAttribute('bagClick');
+            result = image.href;
         // If dataset is supported find the most suitable image
         if (image.dataset) {
             var srcs = [];
@@ -792,7 +794,7 @@
                     click = 0;
                 }, 300) // 300 is timeout judging if single click or double click
             }, options)
-        } else if (e === 'click') {
+        } else if (e === 'click') { // might never be executed, still leave it here as an alternative of bind method
             bind(element, 'click', callbackForDoubleClick(element), options); // what shall do when double clicking disabled and user single clicked the images
         }
     }
