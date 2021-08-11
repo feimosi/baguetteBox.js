@@ -27,6 +27,7 @@
 >    }
 > ```
 > ### Keep in mind that if you set `dblTrigger` to `false` which means you are not enable double click trigger feature, set the `singleClickCallBack` will take no effect.
+> ### __[Tip]__ You can define the timeout value that differentiates a double click and a single click by setting `doubleClickJudgeTimeout` option. If two successive clicks on an image has a time defference less than its value, it will be regraded as a double click, otherwise its a single click. This option's values is metered by milliseconds.
 > ### Below I've got a full example (ommitted unrelated parts):
 > ### __HTML__
 > ```html
@@ -73,5 +74,5 @@
 ## Trivia
 > ### Q: _Why do I abandoned href to trigger double click?_
 > ### A: _Because if href was still applied to `<a>` tag, it will still trigger its default behaviors(like jump to another page, fly to an anchor and so on) every time even if user double clicked it. But you know `<a>` tag can respond to click event, too, that's why I recommend to remove the `href` for every `<a>` tags that will open baguetteBox by double clicking._
-> ### __Tip__: Do not use `dblHref` and `href` at the same time when you enabled double trigger feature, if you insist to use `href`, set its value to `javascript:void(0)`.
+> ### __[Tip]__: Do not use `dblHref` and `href` at the same time when you enabled double trigger feature, if you insist to use `href`, set its value to `javascript:void(0)`.
 > ## For a complete example of my modification, see this [double click demo file](/demo/doubleClickExample.html) for detail.

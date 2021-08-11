@@ -50,8 +50,8 @@
             onChange: null,
             overlayBackgroundColor: 'rgba(0,0,0,.8)',
             dblTrigger: false,
-            singleClickCallBack: function () {
-            }
+            singleClickCallBack: null,
+            doubleClickJudgeTimeout: 300
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -75,11 +75,6 @@
     var imagesElements = [];
     // The last focused element before opening the overlay
     var documentLastFocus = null;
-    // If it is double clicking to open overlay
-    var dblTrigger = false;
-    // When double click to open overlay is enabled, what shall do when single clicked
-    var singleClickCallBack = function () {
-    }
     var overlayClickHandler = function (event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
@@ -177,10 +172,6 @@
 
         buildOverlay();
         removeFromCache(selector);
-        dblTrigger = userOptions.dblTrigger;
-        if (userOptions.singleClickCallBack != null) {
-            singleClickCallBack = userOptions.singleClickCallBack;
-        }
         return bindImageClickListeners(selector, userOptions);
     }
 
@@ -209,7 +200,7 @@
             // Filter 'a' elements from those not linking to images
             tagsNodeList = [].filter.call(tagsNodeList, function (element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
-                    if (dblTrigger)
+                    if (userOptions.dblTrigger)
                         return regex.test(element.getAttribute('dblHref'));
                     else
                         return regex.test(element.href);
@@ -230,9 +221,10 @@
                     eventHandler: imageElementClickHandler,
                     imageElement: imageElement
                 };
-                if (dblTrigger)
-                    bindSingleDoubleClickItems(imageElement, 'dblclick', singleClickCallBack, imageElementClickHandler);
-                else
+                if (userOptions.dblTrigger) // If double clicking to open overlay enabled
+                    // singleClickCallBack defines that: when and only when double click to open overlay is enabled, what shall do when single clicked
+                    bindSingleDoubleClickItems(imageElement, 'dblclick', userOptions.singleClickCallBack, imageElementClickHandler, userOptions);
+                else // else just do last version's behaviors
                     bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
             });
@@ -593,7 +585,7 @@
     function getImageSrc(image) {
         // Set default image path from href
         var result;
-        if (dblTrigger)
+        if (options.dblTrigger)
             result = image.getAttribute('dblHref');
         else
             result = image.href;
@@ -779,7 +771,10 @@
         }
     }
 
-    // bind when double click option is enabled
+    /**  
+     * Bind when double click option is enabled.
+     * This is like a debounce function though.
+     */
     function bindSingleDoubleClickItems(element, e, callBackForSingleClick, callbackForDoubleClick, options) {
         if (e === 'dblclick') {
             let timeout, click = 0;
@@ -792,7 +787,7 @@
                     if (click === 2) // show overlay when user double clicked(double clicking enabled)
                         callbackForDoubleClick(event);
                     click = 0;
-                }, 300) // 300 is timeout judging if single click or double click
+                }, options.doubleClickJudgeTimeout) // here defines a timeout gap judging if it is a single click or double click, metered by milliseconds
             }, options)
         } else if (e === 'click') { // might never be executed, still leave it here as an alternative of bind method
             bind(element, 'click', callbackForDoubleClick(element), options); // what shall do when double clicking disabled and user single clicked the images

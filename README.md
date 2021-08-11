@@ -180,6 +180,7 @@ The following options are available:
 | `filter` | `RegExp` | `/.+\.(gif\|jpe?g\|png\|webp)/i` | Pattern to match image files. Applied to the `a.href` attribute |
 | `dblTrigger` | `Boolean` | `false` | Enable double clicks trigger feature. Applied to the `a.dblHref` attribute. When this option is enable, do not apply or apply `javascript:void(0)` to `a.href` attribute! If you still want `a.href` do its job, use `singleClickCallBack` option below. |
 | `singleClickCallBack` | `function` | `null` | External function to be run when dblTrigger is set to `true` and when user single click the `a` tag |
+| `doubleClickJudgeTimeout` | `Integer` | `300` | The timeout value differentiates between a double click and a single click, if two successive clicks on an image has a time defference less than the value, it will be regraded as a double click, otherwise its a single click. This value is metered by milliseconds. |
 
 ## API
 

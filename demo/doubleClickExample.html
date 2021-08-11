@@ -66,13 +66,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../dist/baguetteBox.js"></script>
+    <script src="../src/baguetteBox.js"></script>
     <script>
         (function () {
             if (document.querySelectorAll('.col-3').length > 0) {
                 baguetteBox.run('.container', {
                     dblTrigger: true,
-                    singleClickCallBack: function (element, msg) { saySomething(element, 'Hello, you\'ve single clicked me! If you double click me, I won\'t be triggered! Do you like me?') }
+                    singleClickCallBack: function (element, msg) { saySomething(element, 'Hello, you\'ve single clicked me! If you double click me, I won\'t be triggered! Do you like me?') },
+                    doubleClickJudgeTimeout: 200
                 });
             }
         })();
