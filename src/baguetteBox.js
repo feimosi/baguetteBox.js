@@ -789,7 +789,7 @@
                     click = 0;
                 }, options.doubleClickJudgeTimeout) // here defines a timeout gap judging if it is a single click or double click, metered by milliseconds
             }, options)
-        } else if (e === 'click') { // might never be executed, still leave it here as an alternative of bind method
+        } else { // might never be executed, still leave it here as an alternative of bind method
             bind(element, 'click', callbackForDoubleClick(element), options); // what shall do when double clicking disabled and user single clicked the images
         }
     }
