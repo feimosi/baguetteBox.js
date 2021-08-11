@@ -223,7 +223,7 @@
                 };
                 if (userOptions.dblTrigger) // If double clicking to open overlay enabled
                     // singleClickCallBack defines that: when and only when double click to open overlay is enabled, what shall do when single clicked
-                    bindSingleDoubleClickItems(imageElement, 'dblclick', userOptions.singleClickCallBack, imageElementClickHandler, userOptions);
+                    bindSingleDoubleClickItems(imageElement, imageElementClickHandler, userOptions);
                 else // else just do last version's behaviors
                     bind(imageElement, 'click', imageElementClickHandler);
                 gallery.push(imageItem);
@@ -775,16 +775,16 @@
      * Bind when double click option is enabled.
      * This is like a debounce function though.
      */
-    function bindSingleDoubleClickItems(element, e, callBackForSingleClick, callbackForDoubleClick, options) {
-        if (e === 'dblclick') {
+    function bindSingleDoubleClickItems(element, callbackForDoubleClick, options) {
+        if (options.dblTrigger) {
             let timeout, click = 0;
             element.addEventListener('click', function (event) {
                 click++;
                 clearTimeout(timeout);
                 timeout = setTimeout(function () {
                     if (click === 1) // what shall do when double clicking enabled and user single clicked the images
-                        callBackForSingleClick(event);
-                    if (click === 2) // show overlay when user double clicked(double clicking enabled)
+                        options.singleClickCallBack(event);
+                    if (click >= 2) // show overlay when user double clicked(or more than double clicking, so it is even able to differentiate triple clicking and more...)
                         callbackForDoubleClick(event);
                     click = 0;
                 }, options.doubleClickJudgeTimeout) // here defines a timeout gap judging if it is a single click or double click, metered by milliseconds

@@ -45,7 +45,8 @@
 > ```javascript
 >   baguetteBox.run('.grid', {
 >           dblTrigger: true,
->           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); }
+>           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); },
+>           doubleClickJudgeTimeout: 200
 >    });
 >
 >    function doSomething(element, msg) {
