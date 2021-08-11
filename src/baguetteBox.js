@@ -210,6 +210,10 @@
                 return;
             }
 
+            // setOptions calls after bind click listener, but doubleClickJudgeTimeout is eager to use its value during binding click listener
+            if (typeof userOptions.doubleClickJudgeTimeout === 'undefined')
+                userOptions.doubleClickJudgeTimeout = defaults.doubleClickJudgeTimeout;
+
             var gallery = [];
             [].forEach.call(tagsNodeList, function (imageElement, imageIndex) {
                 var imageElementClickHandler = function (event) {
