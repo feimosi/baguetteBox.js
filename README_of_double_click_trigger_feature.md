@@ -16,13 +16,13 @@
 > ```javascript
 >   baguetteBox.run('.grid', {
 >           dblTrigger: true,
->           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); }
+>           singleClickCallBack: function (event, someParameters) { doSomething(event, 'Oh you pressed me!'); }
 >    });
 > ```
 > ### then define this `doSomething` function like this:
 > ```javascript
->    function doSomething(element, msg) {
->        console.log(element.srcElement.src); // the parameter 'element' here is the source image element which user click, for example, this example here will print the image's src attribute in console when user single clicked it.
+>    function doSomething(event, msg) {
+>        console.log(event.srcElement.src); // the parameter 'event' here is the event object our browser provided when we set a listener, you can get quite a lot info for it, for example here, it will print the image's src attribute in console when user single clicked it.
 >        console.log(msg); // this 'msg' here is defined by you, you can pass anything to it and even add more parameters to the function itself.
 >    }
 > ```
@@ -45,12 +45,12 @@
 > ```javascript
 >   baguetteBox.run('.grid', {
 >           dblTrigger: true,
->           singleClickCallBack: function (element, someParameters) { doSomething(element, 'Oh you pressed me!'); },
+>           singleClickCallBack: function (event, someParameters) { doSomething(event, 'Oh you pressed me!'); },
 >           doubleClickJudgeTimeout: 200
 >    });
 >
->    function doSomething(element, msg) {
->        console.log(element.srcElement.src);
+>    function doSomething(event, msg) {
+>        console.log(event.srcElement.src);
 >        console.log(msg);
 >    }
 > ```

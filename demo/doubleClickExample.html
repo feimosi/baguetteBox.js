@@ -58,7 +58,7 @@
                 </a>
             </div>
             <div class="col-3">
-                <a href="javascript:void(0)"  dblHref="img/5-1.jpg">
+                <a href="javascript:void(0)" dblHref="img/5-1.jpg">
                     <img class="card-img-top" class="img-fluid" src="img/thumbs/5-1.jpg" />
                 </a>
             </div>
@@ -72,16 +72,17 @@
             if (document.querySelectorAll('.col-3').length > 0) {
                 baguetteBox.run('.container', {
                     dblTrigger: true,
-                    singleClickCallBack: function (element, msg) { saySomething(element, 'Hello, you\'ve single clicked me! If you double click me, I won\'t be triggered! Do you like me?') },
-                    doubleClickJudgeTimeout: 200
+                    singleClickCallBack: function (event, msg) { saySomething(event, 'Hello, you\'ve single clicked me! If you double click me, I won\'t be triggered! Do you like me?') },
+                    // doubleClickJudgeTimeout: 200,
+                    // fullScreen: true
                 });
             }
         })();
 
         let i = 0;
 
-        function saySomething(element, msg) {
-            console.log(element.srcElement.src);
+        function saySomething(event, msg) {
+            console.log(event.srcElement.src);
             console.log((i++) + '. ' + msg);
         }
     </script>
