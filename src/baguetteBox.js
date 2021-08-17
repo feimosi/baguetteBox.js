@@ -7,7 +7,7 @@
 
 /* global define, module */
 
-(function (root, factory) {
+(function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         define(factory);
@@ -16,7 +16,7 @@
     } else {
         root.baguetteBox = factory();
     }
-}(this, function () {
+}(this, function() {
     'use strict';
 
     // SVG shapes used on the buttons
@@ -75,25 +75,25 @@
     var imagesElements = [];
     // The last focused element before opening the overlay
     var documentLastFocus = null;
-    var overlayClickHandler = function (event) {
+    var overlayClickHandler = function(event) {
         // Close the overlay when user clicks directly on the background
         if (event.target.id.indexOf('baguette-img') !== -1) {
             hideOverlay();
         }
     };
-    var previousButtonClickHandler = function (event) {
+    var previousButtonClickHandler = function(event) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showPreviousImage();
     };
-    var nextButtonClickHandler = function (event) {
+    var nextButtonClickHandler = function(event) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showNextImage();
     };
-    var closeButtonClickHandler = function (event) {
+    var closeButtonClickHandler = function(event) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         hideOverlay();
     };
-    var touchstartHandler = function (event) {
+    var touchstartHandler = function(event) {
         touch.count++;
         if (touch.count > 1) {
             touch.multitouch = true;
@@ -102,7 +102,7 @@
         touch.startX = event.changedTouches[0].pageX;
         touch.startY = event.changedTouches[0].pageY;
     };
-    var touchmoveHandler = function (event) {
+    var touchmoveHandler = function(event) {
         // If action was already triggered or multitouch return
         if (touchFlag || touch.multitouch) {
             return;
@@ -121,18 +121,18 @@
             hideOverlay();
         }
     };
-    var touchendHandler = function () {
+    var touchendHandler = function() {
         touch.count--;
         if (touch.count <= 0) {
             touch.multitouch = false;
         }
         touchFlag = false;
     };
-    var contextmenuHandler = function () {
+    var contextmenuHandler = function() {
         touchendHandler();
     };
 
-    var trapFocusInsideOverlay = function (event) {
+    var trapFocusInsideOverlay = function(event) {
         if (overlay.style.display === 'block' && (overlay.contains && !overlay.contains(event.target))) {
             event.stopPropagation();
             initFocus();
@@ -143,7 +143,7 @@
     // http://stackoverflow.com/a/14827443/1077846
     /* eslint-disable */
     if (![].forEach) {
-        Array.prototype.forEach = function (callback, thisArg) {
+        Array.prototype.forEach = function(callback, thisArg) {
             for (var i = 0; i < this.length; i++) {
                 callback.call(thisArg, this[i], i, this);
             }
@@ -153,7 +153,7 @@
     // filter polyfill for IE8
     // https://gist.github.com/eliperelman/1031656
     if (![].filter) {
-        Array.prototype.filter = function (a, b, c, d, e) {
+        Array.prototype.filter = function(a, b, c, d, e) {
             c = this;
             d = [];
             for (e = 0; e < c.length; e++)
@@ -184,7 +184,7 @@
         };
         data[selector] = selectorData;
 
-        [].forEach.call(galleryNodeList, function (galleryElement) {
+        [].forEach.call(galleryNodeList, function(galleryElement) {
             if (userOptions && userOptions.filter) {
                 regex = userOptions.filter;
             }
@@ -198,7 +198,7 @@
             }
 
             // Filter 'a' elements from those not linking to images
-            tagsNodeList = [].filter.call(tagsNodeList, function (element) {
+            tagsNodeList = [].filter.call(tagsNodeList, function(element) {
                 if (element.className.indexOf(userOptions && userOptions.ignoreClass) === -1) {
                     if (userOptions.dblTrigger)
                         return regex.test(element.getAttribute('dblHref'));
@@ -215,8 +215,8 @@
                 userOptions.doubleClickJudgeTimeout = defaults.doubleClickJudgeTimeout;
 
             var gallery = [];
-            [].forEach.call(tagsNodeList, function (imageElement, imageIndex) {
-                var imageElementClickHandler = function (event) {
+            [].forEach.call(tagsNodeList, function(imageElement, imageIndex) {
+                var imageElementClickHandler = function(event) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
                     prepareOverlay(gallery, userOptions);
                     showOverlay(imageIndex);
@@ -251,8 +251,8 @@
             return;
         }
         var galleries = data[selector].galleries;
-        [].forEach.call(galleries, function (gallery) {
-            [].forEach.call(gallery, function (imageItem) {
+        [].forEach.call(galleries, function(gallery) {
+            [].forEach.call(gallery, function(imageItem) {
                 unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
 
@@ -436,7 +436,7 @@
             startX: null,
             startY: null
         };
-        loadImage(currentIndex, function () {
+        loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
@@ -447,7 +447,7 @@
             enterFullScreen();
         }
         // Fade in overlay
-        setTimeout(function () {
+        setTimeout(function() {
             overlay.className = 'visible';
             if (options.bodyClass && document.body.classList) {
                 document.body.classList.add(options.bodyClass);
@@ -504,7 +504,7 @@
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
-        setTimeout(function () {
+        setTimeout(function() {
             overlay.style.display = 'none';
             if (document.fullscreen) {
                 exitFullscreen();
@@ -564,7 +564,7 @@
 
         // Prepare gallery img element
         var image = create('img');
-        image.onload = function () {
+        image.onload = function() {
             // Remove loader element
             var spinner = document.querySelector('#baguette-img-' + index + ' .baguetteBox-spinner');
             figure.removeChild(spinner);
@@ -603,7 +603,7 @@
                 }
             }
             // Sort resolutions ascending
-            var keys = Object.keys(srcs).sort(function (a, b) {
+            var keys = Object.keys(srcs).sort(function(a, b) {
                 return parseInt(a, 10) < parseInt(b, 10) ? -1 : 1;
             });
             // Get real screen resolution
@@ -670,7 +670,7 @@
         }
 
         currentIndex = index;
-        loadImage(currentIndex, function () {
+        loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
@@ -689,7 +689,7 @@
      */
     function bounceAnimation(direction) {
         slider.className = 'bounce-from-' + direction;
-        setTimeout(function () {
+        setTimeout(function() {
             slider.className = '';
         }, 400);
     }
@@ -698,7 +698,7 @@
         var offset = -currentIndex * 100 + '%';
         if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
-            setTimeout(function () {
+            setTimeout(function() {
                 supports.transforms ?
                     slider.style.transform = slider.style.webkitTransform = 'translate3d(' + offset + ',0,0)'
                     : slider.style.left = offset;
@@ -730,7 +730,7 @@
         var passiveEvents = false;
         try {
             var opts = Object.defineProperty({}, 'passive', {
-                get: function () {
+                get: function() {
                     passiveEvents = true;
                 }
             });
@@ -747,7 +747,7 @@
         if (index - currentIndex >= options.preload) {
             return;
         }
-        loadImage(index + 1, function () {
+        loadImage(index + 1, function() {
             preloadNext(index + 1);
         });
     }
@@ -756,7 +756,7 @@
         if (currentIndex - index >= options.preload) {
             return;
         }
-        loadImage(index - 1, function () {
+        loadImage(index - 1, function() {
             preloadPrev(index - 1);
         });
     }
@@ -766,7 +766,7 @@
             element.addEventListener(event, callback, options);
         } else {
             // IE8 fallback
-            element.attachEvent('on' + event, function (event) {
+            element.attachEvent('on' + event, function(event) {
                 // `event` and `event.target` are not provided in IE8
                 event = event || window.event;
                 event.target = event.target || event.srcElement;
@@ -782,10 +782,10 @@
     function bindSingleDoubleClickItems(element, callbackForDoubleClick, options) {
         if (options.dblTrigger) {
             let timeout, click = 0;
-            element.addEventListener('click', function (event) {
+            element.addEventListener('click', function(event) {
                 click++;
                 clearTimeout(timeout);
-                timeout = setTimeout(function () {
+                timeout = setTimeout(function() {
                     if (click === 1) // what shall do when double clicking enabled and user single clicked the images
                         options.singleClickCallBack(event);
                     if (click >= 2) // show overlay when user double clicked(or more than double clicking, so it is even able to differentiate triple clicking and more...)
