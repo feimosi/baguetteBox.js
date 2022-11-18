@@ -169,6 +169,7 @@
 
         buildOverlay();
         removeFromCache(selector);
+        setOptions(userOptions);
         return bindImageClickListeners(selector, userOptions);
     }
 
@@ -384,6 +385,9 @@
         // Fill options object
         for (var item in defaults) {
             options[item] = defaults[item];
+            if (!options[item]) {
+                options[item] = defaults[item];
+            }
             if (typeof newOptions[item] !== 'undefined') {
                 options[item] = newOptions[item];
             }
