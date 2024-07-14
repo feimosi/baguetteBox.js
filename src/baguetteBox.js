@@ -51,7 +51,7 @@
             overlayBackgroundColor: 'rgba(0,0,0,.8)',
             closeX: closeX,
             leftArrow: leftArrow,
-            rightArrow: rightArrow
+            rightArrow: rightArrow,
         };
     // Object containing information about features compatibility
     var supports = {};
