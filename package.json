@@ -51,7 +51,8 @@
         "sass": "~1.77.8"
     },
     "overrides": {
-        "graceful-fs": "^4.2.11"
+        "graceful-fs": "^4.2.11",
+        "gift": "0.10.2"
     },
     "keywords": [
         "lightbox",
