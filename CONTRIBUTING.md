@@ -36,6 +36,7 @@ git commit -m "Build update"
 Bump the version
 ```sh
 npm start release # or npm start patch
+npm install
 git add --update
 git commit -m "v1.8.0"
 ```
@@ -71,3 +72,6 @@ Publish the new version to `npm`
 npm publish
 git checkout dev
 ```
+
+Add a new release on GitHub
+https://github.com/feimosi/baguetteBox.js/releases/new
