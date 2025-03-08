@@ -91,6 +91,23 @@ bower install baguettebox.js --save
 <script src="js/baguetteBox.min.js" async></script>
   ```
 
+### Composer
+Add the following to your `composer.json` file (updating the version as required) and then run `composer install` or `composer update`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/feimosi/baguetteBox.js"
+        }
+    ],
+    "require": {
+        "feimosi/baguettebox.js": "dev-main"
+    }
+}
+```
+
 ## Importing
 
 ### Traditional approach
