@@ -686,7 +686,7 @@
     }
 
     function updateOffset() {
-        var offset = -currentIndex * 100 + '%';
+        var offset = -currentIndex * ( document.getElementsByTagName('html')[0].getAttribute('dir') == 'rtl' ? -100 : 100 ) + '%';
         if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {
