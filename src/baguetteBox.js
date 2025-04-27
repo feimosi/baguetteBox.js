@@ -47,6 +47,7 @@
             animation: 'slideIn',
             afterShow: null,
             afterHide: null,
+            handleWheel: false,
             onChange: null,
             overlayBackgroundColor: 'rgba(0,0,0,.8)',
             closeX: closeX,
@@ -81,6 +82,16 @@
             hideOverlay();
         }
     };
+    var overlayWheelHandler = function(event) {
+        if (options.handleWheel === true) {
+            event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
+            if (event.deltaY > 0) {
+                showNextImage()
+            } else {
+                showPreviousImage();
+            }
+        }
+    }
     var previousButtonClickHandler = function(event) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showPreviousImage();
@@ -324,6 +335,7 @@
         var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
 
         bind(overlay, 'click', overlayClickHandler);
+        bind(overlay, 'wheel', overlayWheelHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
@@ -339,6 +351,7 @@
         var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
 
         unbind(overlay, 'click', overlayClickHandler);
+        unbind(overlay, 'wheel', overlayWheelHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
         unbind(closeButton, 'click', closeButtonClickHandler);
