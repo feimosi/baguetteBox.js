@@ -68,7 +68,7 @@
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)/i;
+    var regex = /.+\.(gif|jpe?g|png|webp|avif)/i;
     // Object of all used galleries
     var data = {};
     // Array containing temporary images DOM elements
