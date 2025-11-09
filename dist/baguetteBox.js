@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.12.0
+ * @version 1.13.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
