@@ -1,4 +1,3 @@
-/* eslint-env node */
 // @ts-nocheck
 
 'use strict';
@@ -72,13 +71,6 @@ function buildDistJs() {
 const buildDemo = gulp.parallel(buildDemoCss, buildDemoJs);
 const buildDist = gulp.parallel(buildDistCss, buildDistJs);
 
-function lint() {
-    return gulp.src([paths.js, 'gulpfile.js', '.eslintrc.js'])
-        .pipe(plugins.eslint())
-        .pipe(plugins.eslint.format())
-        .pipe(plugins.eslint.failAfterError());
-}
-
 function bumpMinor() {
     return gulp.src(['./bower.json', './package.json'])
         .pipe(plugins.bump({ type: 'minor' }))
@@ -109,7 +101,7 @@ function updateVersion() {
 
 function watchFiles() {
     gulp.watch(paths.css, buildDemoCss);
-    gulp.watch(paths.js, gulp.series(buildDemoJs, lint));
+    gulp.watch(paths.js, buildDemoJs);
 }
 
 function watchBrowserSync(done) {
@@ -141,7 +133,6 @@ const build = gulp.series(gulp.parallel(buildDemo, buildDist), updateVersion);
 const watch = gulp.series(buildDemo, watchBrowserSync, watchFiles);
 const release = gulp.series(bumpMinor, build);
 const patch = gulp.series(bumpPatch, build);
-const test = gulp.series(build, lint);
 
 exports['build.demo-css'] = buildDemoCss;
 exports['build.demo-js'] = buildDemoJs;
@@ -149,7 +140,6 @@ exports['build.dist-css'] = buildDistCss;
 exports['build.dist-js'] = buildDistJs;
 exports['build.demo'] = buildDemo;
 exports['build.dist'] = buildDist;
-exports.lint = lint;
 exports['bump-minor'] = bumpMinor;
 exports['bump-patch'] = bumpPatch;
 exports['update-version'] = updateVersion;
@@ -159,5 +149,4 @@ exports.deploy = deploy;
 exports.release = release;
 exports.patch = patch;
 exports.build = build;
-exports.test = test;
 exports.default = watch;
