@@ -23,6 +23,7 @@ Simple and easy to use lightbox script written in pure JavaScript.
   * [Customization](#customization)
   * [API](#api)
   * [Responsive images](#responsive-images)
+  * [Testing](#testing)
   * [Compatibility](#compatibility)
   * [Contributing](#contributing)
   * [Donation](#donation)
@@ -257,6 +258,27 @@ Here's an example of what the HTML code can look like:
 ```
 
 If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep the `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
+
+## Testing
+
+The repository includes Playwright smoke tests and a small set of visual snapshot checks for the lightbox overlay.
+
+### Run the UI test suite
+
+```sh
+npm run test:ui
+```
+
+### Update snapshot baselines
+
+```sh
+npm run test:ui:update
+```
+
+Notes:
+- The Playwright config uses the local Google Chrome browser on macOS.
+- Snapshot files live in `tests/ui/smoke.spec.js-snapshots/`.
+- Run `npm run test:ui:update` only when the new visual output is intentional.
 
 ## Compatibility
 

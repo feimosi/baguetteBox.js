@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>baguetteBox.js smoke fixture</title>
+    <link rel="stylesheet" href="/dist/baguetteBox.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        h1,
+        h2 {
+            margin: 0 0 12px;
+        }
+
+        section {
+            margin-bottom: 32px;
+        }
+
+        .gallery {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .gallery a {
+            display: inline-flex;
+            width: 140px;
+            height: 100px;
+            border: 1px solid #ccc;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <h1>baguetteBox.js Smoke Fixture</h1>
+
+    <section>
+        <h2>Basic Gallery</h2>
+        <div class="gallery gallery-basic">
+            <a id="basic-image-1" href="" data-caption="Golden Gate caption">
+                <img id="basic-image-1-thumb" alt="basic one" src="">
+            </a>
+            <a id="basic-image-2" href="" title="Midnight title">
+                <img id="basic-image-2-thumb" alt="basic two" src="">
+            </a>
+            <a id="basic-image-3" href="">
+                <img id="basic-image-3-thumb" alt="basic three" src="">
+            </a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Callback Gallery</h2>
+        <div class="gallery gallery-callback">
+            <a id="callback-image-1" href="">
+                <img id="callback-image-1-thumb" alt="callback caption" src="">
+            </a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Special Gallery</h2>
+        <div class="gallery gallery-special">
+            <a id="special-image-1" href="">
+                <img id="special-image-1-thumb" alt="special one" src="">
+            </a>
+            <a id="special-image-2" href="">
+                <img id="special-image-2-thumb" alt="special two" src="">
+            </a>
+        </div>
+    </section>
+
+    <script src="/dist/baguetteBox.js"></script>
+    <script>
+        function svgData(config) {
+            var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">' +
+                '<rect width="1200" height="800" fill="' + config.background + '"></rect>' +
+                '<rect x="0" y="0" width="1200" height="800" fill="url(#gradient)"></rect>' +
+                '<defs>' +
+                '<linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">' +
+                '<stop offset="0%" stop-color="' + config.detail + '" stop-opacity="0.2"></stop>' +
+                '<stop offset="100%" stop-color="#000000" stop-opacity="0"></stop>' +
+                '</linearGradient>' +
+                '</defs>' +
+                '<circle cx="150" cy="150" r="72" fill="' + config.accent + '"></circle>' +
+                '<rect x="70" y="560" width="340" height="120" rx="18" fill="' + config.detail + '" opacity="0.7"></rect>' +
+                '<text x="260" y="185" font-size="96" font-family="Arial, sans-serif" fill="#ffffff">' + config.label + '</text>' +
+                '<text x="100" y="635" font-size="48" font-family="Arial, sans-serif" fill="#ffffff">' + config.badge + '</text>' +
+                '</svg>';
+
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
+
+        function fallbackImagePath(label) {
+            return '/tests/fixtures/assets/placeholder.svg?' + label + '.png';
+        }
+
+        function setImage(anchorId, thumbnailId, fullConfig, thumbConfig) {
+            var anchor = document.getElementById(anchorId);
+            var img = document.getElementById(thumbnailId);
+
+            anchor.href = fallbackImagePath(fullConfig.badge);
+            anchor.setAttribute('data-at-1', svgData(fullConfig));
+            img.src = svgData(thumbConfig);
+        }
+
+        window.smokeState = {
+            afterShowCalls: 0,
+            afterHideCalls: 0,
+            basicOnChangeCalls: [],
+            onChangeCalls: [],
+            callbackCaptions: []
+        };
+
+        setImage('basic-image-1', 'basic-image-1-thumb', {
+            label: 'Golden Gate',
+            badge: 'basic-1-full',
+            background: '#5c6bc0',
+            accent: '#ffca28',
+            detail: '#283593'
+        }, {
+            label: 'Golden Gate',
+            badge: 'basic-1-thumb',
+            background: '#7986cb',
+            accent: '#ffd54f',
+            detail: '#3949ab'
+        });
+        setImage('basic-image-2', 'basic-image-2-thumb', {
+            label: 'Midnight City',
+            badge: 'basic-2-full',
+            background: '#263238',
+            accent: '#80deea',
+            detail: '#006064'
+        }, {
+            label: 'Midnight City',
+            badge: 'basic-2-thumb',
+            background: '#37474f',
+            accent: '#4dd0e1',
+            detail: '#00838f'
+        });
+        setImage('basic-image-3', 'basic-image-3-thumb', {
+            label: 'Forest Walk',
+            badge: 'basic-3-full',
+            background: '#2e7d32',
+            accent: '#c5e1a5',
+            detail: '#1b5e20'
+        }, {
+            label: 'Forest Walk',
+            badge: 'basic-3-thumb',
+            background: '#388e3c',
+            accent: '#dcedc8',
+            detail: '#33691e'
+        });
+        setImage('callback-image-1', 'callback-image-1-thumb', {
+            label: 'Callback View',
+            badge: 'callback-1-full',
+            background: '#ad1457',
+            accent: '#f8bbd0',
+            detail: '#880e4f'
+        }, {
+            label: 'Callback View',
+            badge: 'callback-1-thumb',
+            background: '#c2185b',
+            accent: '#f48fb1',
+            detail: '#880e4f'
+        });
+        setImage('special-image-1', 'special-image-1-thumb', {
+            label: 'Special One',
+            badge: 'special-1-full',
+            background: '#ef6c00',
+            accent: '#ffe082',
+            detail: '#e65100'
+        }, {
+            label: 'Special One',
+            badge: 'special-1-thumb',
+            background: '#f57c00',
+            accent: '#ffd54f',
+            detail: '#ef6c00'
+        });
+        setImage('special-image-2', 'special-image-2-thumb', {
+            label: 'Special Two',
+            badge: 'special-2-full',
+            background: '#00897b',
+            accent: '#b2dfdb',
+            detail: '#00695c'
+        }, {
+            label: 'Special Two',
+            badge: 'special-2-thumb',
+            background: '#26a69a',
+            accent: '#80cbc4',
+            detail: '#00796b'
+        });
+
+        window.smokeGalleries = {
+            basic: baguetteBox.run('.gallery-basic', {
+                onChange: function(index, count) {
+                    window.smokeState.basicOnChangeCalls.push({
+                        index: index,
+                        count: count
+                    });
+                }
+            }),
+            callback: baguetteBox.run('.gallery-callback', {
+                captions: function(element) {
+                    var text = element.getElementsByTagName('img')[0].alt.toUpperCase();
+                    window.smokeState.callbackCaptions.push(text);
+                    return text;
+                },
+                titleTag: true
+            }),
+            special: baguetteBox.run('.gallery-special', {
+                animation: 'fadeIn',
+                noScrollbars: true,
+                buttons: false,
+                afterShow: function() {
+                    window.smokeState.afterShowCalls++;
+                },
+                afterHide: function() {
+                    window.smokeState.afterHideCalls++;
+                },
+                onChange: function(index, count) {
+                    window.smokeState.onChangeCalls.push({
+                        index: index,
+                        count: count
+                    });
+                }
+            })
+        };
+    </script>
+</body>
+</html>

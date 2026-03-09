@@ -23,6 +23,8 @@
         "start": "gulp",
         "lint": "gulp lint",
         "test": "gulp test",
+        "test:ui": "playwright test",
+        "test:ui:update": "playwright test --update-snapshots",
         "build": "gulp build",
         "release": "gulp release",
         "patch": "gulp patch"
@@ -31,6 +33,7 @@
         "natives": "1.1.3"
     },
     "devDependencies": {
+        "@playwright/test": "~1.58.2",
         "browser-sync": "^2.26.7",
         "gulp": "^3.9.1",
         "gulp-autoprefixer": "^6.1.0",
