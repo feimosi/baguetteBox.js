@@ -11,7 +11,7 @@ const jsonfile = require('jsonfile');
 const paths = {
     css: './src/*.css',
     ts: './src/*.ts',
-    js: './.tmp-build/src/*.js'
+    js: './.tmp-build/*.js'
 };
 const demo = {
     allFiles: './demo/**/*',
@@ -34,12 +34,25 @@ const autoprefixerBrowsers = [
     'Firefox ESR',
     'Opera 12.1'
 ];
+const autoprefixerOptions = { overrideBrowserslist: autoprefixerBrowsers };
 
-function buildDemoCss() {
-    return gulp.src(paths.css)
-        .pipe(plugins.autoprefixer({ overrideBrowserslist: autoprefixerBrowsers }))
-        .pipe(plugins.concat('baguetteBox.css'))
-        .pipe(gulp.dest(demo.css));
+function runCssBuild(buildStream, done) {
+    import('gulp-autoprefixer')
+        .then(({ default: autoprefixer }) => {
+            buildStream(autoprefixer)
+                .on('end', done)
+                .on('error', done);
+        })
+        .catch(done);
+}
+
+function buildDemoCss(done) {
+    runCssBuild(function(autoprefixer) {
+        return gulp.src(paths.css)
+            .pipe(autoprefixer(autoprefixerOptions))
+            .pipe(plugins.concat('baguetteBox.css'))
+            .pipe(gulp.dest(demo.css));
+    }, done);
 }
 
 function buildDemoJs() {
@@ -48,14 +61,16 @@ function buildDemoJs() {
         .pipe(gulp.dest(demo.js));
 }
 
-function buildDistCss() {
-    return gulp.src(paths.css)
-        .pipe(plugins.autoprefixer({ overrideBrowserslist: autoprefixerBrowsers }))
-        .pipe(plugins.concat('baguetteBox.css'))
-        .pipe(gulp.dest(dist.css))
-        .pipe(plugins.concat('baguetteBox.min.css'))
-        .pipe(plugins.cleanCss({ compatibility: 'ie8' }))
-        .pipe(gulp.dest(dist.css));
+function buildDistCss(done) {
+    runCssBuild(function(autoprefixer) {
+        return gulp.src(paths.css)
+            .pipe(autoprefixer(autoprefixerOptions))
+            .pipe(plugins.concat('baguetteBox.css'))
+            .pipe(gulp.dest(dist.css))
+            .pipe(plugins.concat('baguetteBox.min.css'))
+            .pipe(plugins.cleanCss({ compatibility: 'ie8' }))
+            .pipe(gulp.dest(dist.css));
+    }, done);
 }
 
 function buildDistJs() {
