@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#5c6bc0" />
+  <circle cx="150" cy="150" r="72" fill="#ffca28" />
+  <text x="260" y="180" font-size="96" font-family="Arial, sans-serif" fill="#ffffff">baguetteBox smoke asset</text>
+</svg>

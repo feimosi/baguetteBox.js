@@ -2,7 +2,7 @@
     "name": "baguettebox.js",
     "version": "1.13.0",
     "author": "feimosi",
-    "description": "Simple and easy to use lightbox script written in pure JavaScript",
+    "description": "Simple and easy to use lightbox script distributed as plain JavaScript and CSS",
     "license": "MIT",
     "homepage": "https://github.com/feimosi/baguetteBox.js",
     "repository": {
@@ -19,10 +19,12 @@
         "src"
     ],
     "scripts": {
-        "postinstall": "npm rebuild node-sass",
         "start": "gulp",
-        "lint": "gulp lint",
-        "test": "gulp test",
+        "lint": "eslint src/**/*.ts gulpfile.js playwright.config.js eslint.config.js tests/**/*.js",
+        "typecheck": "tsc --project tsconfig.json",
+        "test": "npm run test:ui",
+        "test:ui": "playwright test",
+        "test:ui:update": "playwright test --update-snapshots",
         "build": "gulp build",
         "release": "gulp release",
         "patch": "gulp patch"
@@ -31,24 +33,24 @@
         "natives": "1.1.3"
     },
     "devDependencies": {
-        "browser-sync": "^2.26.7",
-        "gulp": "^3.9.1",
-        "gulp-autoprefixer": "^6.1.0",
-        "gulp-bump": "^3.1.3",
+        "@eslint/js": "~10.0.1",
+        "@playwright/test": "~1.58.2",
+        "browser-sync": "~3.0.4",
+        "eslint": "~10.0.3",
+        "globals": "~17.4.0",
+        "gulp": "~5.0.1",
+        "gulp-autoprefixer": "~10.0.0",
+        "gulp-bump": "~3.2.0",
+        "gulp-clean-css": "~4.3.0",
         "gulp-concat": "^2.6.1",
-        "gulp-cssmin": "~0.2.0",
-        "gulp-eslint": "^5.0.0",
         "gulp-gh-pages": "~0.5.4",
-        "gulp-if": "^2.0.2",
         "gulp-inject-version": "^1.0.1",
-        "gulp-load-plugins": "^2.0.2",
-        "gulp-rimraf": "~0.2.2",
-        "gulp-sass": "~5.1.0",
+        "gulp-load-plugins": "~2.0.8",
         "gulp-uglify": "^3.0.2",
         "gulp-usemin": "~0.3.30",
-        "jsonfile": "^6.0.1",
-        "run-sequence": "^2.2.1",
-        "sass": "~1.77.8"
+        "jsonfile": "~6.2.0",
+        "typescript": "~5.9.3",
+        "typescript-eslint": "~8.57.0"
     },
     "overrides": {
         "graceful-fs": "^4.2.11",

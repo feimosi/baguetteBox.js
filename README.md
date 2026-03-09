@@ -3,12 +3,12 @@
 [![GitHub Release](https://img.shields.io/github/release/feimosi/baguetteBox.js.svg)](https://github.com/feimosi/baguetteBox.js/releases)
 [![MIT License](https://img.shields.io/npm/l/baguettebox.js.svg)](https://github.com/feimosi/baguetteBox.js/blob/dev/LICENSE)
 [![npm](https://img.shields.io/npm/dm/baguettebox.js.svg)](https://www.npmjs.com/package/baguettebox.js)
-[![Build Status](https://travis-ci.org/feimosi/baguetteBox.js.svg?branch=master)](https://travis-ci.org/feimosi/baguetteBox.js)
+[![UI Tests](https://github.com/feimosi/baguetteBox.js/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/feimosi/baguetteBox.js/actions/workflows/ui-tests.yml)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/feimosi)
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20baguetteBox.js%20-%20simple%20and%20easy%20to%20use%20lightbox%20script%20written%20in%20pure%20JavaScript%0Ahttps%3A%2F%2Fgithub.com%2Ffeimosi%2FbaguetteBox.js)
 [![Twitter Follow](https://img.shields.io/twitter/follow/feimosi.svg?style=social&label=Follow%20the%20author)](https://twitter.com/feimosi)
 
-Simple and easy to use lightbox script written in pure JavaScript.
+Simple and easy to use lightbox script distributed as plain JavaScript and CSS, with the source maintained in TypeScript.
 
 [Demo page](https://feimosi.github.io/baguetteBox.js/)
 
@@ -23,6 +23,8 @@ Simple and easy to use lightbox script written in pure JavaScript.
   * [Customization](#customization)
   * [API](#api)
   * [Responsive images](#responsive-images)
+  * [Testing](#testing)
+  * [Development](#development)
   * [Compatibility](#compatibility)
   * [Contributing](#contributing)
   * [Donation](#donation)
@@ -31,7 +33,7 @@ Simple and easy to use lightbox script written in pure JavaScript.
 
 ## Features
 
-* Written in pure JavaScript, no dependencies required
+* No runtime dependencies required
 * Multiple-gallery support allows custom options for each
 * Supports swipe gestures on touch-screen devices
 * Full-screen mode available
@@ -69,9 +71,9 @@ bower install baguettebox.js --save
   - https://cdnjs.com/libraries/baguettebox.js
   - https://jsdelivr.com/projects/baguettebox.js
 
-3. Copy URLs of the latest version (both `.js` and `.css` files)
+2. Copy URLs of the latest version (both `.js` and `.css` files)
 
-2. Paste the URLs in your HTML file:
+3. Paste the URLs in your HTML file:
 
   ```html
 <link rel="stylesheet" href="<CSS URL>">
@@ -123,9 +125,9 @@ const baguetteBox = require('baguettebox.js');
 import baguetteBox from 'baguettebox.js';
 ```
 
-### Sass
+### CSS
 
-```scss
+```css
 @import 'baguettebox.js/dist/baguetteBox.min.css';
 ```
 
@@ -182,8 +184,8 @@ The following options are available:
 | `leftArrow` \| `rightArrow` \| `closeX` | `string` | default icons | This allows to customize buttons with own icons |
 | `fullScreen` | `Boolean` | `false` | Enable full screen mode |
 | `noScrollbars` | `Boolean` | `false` | Hide scrollbars when gallery is displayed |
-| `bodyClass` | `String` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible (works in IE 10+) |
-| `ignoreClass` | `String` | `null` | It will ignore images with given class put on `a` tag |
+| `bodyClass` | `String` \| `false` | `'baguetteBox-open'` | Class name that will be appended to the `body` when lightbox is visible (works in IE 10+) |
+| `ignoreClass` | `String` | `''` | It will ignore images with given class put on `a` tag |
 | `titleTag` | `Boolean` | `false` | Use caption value also in the gallery `img.title` attribute |
 | `async` | `Boolean` | `false` | Load files asynchronously |
 | `preload` | `Number` | `2` | How many files should be preloaded |
@@ -192,7 +194,7 @@ The following options are available:
 | `afterHide` | `function` | `null` | Callback to be run after hiding the overlay |
 | `onChange` | `function(currentIndex, imagesCount)` | `null` | Callback to be run when image changes |
 | `overlayBackgroundColor` | `String` | `'rgba`<br>`(0,0,0,0.8)'` | Background color for the lightbox overlay |
-| `filter` | `RegExp` | `/.+\.(gif\|jpe?g\|png\|webp)/i` | Pattern to match image files. Applied to the `a.href` attribute |
+| `filter` | `RegExp` | `/.+\.(gif\|jpe?g\|png\|webp\|avif)/i` | Pattern to match image files. Applied to the `a.href` attribute |
 
 ## API
 
@@ -257,6 +259,58 @@ Here's an example of what the HTML code can look like:
 ```
 
 If you have 1366x768 resolution baguetteBox.js will choose `"img/medium/2-1.jpg"`. If, however, it's 1440x900 it'll choose `"img/big/2-1.jpg"`. Keep the `href` attribute as a fallback (link to a bigger image e.g. of HD size) for older browsers.
+
+## Testing
+
+The repository includes the legacy Gulp build, standalone linting, strict TypeScript checks, and Playwright smoke tests with a small set of visual snapshot checks for the lightbox overlay.
+
+### Run the full local verification flow
+
+```sh
+npm run lint
+npm run typecheck
+npm run build
+npm test
+```
+
+`npm test` now delegates to `npm run test:ui`. Build, lint, and typecheck are intentionally separate commands.
+
+### Run the UI test suite
+
+```sh
+npm run test:ui
+```
+
+This runs the Playwright suite against the packaged minified CSS and JS files. Run `npm run build` first if you want the tests to reflect fresh source changes.
+
+### Update snapshot baselines
+
+```sh
+npm run test:ui:update
+```
+
+Run `npm run build` first so snapshot updates match the current built assets.
+
+Notes:
+- The Playwright config uses the local Google Chrome browser on macOS.
+- Snapshot files live in `tests/ui/smoke.spec.js-snapshots/`.
+- Run `npm run test:ui:update` only when the new visual output is intentional.
+
+## Development
+
+Source files live in `src/baguetteBox.ts` and `src/baguetteBox.css`.
+
+### Start the demo with live reload
+
+```sh
+npm start
+```
+
+### Build distributable assets
+
+```sh
+npm run build
+```
 
 ## Compatibility
 

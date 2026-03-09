@@ -1,102 +1,186 @@
-"use strict";
 /*!
  * baguetteBox.js
  * @author  feimosi
  * @version %%INJECT_VERSION%%
  * @url https://github.com/feimosi/baguetteBox.js
  */
-(function (root, factory) {
+
+interface BaguetteBoxApi {
+    run(selector: string, userOptions?: UserOptions): Gallery[];
+    show(index: number, gallery?: Gallery): boolean;
+    showNext(): boolean;
+    showPrevious(): boolean;
+    hide(): void;
+    destroy(): void;
+}
+
+interface AmdDefine {
+    (factory: () => BaguetteBoxApi): void;
+    amd?: unknown;
+}
+
+interface GalleryItem {
+    eventHandler: (event: any) => void;
+    imageElement: HTMLAnchorElement;
+}
+
+interface SelectorData {
+    galleries: Gallery[];
+    nodeList: NodeListOf<Element>;
+}
+
+interface SupportFlags {
+    transforms: boolean;
+    svg: boolean;
+    passiveEvents: boolean;
+}
+
+interface TouchState {
+    count: number;
+    multitouch: boolean;
+    startX: number | null;
+    startY: number | null;
+}
+
+interface Options {
+    captions: boolean | ((this: GalleryItem[], imageElement: HTMLAnchorElement) => string | null | undefined);
+    buttons: boolean | 'auto';
+    fullScreen: boolean;
+    noScrollbars: boolean;
+    bodyClass: string | false;
+    titleTag: boolean;
+    async: boolean;
+    preload: number;
+    animation: 'slideIn' | 'fadeIn' | false;
+    afterShow: (() => void) | null;
+    afterHide: (() => void) | null;
+    onChange: ((currentIndex: number, total: number) => void) | null;
+    overlayBackgroundColor: string;
+    closeX: string;
+    leftArrow: string;
+    rightArrow: string;
+    filter: RegExp;
+    ignoreClass: string;
+}
+
+type UserOptions = Partial<Options>;
+type Gallery = GalleryItem[];
+type RootContext = typeof globalThis & { baguetteBox?: BaguetteBoxApi };
+type StyleWithWebkit = CSSStyleDeclaration & {
+    webkitPerspective?: string;
+    webkitTransition?: string;
+    webkitTransform?: string;
+};
+type FullscreenOverlay = HTMLDivElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void;
+    mozRequestFullScreen?: () => Promise<void> | void;
+};
+type FullscreenDocument = Document & {
+    fullscreenElement?: Element | null;
+    webkitExitFullscreen?: () => Promise<void> | void;
+    mozCancelFullScreen?: () => Promise<void> | void;
+};
+
+declare const define: AmdDefine | undefined;
+
+(function (root: RootContext, factory: () => BaguetteBoxApi) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         define(factory);
-    }
-    else if (typeof exports === 'object' && typeof module === 'object' && module) {
+    } else if (typeof exports === 'object' && typeof module === 'object' && module) {
         module.exports = factory();
-    }
-    else {
+    } else {
         root.baguetteBox = factory();
     }
-}(this, function () {
+}(this as RootContext, function () {
     'use strict';
+
     // SVG shapes used on the buttons
     var leftArrow = '<svg width="44" height="60">' +
-        '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
-        'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
-        '</svg>', rightArrow = '<svg width="44" height="60">' +
-        '<polyline points="14 10 34 30 14 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
-        'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
-        '</svg>', closeX = '<svg width="30" height="30">' +
-        '<g stroke="rgb(160,160,160)" stroke-width="4">' +
-        '<line x1="5" y1="5" x2="25" y2="25"/>' +
-        '<line x1="5" y1="25" x2="25" y2="5"/>' +
-        '</g></svg>';
+            '<polyline points="30 10 10 30 30 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
+            '</svg>',
+        rightArrow = '<svg width="44" height="60">' +
+            '<polyline points="14 10 34 30 14 50" stroke="rgba(255,255,255,0.5)" stroke-width="4"' +
+              'stroke-linecap="butt" fill="none" stroke-linejoin="round"/>' +
+            '</svg>',
+        closeX = '<svg width="30" height="30">' +
+            '<g stroke="rgb(160,160,160)" stroke-width="4">' +
+            '<line x1="5" y1="5" x2="25" y2="25"/>' +
+            '<line x1="5" y1="25" x2="25" y2="5"/>' +
+            '</g></svg>';
     // Global options and their defaults
-    var options = {}, defaults = {
-        captions: true,
-        buttons: 'auto',
-        fullScreen: false,
-        noScrollbars: false,
-        bodyClass: 'baguetteBox-open',
-        titleTag: false,
-        async: false,
-        preload: 2,
-        animation: 'slideIn',
-        afterShow: null,
-        afterHide: null,
-        onChange: null,
-        overlayBackgroundColor: 'rgba(0,0,0,.8)',
-        closeX: closeX,
-        leftArrow: leftArrow,
-        rightArrow: rightArrow,
-        filter: /.+\.(gif|jpe?g|png|webp|avif)/i,
-        ignoreClass: ''
-    };
+    var options = {} as Options,
+        defaults: Options = {
+            captions: true,
+            buttons: 'auto',
+            fullScreen: false,
+            noScrollbars: false,
+            bodyClass: 'baguetteBox-open',
+            titleTag: false,
+            async: false,
+            preload: 2,
+            animation: 'slideIn',
+            afterShow: null,
+            afterHide: null,
+            onChange: null,
+            overlayBackgroundColor: 'rgba(0,0,0,.8)',
+            closeX: closeX,
+            leftArrow: leftArrow,
+            rightArrow: rightArrow,
+            filter: /.+\.(gif|jpe?g|png|webp|avif)/i,
+            ignoreClass: ''
+        };
     // Object containing information about features compatibility
-    var supports = {
+    var supports: SupportFlags = {
         transforms: false,
         svg: false,
         passiveEvents: false
     };
     // DOM Elements references
-    var overlay, slider, previousButton, nextButton, closeButton;
+    var overlay: HTMLDivElement,
+        slider: HTMLDivElement,
+        previousButton: HTMLButtonElement,
+        nextButton: HTMLButtonElement,
+        closeButton: HTMLButtonElement;
     // An array with all images in the current gallery
-    var currentGallery = [];
+    var currentGallery: Gallery = [];
     // Current image index inside the slider
     var currentIndex = 0;
     // Visibility of the overlay
     var isOverlayVisible = false;
     // Touch event start position (for slide gesture)
-    var touch = createTouchState();
+    var touch: TouchState = createTouchState();
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
     var regex = defaults.filter;
     // Object of all used galleries
-    var data = {};
+    var data: Record<string, SelectorData> = {};
     // Array containing temporary images DOM elements
-    var imagesElements = [];
+    var imagesElements: HTMLDivElement[] = [];
     // The last focused element before opening the overlay
-    var documentLastFocus = null;
-    var overlayClickHandler = function (event) {
-        var target = event.target;
+    var documentLastFocus: HTMLElement | null = null;
+    var overlayClickHandler = function(event: any) {
+        var target = event.target as Element | null;
         // Close the overlay when user clicks directly on the background
-        if (target && typeof target.id === 'string' && target.id.indexOf('baguette-img') !== -1) {
+        if (target && typeof (target as HTMLElement).id === 'string' && (target as HTMLElement).id.indexOf('baguette-img') !== -1) {
             hideOverlay();
         }
     };
-    var previousButtonClickHandler = function (event) {
+    var previousButtonClickHandler = function(event: any) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showPreviousImage();
     };
-    var nextButtonClickHandler = function (event) {
+    var nextButtonClickHandler = function(event: any) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         showNextImage();
     };
-    var closeButtonClickHandler = function (event) {
+    var closeButtonClickHandler = function(event: any) {
         event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true; // eslint-disable-line no-unused-expressions
         hideOverlay();
     };
-    var touchstartHandler = function (event) {
+    var touchstartHandler = function(event: TouchEvent) {
         touch.count++;
         if (touch.count > 1) {
             touch.multitouch = true;
@@ -105,7 +189,7 @@
         touch.startX = event.changedTouches[0].pageX;
         touch.startY = event.changedTouches[0].pageY;
     };
-    var touchmoveHandler = function (event) {
+    var touchmoveHandler = function(event: TouchEvent & { returnValue?: boolean }) {
         // If action was already triggered or multitouch return
         if (touchFlag || touch.multitouch) {
             return;
@@ -116,49 +200,56 @@
         if (touch.startX !== null && touchEvent.pageX - touch.startX > 40) {
             touchFlag = true;
             showPreviousImage();
-        }
-        else if (touch.startX !== null && touchEvent.pageX - touch.startX < -40) {
+        } else if (touch.startX !== null && touchEvent.pageX - touch.startX < -40) {
             touchFlag = true;
             showNextImage();
-            // Move 100 pixels up to close the overlay
-        }
-        else if (touch.startY !== null && touch.startY - touchEvent.pageY > 100) {
+        // Move 100 pixels up to close the overlay
+        } else if (touch.startY !== null && touch.startY - touchEvent.pageY > 100) {
             hideOverlay();
         }
     };
-    var touchendHandler = function () {
+    var touchendHandler = function() {
         touch.count--;
         if (touch.count <= 0) {
             touch.multitouch = false;
         }
         touchFlag = false;
     };
-    var contextmenuHandler = function () {
+    var contextmenuHandler = function() {
         touchendHandler();
     };
-    var trapFocusInsideOverlay = function (event) {
-        var target = event.target;
+
+    var trapFocusInsideOverlay = function(event: FocusEvent) {
+        var target = event.target as Node | null;
         if (overlay.style.display === 'block' && target && overlay.contains && !overlay.contains(target)) {
             event.stopPropagation();
             initFocus();
         }
     };
+
     // forEach polyfill for IE8
     // http://stackoverflow.com/a/14827443/1077846
     /* eslint-disable */
     if (![].forEach) {
-        Array.prototype.forEach = function (callback, thisArg) {
+        Array.prototype.forEach = function(
+            callback: (value: any, index: number, array: any[]) => void,
+            thisArg?: unknown
+        ) {
             for (var i = 0; i < this.length; i++) {
                 callback.call(thisArg, this[i], i, this);
             }
         };
     }
+
     // filter polyfill for IE8
     // https://gist.github.com/eliperelman/1031656
     if (![].filter) {
-        Array.prototype.filter = function (callback, thisArg) {
-            var source = this;
-            var filtered = [];
+        Array.prototype.filter = function(
+            callback: (value: any, index: number, array: any[]) => boolean,
+            thisArg?: unknown
+        ) {
+            var source = this as any[];
+            var filtered: any[] = [];
             for (var i = 0; i < source.length; i++) {
                 if (callback.call(thisArg, source[i], i, source)) {
                     filtered.push(source[i]);
@@ -168,7 +259,8 @@
         };
     }
     /* eslint-enable */
-    function createTouchState() {
+
+    function createTouchState(): TouchState {
         return {
             count: 0,
             multitouch: false,
@@ -176,38 +268,43 @@
             startY: null
         };
     }
+
     // Script entry point
-    function run(selector, userOptions) {
+    function run(selector: string, userOptions?: UserOptions): Gallery[] {
         // Fill supports object
         supports.transforms = testTransformsSupport();
         supports.svg = testSvgSupport();
         supports.passiveEvents = testPassiveEventsSupport();
+
         buildOverlay();
         removeFromCache(selector);
         return bindImageClickListeners(selector, userOptions);
     }
-    function bindImageClickListeners(selector, userOptions) {
+
+    function bindImageClickListeners(selector: string, userOptions?: UserOptions): Gallery[] {
         // For each gallery bind a click event to every image inside it
         var galleryNodeList = document.querySelectorAll(selector);
-        var selectorData = {
+        var selectorData: SelectorData = {
             galleries: [],
             nodeList: galleryNodeList
         };
         data[selector] = selectorData;
         regex = userOptions && userOptions.filter ? userOptions.filter : defaults.filter;
-        [].forEach.call(galleryNodeList, function (galleryElement) {
-            var tagsNodeList = [];
+
+        [].forEach.call(galleryNodeList, function(galleryElement: Element) {
+            var tagsNodeList: HTMLAnchorElement[] = [];
+
             // Get nodes from gallery elements or single-element galleries
             if (galleryElement.tagName === 'A') {
-                tagsNodeList = [galleryElement];
-            }
-            else {
-                [].forEach.call(galleryElement.getElementsByTagName('a'), function (element) {
+                tagsNodeList = [galleryElement as HTMLAnchorElement];
+            } else {
+                [].forEach.call(galleryElement.getElementsByTagName('a'), function(element: HTMLAnchorElement) {
                     tagsNodeList.push(element);
                 });
             }
+
             // Filter 'a' elements from those not linking to images
-            tagsNodeList = tagsNodeList.filter(function (element) {
+            tagsNodeList = tagsNodeList.filter(function(element) {
                 var ignoredClass = userOptions && userOptions.ignoreClass;
                 if (ignoredClass && element.className.indexOf(ignoredClass) !== -1) {
                     return false;
@@ -217,14 +314,15 @@
             if (tagsNodeList.length === 0) {
                 return;
             }
-            var gallery = [];
-            [].forEach.call(tagsNodeList, function (imageElement, imageIndex) {
-                var imageElementClickHandler = function (event) {
+
+            var gallery: Gallery = [];
+            [].forEach.call(tagsNodeList, function(imageElement: HTMLAnchorElement, imageIndex: number) {
+                var imageElementClickHandler = function(event: any) {
                     event.preventDefault ? event.preventDefault() : event.returnValue = false; // eslint-disable-line no-unused-expressions
                     prepareOverlay(gallery, userOptions);
                     showOverlay(imageIndex);
                 };
-                var imageItem = {
+                var imageItem: GalleryItem = {
                     eventHandler: imageElementClickHandler,
                     imageElement: imageElement
                 };
@@ -233,8 +331,10 @@
             });
             selectorData.galleries.push(gallery);
         });
+
         return selectorData.galleries;
     }
+
     function clearCachedData() {
         for (var selector in data) {
             if (Object.prototype.hasOwnProperty.call(data, selector)) {
@@ -242,30 +342,34 @@
             }
         }
     }
-    function removeFromCache(selector) {
+
+    function removeFromCache(selector: string) {
         if (!Object.prototype.hasOwnProperty.call(data, selector)) {
             return;
         }
         var galleries = data[selector].galleries;
-        [].forEach.call(galleries, function (gallery) {
-            [].forEach.call(gallery, function (imageItem) {
+        [].forEach.call(galleries, function(gallery: Gallery) {
+            [].forEach.call(gallery, function(imageItem: GalleryItem) {
                 unbind(imageItem.imageElement, 'click', imageItem.eventHandler);
             });
+
             if (currentGallery === gallery) {
                 currentGallery = [];
             }
         });
+
         delete data[selector];
     }
+
     function buildOverlay() {
-        var existingOverlay = getByID('baguetteBox-overlay');
+        var existingOverlay = getByID<HTMLDivElement>('baguetteBox-overlay');
         // Check if the overlay already exists
         if (existingOverlay) {
             overlay = existingOverlay;
-            slider = getByID('baguetteBox-slider');
-            previousButton = getByID('previous-button');
-            nextButton = getByID('next-button');
-            closeButton = getByID('close-button');
+            slider = getByID<HTMLDivElement>('baguetteBox-slider') as HTMLDivElement;
+            previousButton = getByID<HTMLButtonElement>('previous-button') as HTMLButtonElement;
+            nextButton = getByID<HTMLButtonElement>('next-button') as HTMLButtonElement;
+            closeButton = getByID<HTMLButtonElement>('close-button') as HTMLButtonElement;
             return;
         }
         // Create overlay element
@@ -284,43 +388,50 @@
         previousButton.setAttribute('aria-label', 'Previous');
         previousButton.innerHTML = supports.svg ? leftArrow : '&lt;';
         overlay.appendChild(previousButton);
+
         nextButton = create('button');
         nextButton.setAttribute('type', 'button');
         nextButton.id = 'next-button';
         nextButton.setAttribute('aria-label', 'Next');
         nextButton.innerHTML = supports.svg ? rightArrow : '&gt;';
         overlay.appendChild(nextButton);
+
         closeButton = create('button');
         closeButton.setAttribute('type', 'button');
         closeButton.id = 'close-button';
         closeButton.setAttribute('aria-label', 'Close');
         closeButton.innerHTML = supports.svg ? closeX : '&times;';
         overlay.appendChild(closeButton);
+
         previousButton.className = nextButton.className = closeButton.className = 'baguetteBox-button';
+
         bindEvents();
     }
-    function keyDownHandler(event) {
+
+    function keyDownHandler(event: KeyboardEvent) {
         switch (event.keyCode) {
-            case 37: // Left arrow
-                showPreviousImage();
-                break;
-            case 39: // Right arrow
-                showNextImage();
-                break;
-            case 27: // Esc
-                hideOverlay();
-                break;
-            case 36: // Home
-                showFirstImage(event);
-                break;
-            case 35: // End
-                showLastImage(event);
-                break;
+        case 37: // Left arrow
+            showPreviousImage();
+            break;
+        case 39: // Right arrow
+            showNextImage();
+            break;
+        case 27: // Esc
+            hideOverlay();
+            break;
+        case 36: // Home
+            showFirstImage(event);
+            break;
+        case 35: // End
+            showLastImage(event);
+            break;
         }
     }
+
     function bindEvents() {
         var passiveEvent = supports.passiveEvents ? { passive: false } : undefined;
         var nonPassiveEvent = supports.passiveEvents ? { passive: true } : undefined;
+
         bind(overlay, 'click', overlayClickHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
@@ -331,9 +442,11 @@
         bind(overlay, 'touchend', touchendHandler);
         bind(document, 'focus', trapFocusInsideOverlay, true);
     }
+
     function unbindEvents() {
         var passiveEvent = supports.passiveEvents ? { passive: false } : undefined;
         var nonPassiveEvent = supports.passiveEvents ? { passive: true } : undefined;
+
         unbind(overlay, 'click', overlayClickHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
@@ -344,7 +457,8 @@
         unbind(overlay, 'touchend', touchendHandler);
         unbind(document, 'focus', trapFocusInsideOverlay, true);
     }
-    function prepareOverlay(gallery, userOptions) {
+
+    function prepareOverlay(gallery: Gallery, userOptions?: UserOptions) {
         // If the same gallery is being opened prevent from loading it once again
         if (currentGallery === gallery) {
             return;
@@ -357,14 +471,16 @@
             slider.removeChild(slider.firstChild);
         }
         imagesElements.length = 0;
-        var imagesFiguresIds = [];
-        var imagesCaptionsIds = [];
+
+        var imagesFiguresIds: string[] = [];
+        var imagesCaptionsIds: string[] = [];
         // Prepare and append images containers and populate figure and captions IDs arrays
-        for (var i = 0, fullImage; i < gallery.length; i++) {
+        for (var i = 0, fullImage: HTMLDivElement; i < gallery.length; i++) {
             fullImage = create('div');
             fullImage.className = 'full-image';
             fullImage.id = 'baguette-img-' + i;
             imagesElements.push(fullImage);
+
             imagesFiguresIds.push('baguetteBox-figure-' + i);
             imagesCaptionsIds.push('baguetteBox-figcaption-' + i);
             slider.appendChild(imagesElements[i]);
@@ -372,23 +488,24 @@
         overlay.setAttribute('aria-labelledby', imagesFiguresIds.join(' '));
         overlay.setAttribute('aria-describedby', imagesCaptionsIds.join(' '));
     }
-    function setOptions(newOptions) {
+
+    function setOptions(newOptions?: UserOptions) {
         if (!newOptions) {
             newOptions = {};
         }
-        function assignOption(item, source) {
+        function assignOption<K extends keyof Options>(item: K, source: UserOptions) {
             options[item] = defaults[item];
             if (typeof source[item] !== 'undefined') {
-                options[item] = source[item];
+                options[item] = source[item] as Options[K];
             }
         }
         // Fill options object
-        Object.keys(defaults).forEach(function (item) {
-            assignOption(item, newOptions);
+        (Object.keys(defaults) as Array<keyof Options>).forEach(function(item) {
+            assignOption(item, newOptions as UserOptions);
         });
         /* Apply new options */
         // Change transition for proper animation
-        var sliderStyle = slider.style;
+        var sliderStyle = slider.style as StyleWithWebkit;
         sliderStyle.transition = sliderStyle.webkitTransition = (options.animation === 'fadeIn' ? 'opacity .4s ease' :
             options.animation === 'slideIn' ? '' : 'none');
         // Hide buttons if necessary
@@ -406,12 +523,12 @@
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
-        }
-        catch (e) {
+        } catch (e) {
             // Silence the error and continue
         }
     }
-    function showOverlay(chosenImageIndex) {
+
+    function showOverlay(chosenImageIndex: number) {
         if (options.noScrollbars) {
             document.documentElement.style.overflowY = 'hidden';
             document.body.style.overflowY = 'scroll';
@@ -419,20 +536,22 @@
         if (overlay.style.display === 'block') {
             return;
         }
+
         bind(document, 'keydown', keyDownHandler);
         currentIndex = chosenImageIndex;
         touch = createTouchState();
-        loadImage(currentIndex, function () {
+        loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
+
         updateOffset();
         overlay.style.display = 'block';
         if (options.fullScreen) {
             enterFullScreen();
         }
         // Fade in overlay
-        setTimeout(function () {
+        setTimeout(function() {
             overlay.className = 'visible';
             if (typeof options.bodyClass === 'string' && document.body.classList) {
                 document.body.classList.add(options.bodyClass);
@@ -448,38 +567,37 @@
         initFocus();
         isOverlayVisible = true;
     }
+
     function initFocus() {
         if (options.buttons) {
             previousButton.focus();
-        }
-        else {
+        } else {
             closeButton.focus();
         }
     }
+
     function enterFullScreen() {
-        var fullScreenOverlay = overlay;
+        var fullScreenOverlay = overlay as FullscreenOverlay;
         if (fullScreenOverlay.requestFullscreen) {
             fullScreenOverlay.requestFullscreen();
-        }
-        else if (fullScreenOverlay.webkitRequestFullscreen) {
+        } else if (fullScreenOverlay.webkitRequestFullscreen) {
             fullScreenOverlay.webkitRequestFullscreen();
-        }
-        else if (fullScreenOverlay.mozRequestFullScreen) {
+        } else if (fullScreenOverlay.mozRequestFullScreen) {
             fullScreenOverlay.mozRequestFullScreen();
         }
     }
+
     function exitFullscreen() {
-        var fullScreenDocument = document;
+        var fullScreenDocument = document as FullscreenDocument;
         if (fullScreenDocument.exitFullscreen) {
             fullScreenDocument.exitFullscreen();
-        }
-        else if (fullScreenDocument.mozCancelFullScreen) {
+        } else if (fullScreenDocument.mozCancelFullScreen) {
             fullScreenDocument.mozCancelFullScreen();
-        }
-        else if (fullScreenDocument.webkitExitFullscreen) {
+        } else if (fullScreenDocument.webkitExitFullscreen) {
             fullScreenDocument.webkitExitFullscreen();
         }
     }
+
     function hideOverlay() {
         if (options.noScrollbars) {
             document.documentElement.style.overflowY = 'auto';
@@ -488,12 +606,13 @@
         if (overlay.style.display === 'none') {
             return;
         }
+
         unbind(document, 'keydown', keyDownHandler);
         // Fade out and hide the overlay
         overlay.className = '';
-        setTimeout(function () {
+        setTimeout(function() {
             overlay.style.display = 'none';
-            if (document.fullscreenElement) {
+            if ((document as FullscreenDocument).fullscreenElement) {
                 exitFullscreen();
             }
             if (typeof options.bodyClass === 'string' && document.body.classList) {
@@ -508,14 +627,17 @@
             isOverlayVisible = false;
         }, 500);
     }
-    function loadImage(index, callback) {
+
+    function loadImage(index: number, callback?: () => void) {
         var imageContainer = imagesElements[index];
         var galleryItem = currentGallery[index];
+
         // Return if the index exceeds prepared images in the overlay
         // or if the current gallery has been changed / closed
         if (typeof imageContainer === 'undefined' || typeof galleryItem === 'undefined') {
             return;
         }
+
         // If image is already loaded run callback and return
         if (imageContainer.getElementsByTagName('img')[0]) {
             if (callback) {
@@ -523,6 +645,7 @@
             }
             return;
         }
+
         // Get element reference, optional caption and source path
         var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
@@ -530,6 +653,7 @@
             options.captions.call(currentGallery, imageElement) :
             imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = getImageSrc(imageElement);
+
         // Prepare figure element
         var figure = create('figure');
         figure.id = 'baguetteBox-figure-' + index;
@@ -545,9 +669,10 @@
             figure.appendChild(figcaption);
         }
         imageContainer.appendChild(figure);
+
         // Prepare gallery img element
         var image = create('img');
-        image.onload = function () {
+        image.onload = function() {
             // Remove loader element
             var spinner = figure.querySelector('.baguetteBox-spinner');
             if (spinner && spinner.parentNode === figure) {
@@ -563,18 +688,20 @@
             image.title = imageCaption;
         }
         figure.appendChild(image);
+
         // Run callback
         if (options.async && callback) {
             callback();
         }
     }
+
     // Get image source location, mostly used for responsive images
-    function getImageSrc(image) {
+    function getImageSrc(image: HTMLAnchorElement) {
         // Set default image path from href
         var result = image.href;
         // If dataset is supported find the most suitable image
         if (image.dataset) {
-            var srcs = {};
+            var srcs: Record<string, string> = {};
             // Get all possible image versions depending on the resolution
             for (var item in image.dataset) {
                 if (item.substring(0, 3) === 'at-' && !isNaN(parseInt(item.substring(3), 10))) {
@@ -585,7 +712,7 @@
                 }
             }
             // Sort resolutions ascending
-            var keys = Object.keys(srcs).sort(function (a, b) {
+            var keys = Object.keys(srcs).sort(function(a, b) {
                 return parseInt(a, 10) < parseInt(b, 10) ? -1 : 1;
             });
             // Get real screen resolution
@@ -601,35 +728,40 @@
         }
         return result;
     }
+
     // Return false at the right end of the gallery
     function showNextImage() {
         return show(currentIndex + 1);
     }
+
     // Return false at the left end of the gallery
     function showPreviousImage() {
         return show(currentIndex - 1);
     }
+
     // Return false at the left end of the gallery
-    function showFirstImage(event) {
+    function showFirstImage(event?: Event) {
         if (event) {
             event.preventDefault();
         }
         return show(0);
     }
+
     // Return false at the right end of the gallery
-    function showLastImage(event) {
+    function showLastImage(event?: Event) {
         if (event) {
             event.preventDefault();
         }
         return show(currentGallery.length - 1);
     }
+
     /**
      * Move the gallery to a specific index
      * @param `index` {number} - the position of the image
      * @param `gallery` {array} - gallery which should be opened, if omitted assumes the currently opened one
      * @return {boolean} - true on success or false if the index is invalid
      */
-    function show(index, gallery) {
+    function show(index: number, gallery?: Gallery) {
         if (!isOverlayVisible) {
             if (!gallery || index < 0 || index >= gallery.length) {
                 return false;
@@ -650,108 +782,116 @@
             }
             return false;
         }
+
         currentIndex = index;
-        loadImage(currentIndex, function () {
+        loadImage(currentIndex, function() {
             preloadNext(currentIndex);
             preloadPrev(currentIndex);
         });
         updateOffset();
+
         if (options.onChange) {
             options.onChange(currentIndex, imagesElements.length);
         }
+
         return true;
     }
+
     /**
      * Triggers the bounce animation
      * @param {('left'|'right')} direction - Direction of the movement
      */
-    function bounceAnimation(direction) {
+    function bounceAnimation(direction: 'left' | 'right') {
         slider.className = 'bounce-from-' + direction;
-        setTimeout(function () {
+        setTimeout(function() {
             slider.className = '';
         }, 400);
     }
+
     function updateOffset() {
         var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
         var percentage = isRtl ? -100 : 100;
         var offset = -currentIndex * percentage + '%';
-        var sliderStyle = slider.style;
+        var sliderStyle = slider.style as StyleWithWebkit;
+
         if (options.animation === 'fadeIn') {
             sliderStyle.opacity = '0';
-            setTimeout(function () {
+            setTimeout(function() {
                 if (supports.transforms) {
                     sliderStyle.transform = sliderStyle.webkitTransform = 'translate3d(' + offset + ',0,0)';
-                }
-                else {
+                } else {
                     sliderStyle.left = offset;
                 }
                 sliderStyle.opacity = '1';
             }, 400);
-        }
-        else if (supports.transforms) {
+        } else if (supports.transforms) {
             sliderStyle.transform = sliderStyle.webkitTransform = 'translate3d(' + offset + ',0,0)';
-        }
-        else {
+        } else {
             sliderStyle.left = offset;
         }
     }
+
     // CSS 3D Transforms test
     function testTransformsSupport() {
         var div = create('div');
-        var style = div.style;
+        var style = div.style as StyleWithWebkit;
         return typeof style.perspective !== 'undefined' || typeof style.webkitPerspective !== 'undefined';
     }
+
     // Inline SVG test
     function testSvgSupport() {
         var div = create('div');
         div.innerHTML = '<svg/>';
-        var firstChild = div.firstChild;
+        var firstChild = div.firstChild as Element | null;
         return (firstChild && firstChild.namespaceURI) === 'http://www.w3.org/2000/svg';
     }
+
     // Borrowed from https://github.com/seiyria/bootstrap-slider/pull/680/files
     /* eslint-disable getter-return */
     function testPassiveEventsSupport() {
         var passiveEvents = false;
         try {
-            var noop = function () {
+            var noop = function() {
                 return undefined;
             };
             var opts = Object.defineProperty({}, 'passive', {
-                get: function () {
+                get: function() {
                     passiveEvents = true;
                     return true;
                 }
-            });
+            }) as AddEventListenerOptions;
             window.addEventListener('test', noop, opts);
             window.removeEventListener('test', noop, opts);
-        }
-        catch (e) { /* Silence the error and continue */ }
+        } catch (e) { /* Silence the error and continue */ }
+
         return passiveEvents;
     }
     /* eslint-enable getter-return */
-    function preloadNext(index) {
+
+    function preloadNext(index: number) {
         if (index - currentIndex >= options.preload) {
             return;
         }
-        loadImage(index + 1, function () {
+        loadImage(index + 1, function() {
             preloadNext(index + 1);
         });
     }
-    function preloadPrev(index) {
+
+    function preloadPrev(index: number) {
         if (currentIndex - index >= options.preload) {
             return;
         }
-        loadImage(index - 1, function () {
+        loadImage(index - 1, function() {
             preloadPrev(index - 1);
         });
     }
-    function bind(element, event, callback, options) {
+
+    function bind(element: any, event: string, callback: (event: any) => void, options?: boolean | AddEventListenerOptions) {
         if (element.addEventListener) {
             element.addEventListener(event, callback, options);
-        }
-        else {
+        } else {
             // IE8 fallback
-            element.attachEvent('on' + event, function (event) {
+            element.attachEvent('on' + event, function(event: any) {
                 // `event` and `event.target` are not provided in IE8
                 event = event || window.event;
                 event.target = event.target || event.srcElement;
@@ -759,21 +899,24 @@
             });
         }
     }
-    function unbind(element, event, callback, options) {
+
+    function unbind(element: any, event: string, callback: (event: any) => void, options?: boolean | AddEventListenerOptions) {
         if (element.removeEventListener) {
             element.removeEventListener(event, callback, options);
-        }
-        else {
+        } else {
             // IE8 fallback
             element.detachEvent('on' + event, callback);
         }
     }
-    function getByID(id) {
-        return document.getElementById(id);
+
+    function getByID<T extends HTMLElement>(id: string) {
+        return document.getElementById(id) as T | null;
     }
-    function create(element) {
+
+    function create<K extends keyof HTMLElementTagNameMap>(element: K) {
         return document.createElement(element);
     }
+
     function destroyPlugin() {
         unbindEvents();
         clearCachedData();
@@ -785,6 +928,7 @@
         currentGallery = [];
         currentIndex = 0;
     }
+
     return {
         run: run,
         show: show,

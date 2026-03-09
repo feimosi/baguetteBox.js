@@ -1,5 +1,10 @@
 .publish/
 assets/
+!tests/fixtures/assets/
+!tests/fixtures/assets/**
 demo/css/baguetteBox.css
 demo/js/baguetteBox.js
 node_modules/
+.tmp-build/
+playwright-report/
+test-results/
