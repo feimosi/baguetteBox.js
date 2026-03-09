@@ -20,11 +20,11 @@
     ],
     "scripts": {
         "start": "gulp",
-        "lint": "eslint gulpfile.js playwright.config.js eslint.config.js tests/**/*.js",
+        "lint": "eslint src/**/*.ts gulpfile.js playwright.config.js eslint.config.js tests/**/*.js",
         "typecheck": "tsc --project tsconfig.json",
         "test": "npm run build && npm run lint && npm run typecheck",
-        "test:ui": "playwright test",
-        "test:ui:update": "playwright test --update-snapshots",
+        "test:ui": "npm run build && playwright test",
+        "test:ui:update": "npm run build && playwright test --update-snapshots",
         "build": "gulp build",
         "release": "gulp release",
         "patch": "gulp patch"
@@ -49,7 +49,8 @@
         "gulp-uglify": "^3.0.2",
         "gulp-usemin": "~0.3.30",
         "jsonfile": "~6.2.0",
-        "typescript": "~5.9.3"
+        "typescript": "~5.9.3",
+        "typescript-eslint": "~8.57.0"
     },
     "overrides": {
         "graceful-fs": "^4.2.11",

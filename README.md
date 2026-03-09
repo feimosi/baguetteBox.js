@@ -281,6 +281,8 @@ This runs:
 npm run test:ui
 ```
 
+This rebuilds the distributable assets first, then runs Playwright against the packaged minified CSS and JS files.
+
 ### Update snapshot baselines
 
 ```sh

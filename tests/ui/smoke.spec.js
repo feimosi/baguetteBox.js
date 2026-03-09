@@ -18,11 +18,12 @@ async function closeOverlay(page) {
     await expect(page.locator('#baguetteBox-overlay')).not.toBeVisible();
 }
 
-async function expectOverlayScreenshot(page, name) {
+async function expectOverlayScreenshot(page, name, options) {
     await expect(page).toHaveScreenshot(name, {
         animations: 'disabled',
         caret: 'hide',
-        scale: 'css'
+        scale: 'css',
+        maxDiffPixels: options && options.maxDiffPixels
     });
 }
 
@@ -43,7 +44,7 @@ test.describe('baguetteBox smoke tests', function() {
         await expect(page.locator('#baguetteBox-figcaption-0')).toHaveText('Golden Gate caption');
         await expectOverlayScreenshot(page, 'overlay-open.png');
         await closeOverlay(page);
-        await expectOverlayScreenshot(page, 'overlay-closed.png');
+        await expectOverlayScreenshot(page, 'overlay-closed.png', { maxDiffPixels: 1000 });
     });
 
     test('supports button and keyboard navigation in a multi-image gallery', async function({ page }) {

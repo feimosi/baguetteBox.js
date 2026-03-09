@@ -3,6 +3,7 @@
 'use strict';
 
 const childProcess = require('child_process');
+const fs = require('fs');
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const browserSync = require('browser-sync');
@@ -82,6 +83,11 @@ function buildDistJs() {
         .pipe(gulp.dest(dist.js));
 }
 
+function syncCompatibilitySources() {
+    fs.copyFileSync('./.tmp-build/baguetteBox.js', './src/baguetteBox.js');
+    fs.copyFileSync('./src/baguetteBox.css', './src/baguetteBox.scss');
+}
+
 function transpileTs(done) {
     childProcess.execFileSync(process.execPath, [
         require.resolve('typescript/bin/tsc'),
@@ -90,11 +96,14 @@ function transpileTs(done) {
     ], {
         stdio: 'inherit'
     });
+    syncCompatibilitySources();
     done();
 }
 
-const buildDemo = gulp.parallel(buildDemoCss, buildDemoJs);
-const buildDist = gulp.parallel(buildDistCss, buildDistJs);
+const buildDemoJsTask = gulp.series(transpileTs, buildDemoJs);
+const buildDistJsTask = gulp.series(transpileTs, buildDistJs);
+const buildDemo = gulp.parallel(buildDemoCss, buildDemoJsTask);
+const buildDist = gulp.parallel(buildDistCss, buildDistJsTask);
 
 function bumpMinor() {
     return gulp.src(['./bower.json', './package.json'])
@@ -126,7 +135,7 @@ function updateVersion() {
 
 function watchFiles() {
     gulp.watch(paths.css, buildDemoCss);
-    gulp.watch(paths.ts, gulp.series(transpileTs, buildDemoJs));
+    gulp.watch(paths.ts, buildDemoJsTask);
 }
 
 function watchBrowserSync(done) {
@@ -154,15 +163,18 @@ function deploy() {
         }));
 }
 
-const build = gulp.series(transpileTs, gulp.parallel(buildDemo, buildDist), updateVersion);
-const watch = gulp.series(transpileTs, buildDemo, watchBrowserSync, watchFiles);
+const build = gulp.series(transpileTs, gulp.parallel(
+    gulp.parallel(buildDemoCss, buildDemoJs),
+    gulp.parallel(buildDistCss, buildDistJs)
+), updateVersion);
+const watch = gulp.series(buildDemo, watchBrowserSync, watchFiles);
 const release = gulp.series(bumpMinor, build);
 const patch = gulp.series(bumpPatch, build);
 
 exports['build.demo-css'] = buildDemoCss;
-exports['build.demo-js'] = buildDemoJs;
+exports['build.demo-js'] = buildDemoJsTask;
 exports['build.dist-css'] = buildDistCss;
-exports['build.dist-js'] = buildDistJs;
+exports['build.dist-js'] = buildDistJsTask;
 exports['build.demo'] = buildDemo;
 exports['build.dist'] = buildDist;
 exports['bump-minor'] = bumpMinor;
