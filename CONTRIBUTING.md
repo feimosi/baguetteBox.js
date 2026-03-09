@@ -18,7 +18,7 @@ Remember the script's core philosophy is to stay simple and minimal, doing one t
 
 ## Before you open a pull request
 - Follow Git best practices (especially use meaningful commit messages).
-- Run `npm test` and `npm run test:ui`.
+- Run `npm run lint`, `npm run typecheck`, `npm run build`, and `npm test`.
 - Describe thoroughly your work in a PR comment.
 - Be patient and understanding. It's a side project, done in free time.
 
@@ -32,9 +32,10 @@ Compatible node version: v22
 
 Build the script
 ```sh
+npm run lint
+npm run typecheck
 npm run build
 npm test
-npm run test:ui
 git add --update
 git commit -m "Build update"
 ```

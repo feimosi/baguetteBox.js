@@ -22,9 +22,9 @@
         "start": "gulp",
         "lint": "eslint src/**/*.ts gulpfile.js playwright.config.js eslint.config.js tests/**/*.js",
         "typecheck": "tsc --project tsconfig.json",
-        "test": "npm run build && npm run lint && npm run typecheck",
-        "test:ui": "npm run build && playwright test",
-        "test:ui:update": "npm run build && playwright test --update-snapshots",
+        "test": "npm run test:ui",
+        "test:ui": "playwright test",
+        "test:ui:update": "playwright test --update-snapshots",
         "build": "gulp build",
         "release": "gulp release",
         "patch": "gulp patch"

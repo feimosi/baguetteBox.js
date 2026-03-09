@@ -267,13 +267,13 @@ The repository includes the legacy Gulp build, standalone linting, strict TypeSc
 ### Run the full local verification flow
 
 ```sh
+npm run lint
+npm run typecheck
+npm run build
 npm test
 ```
 
-This runs:
-- `npm run build`
-- `npm run lint`
-- `npm run typecheck`
+`npm test` now delegates to `npm run test:ui`. Build, lint, and typecheck are intentionally separate commands.
 
 ### Run the UI test suite
 
@@ -281,13 +281,15 @@ This runs:
 npm run test:ui
 ```
 
-This rebuilds the distributable assets first, then runs Playwright against the packaged minified CSS and JS files.
+This runs the Playwright suite against the packaged minified CSS and JS files. Run `npm run build` first if you want the tests to reflect fresh source changes.
 
 ### Update snapshot baselines
 
 ```sh
 npm run test:ui:update
 ```
+
+Run `npm run build` first so snapshot updates match the current built assets.
 
 Notes:
 - The Playwright config uses the local Google Chrome browser on macOS.

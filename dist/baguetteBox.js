@@ -2,7 +2,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version %%INJECT_VERSION%%
+ * @version 1.13.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 (function (root, factory) {
