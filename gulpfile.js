@@ -2,14 +2,13 @@
 
 'use strict';
 
-const sass = require('gulp-sass')(require('sass'));
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const browserSync = require('browser-sync');
 const jsonfile = require('jsonfile');
 
 const paths = {
-    css: ['./src/*.scss', './src/*.css'],
+    css: './src/*.css',
     js: './src/*.js'
 };
 const demo = {
@@ -36,7 +35,6 @@ const autoprefixerBrowsers = [
 
 function buildDemoCss() {
     return gulp.src(paths.css)
-        .pipe(plugins.if(/.scss/, sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer({ overrideBrowserslist: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(demo.css));
@@ -50,7 +48,6 @@ function buildDemoJs() {
 
 function buildDistCss() {
     return gulp.src(paths.css)
-        .pipe(plugins.if(/.scss/, sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer({ overrideBrowserslist: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(dist.css))

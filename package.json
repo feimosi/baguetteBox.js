@@ -47,11 +47,9 @@
         "gulp-inject-version": "^1.0.1",
         "gulp-load-plugins": "^2.0.2",
         "gulp-rimraf": "~0.2.2",
-        "gulp-sass": "~5.1.0",
         "gulp-uglify": "^3.0.2",
         "gulp-usemin": "~0.3.30",
-        "jsonfile": "^6.0.1",
-        "sass": "~1.77.8"
+        "jsonfile": "^6.0.1"
     },
     "overrides": {
         "graceful-fs": "^4.2.11",
