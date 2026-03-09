@@ -19,7 +19,6 @@
         "src"
     ],
     "scripts": {
-        "postinstall": "npm rebuild node-sass",
         "start": "gulp",
         "lint": "gulp lint",
         "test": "gulp test",
@@ -35,11 +34,11 @@
     "devDependencies": {
         "@playwright/test": "~1.58.2",
         "browser-sync": "^2.26.7",
-        "gulp": "^3.9.1",
+        "gulp": "~4.0.2",
         "gulp-autoprefixer": "^6.1.0",
         "gulp-bump": "^3.1.3",
+        "gulp-clean-css": "~4.3.0",
         "gulp-concat": "^2.6.1",
-        "gulp-cssmin": "~0.2.0",
         "gulp-eslint": "^5.0.0",
         "gulp-gh-pages": "~0.5.4",
         "gulp-if": "^2.0.2",
@@ -50,7 +49,6 @@
         "gulp-uglify": "^3.0.2",
         "gulp-usemin": "~0.3.30",
         "jsonfile": "^6.0.1",
-        "run-sequence": "^2.2.1",
         "sass": "~1.77.8"
     },
     "overrides": {
