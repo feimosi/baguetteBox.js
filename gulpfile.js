@@ -2,6 +2,7 @@
 
 'use strict';
 
+const childProcess = require('child_process');
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const browserSync = require('browser-sync');
@@ -9,7 +10,8 @@ const jsonfile = require('jsonfile');
 
 const paths = {
     css: './src/*.css',
-    js: './src/*.js'
+    ts: './src/*.ts',
+    js: './.tmp-build/src/*.js'
 };
 const demo = {
     allFiles: './demo/**/*',
@@ -65,6 +67,17 @@ function buildDistJs() {
         .pipe(gulp.dest(dist.js));
 }
 
+function transpileTs(done) {
+    childProcess.execFileSync(process.execPath, [
+        require.resolve('typescript/bin/tsc'),
+        '--project',
+        'tsconfig.build.json'
+    ], {
+        stdio: 'inherit'
+    });
+    done();
+}
+
 const buildDemo = gulp.parallel(buildDemoCss, buildDemoJs);
 const buildDist = gulp.parallel(buildDistCss, buildDistJs);
 
@@ -98,7 +111,7 @@ function updateVersion() {
 
 function watchFiles() {
     gulp.watch(paths.css, buildDemoCss);
-    gulp.watch(paths.js, buildDemoJs);
+    gulp.watch(paths.ts, gulp.series(transpileTs, buildDemoJs));
 }
 
 function watchBrowserSync(done) {
@@ -126,8 +139,8 @@ function deploy() {
         }));
 }
 
-const build = gulp.series(gulp.parallel(buildDemo, buildDist), updateVersion);
-const watch = gulp.series(buildDemo, watchBrowserSync, watchFiles);
+const build = gulp.series(transpileTs, gulp.parallel(buildDemo, buildDist), updateVersion);
+const watch = gulp.series(transpileTs, buildDemo, watchBrowserSync, watchFiles);
 const release = gulp.series(bumpMinor, build);
 const patch = gulp.series(bumpPatch, build);
 

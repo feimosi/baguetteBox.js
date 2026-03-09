@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "es5",
+        "module": "none",
+        "lib": [
+            "dom",
+            "es5",
+            "es2015"
+        ],
+        "noEmit": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
