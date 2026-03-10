@@ -536,11 +536,16 @@
         // Get element reference, optional caption and source path
         var imageElement = galleryItem.imageElement;
         var thumbnailElement = imageElement.getElementsByTagName('img')[0];
-        var imageCaption = typeof options.captions === 'function' ?
-            options.captions.call(currentGallery, imageElement) :
-            imageElement.getAttribute('data-caption') || imageElement.title;
+       // var imageCaption = typeof options.captions === 'function' ?
+        //    options.captions.call(currentGallery, imageElement) :
+        //    imageElement.getAttribute('data-caption') || imageElement.title;
         var imageSrc = getImageSrc(imageElement);
-
+        
+        /***change caption en compteur****/
+		var actuel = [index +1] ;
+		var imageCaption = actuel +'/' + currentGallery.length;
+		/******************************/
+        
         // Prepare figure element
         var figure = create('figure');
         figure.id = 'baguetteBox-figure-' + index;
