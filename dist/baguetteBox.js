@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.11.1
+ * @version 1.13.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -48,7 +48,10 @@
             afterShow: null,
             afterHide: null,
             onChange: null,
-            overlayBackgroundColor: 'rgba(0,0,0,.8)'
+            overlayBackgroundColor: 'rgba(0,0,0,.8)',
+            closeX: closeX,
+            leftArrow: leftArrow,
+            rightArrow: rightArrow,
         };
     // Object containing information about features compatibility
     var supports = {};
@@ -65,7 +68,7 @@
     // If set to true ignore touch events because animation was already fired
     var touchFlag = false;
     // Regex pattern to match image files
-    var regex = /.+\.(gif|jpe?g|png|webp)/i;
+    var regex = /.+\.(gif|jpe?g|png|webp|avif)/i;
     // Object of all used galleries
     var data = {};
     // Array containing temporary images DOM elements
@@ -398,6 +401,12 @@
         }
         // Set buttons style to hide or display them
         previousButton.style.display = nextButton.style.display = (options.buttons ? '' : 'none');
+        // Set custom markup for buttons
+        closeButton.innerHTML = options.closeX;
+        if (options.buttons) {
+            previousButton.innerHTML = options.leftArrow;
+            nextButton.innerHTML = options.rightArrow;
+        }
         // Set overlay color
         try {
             overlay.style.backgroundColor = options.overlayBackgroundColor;
@@ -677,7 +686,10 @@
     }
 
     function updateOffset() {
-        var offset = -currentIndex * 100 + '%';
+        var isRtl = document.querySelectorAll('html')[0].getAttribute('dir') === 'rtl';
+        var percentage = isRtl ? -100 : 100;
+        var offset = -currentIndex * percentage + '%';
+
         if (options.animation === 'fadeIn') {
             slider.style.opacity = 0;
             setTimeout(function() {

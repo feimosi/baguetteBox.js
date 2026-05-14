@@ -1,0 +1,19 @@
+{
+    "name": "feimosi/baguettebox.js",
+    "description": "Simple and easy to use lightbox script",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "feimosi",
+            "homepage": "https://github.com/feimosi"
+        }
+    ],
+    "homepage": "https://github.com/feimosi/baguetteBox.js",
+    "keywords": ["lightbox", "gallery", "image", "javascript"],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "classmap": ["dist/"]
+    }
+}

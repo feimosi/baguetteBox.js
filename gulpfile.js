@@ -2,6 +2,8 @@
 
 'use strict';
 
+const sass = require('gulp-sass')(require('sass'));
+
 var gulp = require('gulp'),
     plugins = require('gulp-load-plugins')(),
     browserSync = require('browser-sync'),
@@ -36,7 +38,7 @@ var autoprefixerBrowsers = [
 
 gulp.task('build.demo-css', function() {
     return gulp.src(src.css)
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer({ browsers: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(demo.css));
@@ -50,7 +52,7 @@ gulp.task('build.demo-js', function () {
 
 gulp.task('build.dist-css', function() {
     return gulp.src(src.css)
-        .pipe(plugins.if(/.scss/, plugins.sass({ style: 'compressed', noCache: true })))
+        .pipe(plugins.if(/.scss/, sass({ style: 'compressed', noCache: true })))
         .pipe(plugins.autoprefixer({ browsers: autoprefixerBrowsers }))
         .pipe(plugins.concat('baguetteBox.css'))
         .pipe(gulp.dest(dist.css))
